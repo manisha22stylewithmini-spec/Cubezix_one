@@ -1141,3 +1141,13 @@
 /* CTA accent word: same treatment as the section titles - italic serif gradient, no fill, no pixel font */
 .cta-h .pxf{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;text-transform:none;font-size:1.1em;letter-spacing:-.015em;line-height:.9;padding:0 .05em 0 0;margin:0;background:linear-gradient(95deg,#CFF1F2 0%,#FFFFFF 45%,#D9D3FF 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:none;text-shadow:none}
 .cta-h .pxf::before,.cta-h .pxf::after{display:none;content:none}
+
+/* closing CTA: full-bleed band, no light gutters; footer keeps the white */
+.h2-final{padding:0;background:none}
+.h2-final>.wrap{max-width:none;width:100%;padding:0;margin:0}
+.h2-cta-card{border-radius:0;padding:110px 24px}
+footer.site-footer{background:#fff;margin-top:0}
+/* logo on a glossy tile: white glass face, logo-gradient rim, brand-coloured lift */
+.cta-mark{position:relative;display:inline-grid;place-items:center;width:1.22em;height:1.22em;aspect-ratio:auto;margin:-.06em .14em 0;border-radius:.3em;border:.045em solid transparent;background:linear-gradient(155deg,#FFFFFF 0%,#F5F4FF 55%,#E7E3FF 100%) padding-box,linear-gradient(135deg,#80D1D4 0%,#3A4CE1 50%,#633ADD 100%) border-box;box-shadow:0 .1em .18em -.05em rgba(13,16,70,.55),0 .45em .9em -.28em rgba(99,58,221,.75),inset 0 .035em .02em rgba(255,255,255,1),inset 0 -.07em .14em rgba(99,58,221,.14);transform:rotate(-6deg);animation:none;vertical-align:middle;overflow:hidden}
+.cta-mark::after{content:"";position:absolute;left:.05em;right:.05em;top:.04em;height:46%;border-radius:.24em .24em .5em .5em;background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,0));pointer-events:none}
+.cta-mark svg{position:relative;z-index:1;width:auto;height:.84em;display:block;filter:drop-shadow(0 .03em .04em rgba(20,22,63,.25))}
