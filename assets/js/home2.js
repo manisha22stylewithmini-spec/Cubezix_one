@@ -175,35 +175,9 @@
   const ORDER = [0, 1, 2, 3, 4, 5, 7, 6, 8];
   $("#feat-grid").innerHTML = ORDER.map((k) => FEAT[k]).map((f, i) => `<div class="fc ${f[4]} rv" style="--d:${(i % 3) * 0.06}s">${f[5]}<div class="fh"><div class="fi">${ICX[f[0]]}</div>${f[3] ? `<span class="from">${f[3]}</span>` : ""}</div><h3>${f[1]}</h3><p>${f[2]}</p></div>`).join("");
 
-  /* ---------- inbox spotlight (interactive approve) ---------- */
-  const inbox = $("#inbox-demo");
-  const pc = () => `<div class="card" id="po2"><div class="ticket-head"><span class="ticket-ico"><span class="pill1 dark" style="width:18px;height:18px;font-size:10px">1</span></span><div><div class="ticket-meta">CubeZixONE <span class="mono">09:42</span></div><div class="ticket-title">Purchase order <span class="mono">PO-2026-0418</span></div></div><span class="needs" id="po2-n">Needs you <i class="pill1">1</i></span></div><div class="rows"><div class="row"><span class="k">Supplier</span><span class="v">Gulf Pack Supplies</span></div><div class="row"><span class="k">Amount</span><span class="v mono">AED 48,250.00</span></div><div class="row"><span class="k">Budget</span><span class="v warn">${ICX.x.replace("<svg", '<svg width="14" height="14"')} Over budget by 6%</span></div><div class="row"><span class="k">Requested by</span><span class="v">Hana · Finance</span></div></div><div class="card-foot" id="po2-f"><button class="btn btn-dark" id="po2-a">Approve</button><button class="btn-ghost" style="font-size:14px;font-weight:500">Review</button></div></div><div class="card hide" id="po2-t" style="padding:6px 22px"></div>`;
-  inbox.innerHTML = pc();
-  $("#po2-a").addEventListener("click", () => {
-    $("#po2-n").style.opacity = 0;
-    const d = new Date(), t = [d.getHours(), d.getMinutes(), d.getSeconds()].map((n) => String(n).padStart(2, "0")).join(":");
-    $("#po2-f").innerHTML = `<span class="okc" style="font-size:14px">${ICX.ok.replace("<svg", '<svg width="14" height="14"')} Approved</span><span class="mono" style="margin-left:auto;font-size:13px;color:var(--ink-2)">${t}</span>`;
-    const tl = $("#po2-t"); tl.classList.remove("hide");
-    tl.innerHTML = [["Stock reserved", "Inventory", "+0.04s"], ["Supplier notified", "Procurement", "+0.06s"], ["Budget updated", "Finance", "+0.07s"], ["Posted to ledger", "Finance", "+0.09s"]].map((s) => `<div class="tl">${ICX.ok.replace("<svg", '<svg width="13" height="13"')}<b>${s[0]}</b><small>${s[1]}</small><span class="t">${s[2]}</span></div>`).join("");
-    $$(".tl", tl).forEach((r, i) => setTimeout(() => r.classList.add("in"), 200 + i * 240));
-  });
-
   /* ---------- how it works ---------- */
   const STEPS = [["Walk through it", "A demo shaped around your company, your modules and your own processes, not a generic tour.", "Day 1"], ["We move you in", "We bring across customers, stock and balances, merge the duplicates, and set up VAT, roles and approvals with you.", "Week 1 to [x]"], ["Go live, and after", "Your dedicated contact stays on after launch, so every question goes to one person who knows your setup.", "Then, every day"]];
   $("#steps").innerHTML = STEPS.map((s, i) => `<div class="st rv" style="--d:${i * 0.08}s"><div class="n">0${i + 1}</div><h3>${s[0]}</h3><p>${s[1]}</p><span class="chip2">${s[2]}</span></div>`).join("");
-
-  /* ---------- comparison ---------- */
-  const CMP = [["Setup", "Weeks, with one contact guiding you", "Months, or never finished"], ["UAE VAT, WPS and e-invoicing", "Built in and kept current", "Plugins or manual workarounds"], ["One record across modules", "Typed once, used everywhere", "Re-typed between tools"], ["Dedicated contact", "One named person, from demo to go-live", "A ticket queue"], ["Helpdesk, assets and e-sign", "Included in the same family", "Separate tools to buy and connect"], ["Pricing", "Per user, in AED, SAR or USD", "Per module, per seat, per consultant day"]];
-  $("#cmp").innerHTML = `<div class="cr"><span>Feature</span><span>CubeZixONE</span><span>Others</span></div>` + CMP.map((r) => `<div class="cr"><span>${r[0]}</span><span><span class="y">${ICX.ok}${r[1]}</span></span><span><span class="n">${ICX.x}${r[2]}</span></span></div>`).join("");
-
-  /* ---------- pricing ---------- */
-  let ccy = "AED";
-  const PL = [["Starter", "For small teams starting with the ERP basics.", { aed: 299 }, ["Finance, Sales and CRM modules", "UAE VAT built in", "Dedicated contact", "Data migration help"], "Book a demo", false], ["Growth", "All eight ERP modules plus the helpdesk.", { tbc: true }, ["Everything in Starter", "All eight ERP modules", "ONE Desk helpdesk", "WPS payroll and e-invoicing"], "Book a demo", true], ["Scale", "The whole CubeZixONE family for larger teams.", { talk: true }, ["Everything in Growth", "ONE People, ONE Assets, ONE Sign", "Roles, approvals and SLAs", "Priority support"], "Talk to us", false]];
-  function renderPrice() {
-    $("#price").innerHTML = PL.map((p, i) => { const a = p[2]; const amt = a.aed ? `<span>${ccy} ${Math.round(a.aed * rates[ccy])}</span><small>per user / month</small>` : a.tbc ? `<span style="color:var(--faint)">[TBC]</span><small>per user / month</small>` : `<span>Custom</span>`; return `<div class="pp ${p[5] ? "pop" : ""} rv in">${p[5] ? '<span class="badge">Most popular</span>' : ""}<h3>${p[0]}</h3><p class="sub">${p[1]}</p><div class="amt">${amt}</div><div class="note">${a.aed ? "Converted at demo rates · billed in AED · [confirm]" : "[Price to be confirmed]"}</div><ul>${p[3].map((l) => `<li>${l}</li>`).join("")}</ul><a class="btn ${p[5] ? "btn-primary" : "btn-soft"}" href="book-a-demo.html">${p[4]}</a></div>`; }).join("");
-  }
-  renderPrice();
-  $$("#cur button").forEach((b) => b.addEventListener("click", () => { ccy = b.textContent; $$("#cur button").forEach((x) => x.classList.toggle("on", x === b)); renderPrice(); }));
 
   /* ---------- clients ---------- */
   const Q = [["From the initial IT consultation to the seamless implementation, CubeZix demonstrated a deep understanding of our unique IT infrastructure needs. Their expertise in network security, cloud computing and infrastructure management has significantly enhanced our operational efficiency.", "Samarth V", "Assistant Finance Manager, Al Rama International FZCO", "#7896B0"], ["CubeZix's responsiveness is impressive; they are always quick to address any issues that arise, minimizing downtime and keeping our operations seamless. Beyond maintenance, they offer valuable advice and proactive solutions.", "Tarek Nachnouchi", "Chief Product Officer, Arabyads", "#0AA7A4"], ["CubeZix's proactive maintenance approach is a standout feature. They regularly monitor our systems, perform routine check-ups, and provide detailed reports on our IT health.", "Aman Nasser", "Director, International Textile Exports Ltd", "#C670AB"]];
