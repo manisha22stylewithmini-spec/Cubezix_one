@@ -968,3 +968,10 @@
 .h2-pill{border-color:#DCDFFD}
 
 .h2-trusted{padding:72px 0 64px}
+
+/* three-colour logo gradient: hero accent text + stats band */
+.grad{background:linear-gradient(95deg,#80D1D4 0%,#3A4CE1 42%,#633ADD 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.h2-stats{background:linear-gradient(rgba(20,22,63,.14),rgba(20,22,63,.14)),linear-gradient(115deg,#80D1D4 0%,#3A4CE1 42%,#633ADD 100%)}
+.h2-stats .h2-stat b{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:#fff;text-shadow:0 2px 18px rgba(20,22,63,.25)}
+.h2-stats .h2-stat span{color:rgba(255,255,255,.88)}
+.h2-stats .h2-fn{color:rgba(255,255,255,.7)}
