@@ -981,3 +981,7 @@
 .hx-link i{background:linear-gradient(90deg,#80D1D4,#3A4CE1 55%,#633ADD) left center/calc(var(--f)*100%) 100% no-repeat,var(--line)}
 .hx-c.done .hx-link b{background:linear-gradient(135deg,#80D1D4 0%,#3A4CE1 55%,#633ADD 100%);color:#fff;border-color:transparent}
 .hx-c.act .hx-n{color:var(--brand)}
+
+/* closing CTA card: three-colour logo gradient */
+.h2-cta-card{background:linear-gradient(rgba(20,22,63,.12),rgba(20,22,63,.12)),linear-gradient(120deg,#80D1D4 0%,#3A4CE1 40%,#633ADD 100%)}
+.h2-cta-card p{color:rgba(255,255,255,.9)}
