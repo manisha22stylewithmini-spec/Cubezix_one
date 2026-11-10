@@ -28,7 +28,7 @@
     x: S('<path d="M6 6l12 12M18 6L6 18"/>'),
     cube: S('<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/>'),
   };
-  const AVC = ["#3F7FE0", "#8C5CE8", "#1FA9AE", "#0AA7A4", "#6D2FE0", "#2B2FA0", "#8C5CE8", "#8B939C"];
+  const AVC = ["#3F7FE0", "#8C5CE8", "#1FA9AE", "#0AA7A4", "#6D2FE0", "#2B2FA0", "#8C5CE8", "#8D91B5"];
   const av = (name, cls = "", i) => {
     const initials = name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
     const c = AVC[(i !== undefined ? i : name.charCodeAt(0)) % AVC.length];
