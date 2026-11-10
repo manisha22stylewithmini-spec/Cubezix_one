@@ -914,3 +914,42 @@
   .hw-cards .hw-c:hover .hw-arrow{transform:translateX(-50%) rotate(90deg) translateX(6px)}
 }
 @media (prefers-reduced-motion:reduce){.hw-cards .hw-c,.hw-ic,.hw-arrow{transition:none}}
+
+/* ===== how it works v4: pinned, one step at a time, in the site's own card language ===== */
+#how{content-visibility:visible}
+#how.hw-pin{padding:0;height:300vh}
+#how.hw-pin>.wrap{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:64px}
+#how.hw-pin .h2-head{margin-bottom:0}
+.hw{margin:40px auto 0;max-width:1080px}
+.hx-prog{display:flex;align-items:center;gap:14px;max-width:360px;margin:0 auto 34px;font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hx-prog span{white-space:nowrap;min-width:84px;text-align:right}.hx-prog i{flex:1;height:3px;border-radius:3px;background:var(--line);overflow:hidden}.hx-prog u{display:block;height:100%;width:0;background:linear-gradient(90deg,#5FD6D6,#3B4BE8 55%,#6D2FE0);border-radius:3px;transition:width .2s linear}
+.hx-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:56px;align-items:stretch}
+.hx-c{position:relative;display:flex;flex-direction:column;padding:26px 26px 24px;border-radius:28px;background:#fff;border:1px solid var(--line-2);box-shadow:var(--shadow-sm);opacity:.5;transform:scale(.97);transition:opacity .6s var(--ease),transform .6s var(--ease),box-shadow .6s var(--ease),border-color .6s}
+.hx-c::before{content:"";position:absolute;left:26px;right:26px;top:-1px;height:3px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,#5FD6D6,#3B4BE8 55%,#6D2FE0);transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease)}
+.hx-c.act,.hx-c.done{opacity:1}
+.hx-c.act{transform:translateY(-8px);border-color:rgba(61,75,232,.32);box-shadow:0 0 0 4px rgba(61,75,232,.07),0 40px 64px -36px rgba(61,75,232,.55)}
+.hx-c.act::before,.hx-c.done::before{transform:none}
+.hx-c.done{transform:none}
+.hx-top{display:flex;align-items:center;gap:12px}
+.hx-ic{width:46px;height:46px;border-radius:14px;background:var(--brand-soft);color:var(--brand-ink);display:grid;place-items:center;transition:background .5s,color .5s,box-shadow .5s}
+.hx-ic svg{width:22px;height:22px}
+.hx-c.act .hx-ic{background:linear-gradient(135deg,#3B4BE8,#6D2FE0);color:#fff;box-shadow:0 12px 22px -10px rgba(61,75,232,.7)}
+.hx-n{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hx-c.act .hx-n{color:var(--brand-ink)}
+.hx-ck{margin-left:auto;width:26px;height:26px;border-radius:50%;background:#E4F6EA;color:#2E9B57;display:grid;place-items:center;opacity:0;transform:scale(.5);transition:all .5s var(--ease)}
+.hx-ck svg{width:14px;height:14px}.hx-c.done .hx-ck{opacity:1;transform:none}
+.hx-c h3{margin-top:22px;font:700 23px var(--font-display);letter-spacing:-.045em}
+.hx-c p{margin:10px 0 22px;font-size:14px;line-height:1.65;color:var(--ink-2)}
+.hx-chip{margin-top:auto;align-self:flex-start;font:600 11px var(--mono);letter-spacing:.02em;color:var(--brand-ink);background:var(--brand-soft);border-radius:999px;padding:5px 13px}
+.hx-link{position:absolute;left:calc(100% + 6px);top:50%;width:44px;height:26px;transform:translateY(-50%);display:flex;align-items:center;--f:0}
+.hx-link i{flex:1;height:2px;border-radius:2px;background:linear-gradient(90deg,#3B4BE8 calc(var(--f)*100%),var(--line) calc(var(--f)*100%))}
+.hx-link b{width:26px;height:26px;margin-left:-2px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid var(--line);color:var(--muted);transition:all .4s var(--ease);flex:none}
+.hx-link b svg{width:13px;height:13px}
+.hx-link{--ok:0}
+.hx-c.done .hx-link b{background:linear-gradient(135deg,#3B4BE8,#6D2FE0);color:#fff;border-color:transparent}
+@media (max-width:900px){
+  .hx-cards{grid-template-columns:1fr;gap:34px;max-width:440px;margin:0 auto}
+  .hx-link{left:50%;top:calc(100% + 4px);width:26px;height:26px;transform:translateX(-50%) rotate(90deg)}
+  .hx-link i{display:none}
+}
+@media (prefers-reduced-motion:reduce){.hx-c,.hx-c::before,.hx-ic,.hx-ck{transition:none}}

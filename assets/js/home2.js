@@ -236,21 +236,33 @@
   $("#feat-grid").innerHTML = ORDER.map((k) => FEAT[k]).map((f, i) => `<div class="fc ${f[4]} rv" style="--d:${(i % 3) * 0.06}s">${f[5]}<div class="fh"><div class="fi">${ICX[f[0]]}</div>${f[3] ? `<span class="from">${f[3]}</span>` : ""}</div><h3>${f[1]}</h3><p>${f[2]}</p></div>`).join("");
 
   /* ---------- how it works ---------- */
-  const HWI = ["<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"12\" rx=\"2.5\"/><path d=\"M8 20h8M12 16v4\"/><path d=\"M10.5 8.5l4 2.5-4 2.5z\"/></svg>", "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><ellipse cx=\"9\" cy=\"6\" rx=\"5.5\" ry=\"2.5\"/><path d=\"M3.5 6v6c0 1.4 2.5 2.5 5.5 2.5M3.5 12v5c0 1.4 2.5 2.5 5.5 2.5\"/><path d=\"M13 16h8M18 12l3 4-3 4\"/></svg>", "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 3c3 2 5 5.5 4.5 10h-9C7 8.5 9 5 12 3z\"/><circle cx=\"12\" cy=\"9.5\" r=\"1.6\"/><path d=\"M7.5 13l-2.5 3.5 3-.5M16.5 13l2.5 3.5-3-.5M10.5 17c.3 1.5.8 2.5 1.5 3.5.7-1 1.2-2 1.5-3.5\"/></svg>"];
+  const HWI = ["<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"12\" rx=\"2.5\"/><path d=\"M8 20h8M12 16v4\"/><path d=\"M10.5 8.5l4 2.5-4 2.5z\"/></svg>", "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><ellipse cx=\"9\" cy=\"6\" rx=\"5.5\" ry=\"2.5\"/><path d=\"M3.5 6v6c0 1.4 2.5 2.5 5.5 2.5M3.5 12v5c0 1.4 2.5 2.5 5.5 2.5\"/><path d=\"M13 16h8M18 12l3 4-3 4\"/></svg>", "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 3c3 2 5 5.5 4.5 10h-9C7 8.5 9 5 12 3z\"/><circle cx=\"12\" cy=\"9.5\" r=\"1.6\"/><path d=\"M7.5 13l-2.5 3.5 3-.5M16.5 13l2.5 3.5-3-.5M10.5 17c.3 1.5.8 2.5 1.5 3.5.7-1 1.2-2 1.5-3.5\"/></svg>"];
   const STEPS = [["Walk through it", "A demo shaped around your company, your modules and your own processes, not a generic tour.", "Day 1"], ["We move you in", "We bring across customers, stock and balances, merge the duplicates, and set up VAT, roles and approvals with you.", "Week 1 to [x]"], ["Go live, and after", "Your dedicated contact stays on after launch, so every question goes to one person who knows your setup.", "Then, every day"]];
-  const hw = $("#steps");
-  const ARROW = '<span class="hw-arrow" aria-hidden="true"><svg viewBox="0 0 60 70" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 35h44M33 17l18 18-18 18"/></svg></span>';
-  hw.innerHTML = `<div class="hw-cards">${STEPS.map((x, i) => `<article class="hw-c rv" style="--d:${i * 0.08}s"><span class="hw-ic">${HWI[i]}</span><h3>${x[0]}</h3><p>${x[1]}</p><span class="hw-chip">${x[2]}</span>${i < STEPS.length - 1 ? ARROW : ""}</article>`).join("")}</div>`;
+  const hw = $("#steps"), howSec = $("#how");
+  const HCHK = "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg>", HARR = "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg>";
+  hw.innerHTML = `<div class="hx-prog"><span id="hx-lab">Step 1 of 3</span><i><u id="hx-bar"></u></i></div><div class="hx-cards">${STEPS.map((x, i) => `<article class="hx-c"><div class="hx-top"><span class="hx-ic">${HWI[i]}</span><span class="hx-n">Step 0${i + 1}</span><span class="hx-ck">${HCHK}</span></div><h3>${x[0]}</h3><p>${x[1]}</p><span class="hx-chip">${x[2]}</span>${i < 2 ? `<span class="hx-link"><i></i><b>${HARR}</b></span>` : ""}</article>`).join("")}</div>`;
   {
-    const cards = $$(".hw-c", hw); let lastP = -1;
-    const upd = () => {
-      const r = hw.getBoundingClientRect(), vh = innerHeight;
-      if (r.top > vh + 100 || r.bottom < -100) return;
-      const pr = Math.round(clamp((vh * 0.78 - r.top) / (r.height * 0.9), 0, 1) * 100) / 100;
-      if (pr === lastP) return; lastP = pr;
-      cards.forEach((c, i) => c.classList.toggle("on", pr >= i * 0.4 + 0.02));
-    };
-    window.ONEERP.onScroll(upd); upd();
+    const cards = $$(".hx-c", hw), links = $$(".hx-link", hw), lab = $("#hx-lab"), bar = $("#hx-bar");
+    const pinMQ = matchMedia("(min-width: 901px) and (min-height: 620px)");
+    let pinned = false, lastKey = "";
+    const apply = () => { pinned = pinMQ.matches && !matchMedia("(prefers-reduced-motion: reduce)").matches; howSec.classList.toggle("hw-pin", pinned); lastKey = ""; upd(); };
+    function upd() {
+      const vh = innerHeight; let p;
+      if (pinned) {
+        const r = howSec.getBoundingClientRect(), total = Math.max(1, r.height - vh);
+        p = clamp(-r.top / total, 0, 1);
+      } else {
+        const r = hw.getBoundingClientRect(); if (r.top > vh + 100 || r.bottom < -100) return;
+        p = clamp((vh * 0.8 - r.top) / (r.height * 1.1), 0, 1);
+      }
+      const t = Math.round(p * 3 * 200) / 200, key = t + "|" + pinned; if (key === lastKey) return; lastKey = key;
+      const cur = Math.min(2, Math.floor(t));
+      cards.forEach((c, i) => { const done = i < 2 ? t >= i + 1 : t >= 2.97; c.classList.toggle("done", done); c.classList.toggle("act", i === cur && !done); });
+      links.forEach((l, i) => l.style.setProperty("--f", clamp(t - i, 0, 1).toFixed(3)));
+      lab.textContent = `Step ${cur + 1} of 3`; bar.style.width = (p * 100).toFixed(1) + "%";
+    }
+    pinMQ.addEventListener("change", apply); apply();
+    window.ONEERP.onScroll(upd);
   }
 
   /* ---------- clients ---------- */
