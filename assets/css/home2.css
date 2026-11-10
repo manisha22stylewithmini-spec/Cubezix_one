@@ -1160,3 +1160,9 @@ footer.site-footer{background:#fff;margin-top:0}
 
 /* gradient text is clipped to the element box: give italic serif words room for swashes and descenders */
 .t-acc,.h2-title .grad,.nine-head > b .hl,.cta-h .pxf{padding:.16em .14em .26em .14em;margin:0 -.14em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+/* closing CTA: tighter height */
+.h2-cta-card{padding:72px 24px}
+.h2-cta-card p{margin:24px auto 30px}
+.h2-cta-card .cta-eyebrow{margin-bottom:18px}
+@media (max-width:980px){.h2-cta-card{padding:48px 20px}.h2-cta-card p{margin:20px auto 26px}.h2-cta-card .cta-eyebrow{margin-bottom:14px}}
