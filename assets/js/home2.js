@@ -177,6 +177,53 @@
   }
   win.insertAdjacentHTML("afterbegin", '<div class="w-bar"><span class="w-dots"><i></i><i></i><i></i></span><span class="w-url"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span id="w-url">app.cubezix.one/erp</span></span><span class="w-sp"></span></div>');
   stage.insertAdjacentHTML("afterbegin", '<div class="h2-glows" aria-hidden="true">' + PRODUCTS.map((p) => `<i style="--c:${p.c}"></i>`).join("") + "</div>");
+  /* ---------- hero product cards that fly into their tabs on scroll (Steep-style) ---------- */
+  (function heroFlow() {
+    const hero = $(".h2-hero"); if (!hero) return;
+    const big = matchMedia("(min-width: 1280px)"), still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const av2 = (t, c) => `<span class="hf-av" style="--c:${c}">${t}</span>`;
+    const BODY = {
+      erp: `<div class="hf-big">AED 957K</div><small class="hf-sm">Cash position · 3 accounts</small><svg class="hf-bars" viewBox="0 0 120 34" aria-hidden="true">${[10, 16, 13, 20, 18, 26, 23, 31].map((h, i) => `<rect x="${i * 15}" y="${34 - h}" width="9" height="${h}" rx="2.5" fill="${i > 5 ? "#633ADD" : "#3A4CE1"}" opacity="${0.35 + i * 0.08}"/>`).join("")}</svg>`,
+      desk: `<div class="hf-row"><b>12</b><small>open tickets</small></div><div class="hf-meter"><i style="width:78%"></i></div><small class="hf-sm"><em class="hf-dot"></em>98% on time · 2 at risk</small>`,
+      assets: `<div class="hf-row"><b>66</b><small>devices</small></div><div class="hf-chips"><span>42 in use</span><span>6 spare</span><span>3 repair</span></div>`,
+      people: `<div class="hf-avs">${av2("AR", "#80D1D4")}${av2("OK", "#3A4CE1")}${av2("FA", "#633ADD")}${av2("+21", "#E9E8FF")}</div><div class="hf-row"><b>96%</b><small>present today</small></div>`,
+      sign: `<svg class="hf-sig" viewBox="0 0 120 30" fill="none" stroke="#3A4CE1" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 21c8-14 12-14 14-2s6 4 12-8c6-12 8 6 14 6s10-12 18-2 12 4 18-6"/></svg><small class="hf-sm"><em class="hf-ok">✓</em>Contract signed and stamped</small>`,
+    };
+    const wrapEl = document.createElement("div"); wrapEl.className = "hf-wrap"; wrapEl.setAttribute("aria-hidden", "true");
+    wrapEl.innerHTML = PRODUCTS.map((p) => `<div class="hf hf-${p.k}" data-k="${p.k}"><div class="hf-in" style="--c:${p.c}"><div class="hf-h"><i>${TABICON[p.k]}</i><span>${p.name}</span></div>${BODY[p.k] || ""}</div></div>`).join("");
+    hero.insertBefore(wrapEl, hero.querySelector(".wrap"));
+    const cards = $$(".hf", wrapEl), tabEls = $$(".h2-tab", tabs);
+    let geo = [], end = 1, lastE = -1;
+    function measure() {
+      if (!big.matches) return;
+      cards.forEach((c) => (c.style.transform = ""));
+      const hr = hero.getBoundingClientRect();
+      geo = cards.map((c, i) => {
+        const t = tabEls[i] || tabs, tr = t.getBoundingClientRect();
+        const cx = c.offsetLeft + c.offsetWidth / 2, cy = c.offsetTop + c.offsetHeight / 2;
+        return { dx: tr.left - hr.left + tr.width / 2 - cx, dy: tr.top - hr.top + tr.height / 2 - cy };
+      });
+      const st = stage.getBoundingClientRect().top + scrollY;
+      end = Math.max(200, st - innerHeight * 0.45);
+      lastE = -1; frame();
+    }
+    function frame() {
+      if (!big.matches || still || !geo.length) return;
+      const p = clamp(scrollY / end, 0, 1), e = Math.round(p * p * (3 - 2 * p) * 400) / 400;
+      if (e === lastE) return; lastE = e;
+      cards.forEach((c, i) => {
+        const g = geo[i], d = i * 0.035, q = clamp((e - d) / (1 - d), 0, 1);
+        c.style.transform = `translate(${(g.dx * q).toFixed(1)}px,${(g.dy * q).toFixed(1)}px) scale(${(1 - 0.78 * q).toFixed(3)})`;
+        c.style.opacity = q < 0.7 ? 1 : Math.max(0, 1 - (q - 0.7) / 0.3).toFixed(3);
+      });
+      wrapEl.classList.toggle("gone", e >= 1);
+    }
+    window.ONEERP.onScroll(frame);
+    big.addEventListener("change", measure);
+    let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(measure, 150); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(measure, 60));
+    setTimeout(measure, 400);
+  })();
   select(0);
   if (reduce) $$(".h2-tab b").forEach((b) => (b.style.display = "none"));
 
