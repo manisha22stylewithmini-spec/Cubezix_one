@@ -160,9 +160,9 @@
   })();
   (function typeAccent() {
     $$(".h2-head .h2, .ac-head .h2").forEach((h) => {
-      if (h.querySelector(".acc")) return;
+      if (h.querySelector(".t-acc")) return;
       const words = h.textContent.trim().split(/\s+/), n = words.length <= 2 ? 1 : 2;
-      h.innerHTML = words.slice(0, -n).join(" ") + (words.length > n ? " " : "") + `<span class="acc">${words.slice(-n).join(" ")}</span>`;
+      h.innerHTML = words.slice(0, -n).join(" ") + (words.length > n ? " " : "") + `<span class="t-acc">${words.slice(-n).join(" ")}</span>`;
     });
   })();
   /* ---------- closing CTA: WebGL "Waves" shader in the logo colours (port of the 21st.dev ShaderBackground) ---------- */
