@@ -1154,3 +1154,6 @@ footer.site-footer{background:#fff;margin-top:0}
 
 .h2-cta-card{border-radius:40px;overflow:hidden}
 @media (max-width:768px){.h2-cta-card{border-radius:30px}}
+
+.cta-mark{width:1.02em;height:1.02em;margin:-.04em .12em 0}
+.cta-mark svg{height:.7em}
