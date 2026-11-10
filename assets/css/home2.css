@@ -1001,3 +1001,11 @@
 /* Approve buttons: three-colour logo gradient */
 .no-a{background:linear-gradient(115deg,#80D1D4 0%,#3A4CE1 34%,#633ADD 100%);background-size:150% 100%;background-position:0 0;color:#fff;box-shadow:0 8px 16px -8px rgba(58,76,225,.6);transition:transform .2s,background-position .5s var(--ease),box-shadow .3s}
 .no-a:hover{background-position:100% 0;transform:scale(1.05);box-shadow:0 10px 20px -8px rgba(99,58,221,.65)}
+
+/* closing CTA typography: geometric sans, sentence-case eyebrow, big medium-weight title, gradient accent word */
+.h2-cta-card{font-family:"Outfit","Inter",system-ui,sans-serif}
+.h2-cta-card .cta-eyebrow{display:block;font:500 clamp(16px,1.5vw,19px)/1.3 "Outfit",sans-serif;letter-spacing:0;color:rgba(255,255,255,.86);margin-bottom:26px}
+.h2-cta-card .h2{font-family:"Outfit",sans-serif;font-weight:500;font-size:clamp(40px,6vw,80px);line-height:1.04;letter-spacing:-.035em;max-width:12.5em;margin:0 auto;text-wrap:balance}
+.h2-cta-card .cta-acc{background:linear-gradient(95deg,#FFFFFF 0%,#CFF1F2 35%,#C9C4FF 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.h2-cta-card p{font-family:"Outfit",sans-serif;font-weight:400;font-size:clamp(17px,1.5vw,21px);line-height:1.55;letter-spacing:0;max-width:25em;margin:30px auto 40px;color:rgba(255,255,255,.88)}
+.h2-cta-card .btn{font-family:var(--font)}
