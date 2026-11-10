@@ -747,3 +747,23 @@
 @media (prefers-reduced-motion:reduce){.hw-c,.hw-node,.hv-b u{transition:none}.hv-on i{animation:none}}
 
 .hv-who .av,.hv-msg .av{flex:none;border-radius:50%}.hv-who small{white-space:nowrap}
+
+/* how-it-works illustrations */
+.hw-vis{display:block;padding:0;height:178px;border-radius:20px;overflow:hidden;background:linear-gradient(160deg,#E4F8F8,#E9E8FF);border:1px solid rgba(61,75,232,.1)}
+.hw-c:nth-child(2) .hw-vis{background:linear-gradient(160deg,#E9E8FF,#EFE4FF)}
+.hw-c:nth-child(3) .hw-vis{background:linear-gradient(160deg,#EFE4FF,#DDF2F6)}
+.hw-vis svg{display:block;width:100%;height:100%}
+.hw-c:hover .hw-vis svg{transform:scale(1.04)}.hw-vis svg{transition:transform .6s var(--ease)}
+.il-float{animation:ilf 5s ease-in-out infinite}.il-float2{animation:ilf 6.5s ease-in-out -2s infinite}
+@keyframes ilf{50%{transform:translateY(-5px)}}
+.il-rise{animation:ilr 4s ease-in-out infinite}
+@keyframes ilr{50%{transform:translateY(-8px)}}
+.il-flame{transform-origin:160px 108px;animation:ilfl .5s ease-in-out infinite alternate}
+@keyframes ilfl{to{transform:scaleY(1.15)}}
+.il-dash{stroke-dashoffset:0;animation:ildash 1.2s linear infinite}
+@keyframes ildash{to{stroke-dashoffset:-26}}
+.il-fly{animation:ilfly 3s ease-in-out infinite;opacity:0}
+@keyframes ilfly{0%{transform:translate(0,6px);opacity:0}15%{opacity:1}50%{transform:translate(62px,-16px)}85%{opacity:1}100%{transform:translate(124px,2px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.il-float,.il-float2,.il-rise,.il-flame,.il-dash,.il-fly{animation:none}.il-fly{opacity:1}}
+
+.hw-vis{height:168px}
