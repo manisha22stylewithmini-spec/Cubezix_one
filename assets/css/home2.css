@@ -680,3 +680,42 @@
 @media (max-width:1100px){.h2-ind{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:640px){.h2-ind{grid-template-columns:1fr}.h2-ind .ic{min-height:460px}.h2-ind .ic .go{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.ic-chip,.iw-b u,.iw-chart u{animation:none}}
+
+/* ===== nine apps v3: two marquee rows, each card turns into its own fix ===== */
+.h2-trusted{padding:26px 0 44px}
+.nine-sum{display:flex;align-items:center;gap:18px;max-width:880px;margin:0 auto 26px;padding:10px 14px 10px 20px;border-radius:999px;background:#fff;border:1px solid var(--line-2);box-shadow:var(--shadow-sm);font:500 12.5px var(--font);color:var(--ink-2)}
+.ns-c b{font:700 16px var(--font-display);color:#2E9B57;margin-right:4px}.ns-c.y b{color:var(--brand-ink)}
+.ns-bar{flex:1;height:6px;border-radius:6px;background:#EDF0F7;overflow:hidden;min-width:60px}.ns-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5FD6D6,#6D2FE0);border-radius:6px;transition:width .6s var(--ease)}
+.ns-m{white-space:nowrap;min-width:150px;text-align:right}.ns-m b{color:var(--ink)}
+.nine-sum .no-replay{margin:0}
+.nine-sum.all{box-shadow:0 0 0 1px rgba(61,75,232,.3),var(--shadow-sm)}.nine-sum.all .no-replay{opacity:1;pointer-events:auto}
+.nine-rows{overflow:hidden;padding:8px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.nine-rows:hover .nine-in{animation-play-state:paused}
+.nine-rows .nine-track{margin-bottom:14px}
+.nz{position:relative;flex:none;width:360px;height:108px;border-radius:20px;background:#fff;border:1px solid var(--line-2);box-shadow:var(--shadow-sm);overflow:hidden;cursor:pointer;transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .4s,background .4s}
+.nz:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.nz:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.nz-in{display:grid;height:100%}
+.nz-f{grid-area:1/1;display:flex;align-items:center;gap:14px;padding:0 18px}
+.nz .ni{width:42px;height:42px;border-radius:13px;background:var(--bg-2);display:grid;place-items:center;flex:none;color:var(--ink-2)}
+.nz-t{min-width:0;flex:1}
+.nz-t small{display:block;font:500 10.5px var(--mono);letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.nz-t b{display:block;margin-top:5px;font:500 13.5px/1.4 var(--font);color:var(--ink);white-space:normal}
+.nz-f.pain .dot{position:absolute;right:14px;top:14px;width:9px;height:9px;border-radius:50%;background:#E0524A;animation:ndot 1.6s ease-in-out infinite}
+.tapfix{position:absolute;right:12px;bottom:10px;text-decoration:none;font:600 10px var(--font);color:var(--brand-ink);background:var(--brand-soft);border-radius:999px;padding:3px 10px;opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s}
+.nz:not(.ok):hover .tapfix{opacity:1;transform:none}
+.nz-f.fix{clip-path:inset(0 100% 0 0);background:linear-gradient(100deg,#EAF8F0,#F6FCF8)}
+.nz-f.fix .ni{background:#D5F1DF;color:#2E9B57}.nz-f.fix small{color:#2E9B57}
+.nz-f.fix .dn{text-decoration:none;font:600 10.5px var(--font);color:#2E9B57;background:#D5F1DF;border-radius:999px;padding:3px 10px}
+.nz-f.fix .dn.ok{background:#2E9B57;color:#fff}
+.nz.ok{border-color:rgba(46,155,87,.4)}
+.nz.ok .nz-f.fix{clip-path:inset(0 0 0 0);transition:clip-path .75s var(--ease)}
+.nz.ok .pain{opacity:0;transition:opacity .4s .25s}
+.nz.ok::after{content:"";position:absolute;top:0;bottom:0;width:60px;left:0;background:linear-gradient(100deg,transparent,rgba(95,214,214,.55),transparent);transform:translateX(-80px);animation:nzbeam .8s var(--ease) 1 forwards;pointer-events:none}
+@keyframes nzbeam{to{transform:translateX(420px)}}
+.nz.ok:has(.no-a){border-color:rgba(61,75,232,.4)}.nz.ok:has(.no-a) .nz-f.fix{background:linear-gradient(100deg,#ECEEFF,#F7F7FF)}
+.nz.ok:has(.no-a) .ni{background:var(--brand-soft);color:var(--brand-ink)}.nz.ok:has(.no-a) small{color:var(--brand-ink)}
+@media (max-width:760px){.nine-sum{border-radius:22px;flex-wrap:wrap;gap:10px 14px}.ns-bar{order:5;flex-basis:100%}.ns-m{min-width:0;text-align:left;flex:1}.nz{width:290px;height:112px}}
+@media (prefers-reduced-motion:reduce){.nz.ok::after{animation:none}}
+
+.nz{text-align:left}
