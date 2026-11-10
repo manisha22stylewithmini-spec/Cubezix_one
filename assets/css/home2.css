@@ -1137,3 +1137,7 @@
 .h2-cta-card > canvas.cta-shader{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
 .h2-cta-card.has-shader::before{z-index:1;opacity:.5}
 .h2-cta-card > *:not(canvas){position:relative;z-index:2}
+
+/* CTA accent word: same treatment as the section titles - italic serif gradient, no fill, no pixel font */
+.cta-h .pxf{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;text-transform:none;font-size:1.1em;letter-spacing:-.015em;line-height:.9;padding:0 .05em 0 0;margin:0;background:linear-gradient(95deg,#CFF1F2 0%,#FFFFFF 45%,#D9D3FF 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:none;text-shadow:none}
+.cta-h .pxf::before,.cta-h .pxf::after{display:none;content:none}
