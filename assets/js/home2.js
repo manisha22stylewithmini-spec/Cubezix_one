@@ -220,8 +220,26 @@
   $("#feat-grid").innerHTML = ORDER.map((k) => FEAT[k]).map((f, i) => `<div class="fc ${f[4]} rv" style="--d:${(i % 3) * 0.06}s">${f[5]}<div class="fh"><div class="fi">${ICX[f[0]]}</div>${f[3] ? `<span class="from">${f[3]}</span>` : ""}</div><h3>${f[1]}</h3><p>${f[2]}</p></div>`).join("");
 
   /* ---------- how it works ---------- */
+  const hwv = [
+    `<div class="hv-demo"><div class="hv-who"><span class="av" style="--c:#6D2FE0">DK</span><span><b>Daniel, your guide</b><small>Tue 10:00 · 45 min</small></span><u>Booked</u></div><div class="hv-tick"><i></i>Your modules</div><div class="hv-tick"><i></i>Your approvals</div><div class="hv-tick"><i></i>Your own data</div></div>`,
+    `<div class="hv-mig"><div class="hv-b"><span>Customers</span><i><u style="--w:100%"></u></i><b>1,240</b></div><div class="hv-b"><span>Stock</span><i><u style="--w:100%"></u></i><b>3,860</b></div><div class="hv-b"><span>Balances</span><i><u style="--w:86%"></u></i><b>86%</b></div><div class="hv-note">142 duplicates merged · VAT and roles set</div></div>`,
+    `<div class="hv-live"><div class="hv-msg"><span class="av" style="--c:#6D2FE0">DK</span><p>Morning Hana. Month-end close is set up, want a quick look together?</p></div><div class="hv-on"><i></i>Daniel is online<em>replies in minutes</em></div></div>`,
+  ];
   const STEPS = [["Walk through it", "A demo shaped around your company, your modules and your own processes, not a generic tour.", "Day 1"], ["We move you in", "We bring across customers, stock and balances, merge the duplicates, and set up VAT, roles and approvals with you.", "Week 1 to [x]"], ["Go live, and after", "Your dedicated contact stays on after launch, so every question goes to one person who knows your setup.", "Then, every day"]];
-  $("#steps").innerHTML = STEPS.map((s, i) => `<div class="st rv" style="--d:${i * 0.08}s"><div class="n">0${i + 1}</div><h3>${s[0]}</h3><p>${s[1]}</p><span class="chip2">${s[2]}</span></div>`).join("");
+  const hw = $("#steps");
+  hw.innerHTML = `<div class="hw-line" aria-hidden="true"><i></i>${STEPS.map((_, i) => `<b class="hw-node" data-i="${i}">${i + 1}</b>`).join("")}</div><div class="hw-cards">${STEPS.map((x, i) => `<article class="hw-c rv" style="--d:${i * 0.08}s"><span class="hw-chip">${x[2]}</span><h3>${x[0]}</h3><p>${x[1]}</p><div class="hw-vis">${hwv[i]}</div></article>`).join("")}</div>`;
+  {
+    const nodes = $$(".hw-node", hw), cards = $$(".hw-c", hw); let lastP = -1;
+    const upd = () => {
+      const r = hw.getBoundingClientRect(), vh = innerHeight;
+      if (r.top > vh + 100 || r.bottom < -100) return;
+      const pr = Math.round(clamp((vh * 0.72 - r.top) / (r.height * 0.85), 0, 1) * 200) / 200;
+      if (pr === lastP) return; lastP = pr;
+      hw.style.setProperty("--p", pr);
+      nodes.forEach((n, i) => { const on = pr >= i / (nodes.length - 1) - 0.02; n.classList.toggle("on", on); cards[i].classList.toggle("on", on); });
+    };
+    window.ONEERP.onScroll(upd); upd();
+  }
 
   /* ---------- clients ---------- */
   const Q = [["From the initial IT consultation to the seamless implementation, CubeZix demonstrated a deep understanding of our unique IT infrastructure needs. Their expertise in network security, cloud computing and infrastructure management has significantly enhanced our operational efficiency.", "Samarth V", "Assistant Finance Manager, Al Rama International FZCO", "#7896B0"], ["CubeZix's responsiveness is impressive; they are always quick to address any issues that arise, minimizing downtime and keeping our operations seamless. Beyond maintenance, they offer valuable advice and proactive solutions.", "Tarek Nachnouchi", "Chief Product Officer, Arabyads", "#0AA7A4"], ["CubeZix's proactive maintenance approach is a standout feature. They regularly monitor our systems, perform routine check-ups, and provide detailed reports on our IT health.", "Aman Nasser", "Director, International Textile Exports Ltd", "#C670AB"]];
