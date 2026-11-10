@@ -997,3 +997,7 @@
 /* nine apps: room above and below each row so lifted cards and shadows are not clipped */
 .nine-rows{padding:6px 0}
 .nine-rows .nine-track{padding:12px 0 14px;margin-bottom:0}
+
+/* Approve buttons: three-colour logo gradient */
+.no-a{background:linear-gradient(115deg,#80D1D4 0%,#3A4CE1 34%,#633ADD 100%);background-size:150% 100%;background-position:0 0;color:#fff;box-shadow:0 8px 16px -8px rgba(58,76,225,.6);transition:transform .2s,background-position .5s var(--ease),box-shadow .3s}
+.no-a:hover{background-position:100% 0;transform:scale(1.05);box-shadow:0 10px 20px -8px rgba(99,58,221,.65)}
