@@ -966,3 +966,5 @@
 .h2-sec.tint{background:linear-gradient(180deg,#EEF0FF,#F4F5FF 40%,#EBEEFF)}
 .h2-stats{background:radial-gradient(700px 320px at 15% 0%,rgba(95,214,214,.32),transparent 70%),radial-gradient(640px 320px at 92% 100%,rgba(109,47,224,.5),transparent 70%),linear-gradient(135deg,#1B1F7A 0%,#2B2FA0 55%,#3B2BB8 100%)}
 .h2-pill{border-color:#DCDFFD}
+
+.h2-trusted{padding:72px 0 64px}
