@@ -813,3 +813,29 @@
 @keyframes fswap{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (max-width:760px){.fm-ans{grid-template-columns:1fr;gap:16px;padding:22px}.fa-n{justify-items:start;grid-auto-flow:column;justify-content:start;align-items:center;gap:12px}.fm-c{width:300px}}
 @media (prefers-reduced-motion:reduce){.fm-in{animation:none}.fm{overflow-x:auto}.fm-ans.swap .fa-b,.fm-ans.swap .fa-n{animation:none}}
+
+/* ===== FAQ v3: connected accordion card ===== */
+.ac-wrap{max-width:760px;margin:0 auto;text-align:left}
+.ac-head .h2{margin:14px 0 12px;font-size:clamp(32px,4.4vw,52px)}
+.ac-head p{color:var(--ink-2);font-size:16px;line-height:1.6;max-width:36em}
+.ac{margin-top:32px;background:#fff;border:1px solid var(--line-2);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+.ac-i{border-top:1px solid var(--line-2);transition:background .35s}
+.ac-i:first-child{border-top:0}
+.ac-i.open{background:linear-gradient(180deg,#F6F7FF,#fff)}
+.ac-i h3{margin:0}
+.ac-t{display:flex;align-items:center;gap:16px;width:100%;padding:20px 24px;text-align:left;font:600 16px/1.4 var(--font-display);letter-spacing:-.02em;color:var(--ink)}
+.ac-n{font:500 11px var(--mono);color:var(--muted);transition:color .3s}
+.ac-i.open .ac-n{color:var(--brand-ink)}
+.ac-q{flex:1}
+.ac-ch{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#F1F3FA;color:var(--ink-2);transition:transform .45s var(--ease),background .3s,color .3s;flex:none}
+.ac-t:hover .ac-ch{background:var(--brand-soft);color:var(--brand-ink)}
+.ac-i.open .ac-ch{transform:rotate(180deg);background:linear-gradient(135deg,#3B4BE8,#6D2FE0);color:#fff}
+.ac-c{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
+.ac-c>div{overflow:hidden}
+.ac-c p{margin:0;padding:0 24px 22px 64px;font-size:15px;line-height:1.7;color:var(--ink-2);opacity:0;transform:translateY(-4px);transition:opacity .35s,transform .45s var(--ease)}
+.ac-i.open .ac-c{grid-template-rows:1fr}
+.ac-i.open .ac-c p{opacity:1;transform:none;transition-delay:.1s}
+.ac-foot{margin-top:20px;font-size:14.5px;color:var(--ink-2)}
+.ac-foot a{color:var(--brand-ink);font-weight:600;border-bottom:1px solid currentColor}
+@media (max-width:640px){.ac-t{padding:16px 16px;gap:12px;font-size:15px}.ac-c p{padding:0 16px 18px 16px}.ac-n{display:none}}
+@media (prefers-reduced-motion:reduce){.ac-c,.ac-c p,.ac-ch{transition:none}}

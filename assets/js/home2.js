@@ -250,19 +250,14 @@
 
   /* ---------- faq ---------- */
   const FAQ = [["How long does it take to go live?", "It depends on your size and modules. Most companies go live in [timeframe]. Your dedicated contact plans every step with you."], ["Can we start with just one product?", "Yes. Start with the ERP, the helpdesk or HR on their own, and add the rest later. They share records when you run them together."], ["Can you move our data from our current system?", "Yes. We migrate your customers, items and balances, and clean up duplicates along the way, so you start with one clean record for everything."], ["Does it handle UAE VAT, WPS and e-invoicing?", "Yes. VAT at 5% is built in, WPS salary files are prepared from the payroll run, and e-invoicing is supported as the UAE rules come into force."], ["Where is our data stored, and is it secure?", "[Hosting location and security details.] Access is controlled with roles, two-factor login and a full audit trail."], ["What does our dedicated contact do?", "One person at CubeZix who knows your setup, from your first demo through go-live and beyond."]];
-  const FICON = [DI.clock, DI.box, DI.doc, DI.wallet, ICX.shield || DI.check, DI.users];
-  const fcard = (f, i) => `<button class="fm-c" type="button" data-i="${i}" aria-pressed="false"><span class="fm-i">${FICON[i]}</span><span class="fm-t"><b>${f[0]}</b><small>${f[1]}</small></span><span class="fm-go">${DI.arrow}</span></button>`;
-  const frow = (ids, rev) => `<div class="fm-track${rev ? " rev" : ""}"><div class="fm-in">${[...ids, ...ids].map((i) => fcard(FAQ[i], i)).join("")}</div></div>`;
-  const fRows = $("#faq-rows"), fAns = $("#faq-ans");
-  fRows.innerHTML = frow([0, 1, 2]) + frow([3, 4, 5], true);
-  function showFaq(i) {
-    $$(".fm-c", fRows).forEach((c) => { const on = +c.dataset.i === i; c.classList.toggle("on", on); c.setAttribute("aria-pressed", on); });
-    fAns.innerHTML = `<div class="fa-n"><span class="fa-ic">${FICON[i]}</span><small>Question ${i + 1} of ${FAQ.length}</small></div><div class="fa-b"><h3>${FAQ[i][0]}</h3><p>${FAQ[i][1]}</p></div><a class="btn btn-primary" href="book-a-demo.html">Ask in a demo</a>`;
-    fAns.classList.remove("swap"); void fAns.offsetWidth; fAns.classList.add("swap");
-  }
-  fRows.addEventListener("click", (e) => { const c = e.target.closest(".fm-c"); if (c) showFaq(+c.dataset.i); });
-  showFaq(0);
-  new IntersectionObserver(([e]) => fRows.classList.toggle("is-off", !e.isIntersecting)).observe(fRows);
+  const acEl = $("#faq-list");
+  acEl.innerHTML = FAQ.map((f, i) => `<div class="ac-i${i === 0 ? " open" : ""}"><h3><button class="ac-t" type="button" id="acq${i}" aria-expanded="${i === 0}" aria-controls="aca${i}"><span class="ac-n">0${i + 1}</span><span class="ac-q">${f[0]}</span><span class="ac-ch">${DI.chev}</span></button></h3><div class="ac-c" id="aca${i}" role="region" aria-labelledby="acq${i}"><div><p>${f[1]}</p></div></div></div>`).join("");
+  acEl.addEventListener("click", (e) => {
+    const b = e.target.closest(".ac-t"); if (!b) return;
+    const item = b.closest(".ac-i"), was = item.classList.contains("open");
+    $$(".ac-i", acEl).forEach((x) => { x.classList.remove("open"); $(".ac-t", x).setAttribute("aria-expanded", "false"); });
+    if (!was) { item.classList.add("open"); b.setAttribute("aria-expanded", "true"); }
+  });
 
     window.ONEERP.observeReveal();
   }
