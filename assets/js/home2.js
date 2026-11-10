@@ -121,11 +121,45 @@
 
   function below() {
   /* ---------- nine apps marquee ---------- */
-  const NINE = [["mail", "Mail", "Re: can you confirm the PO number?"], ["bank", "Bank portal", "Card limit 85% used"], ["chat", "Chat", "Fatima: visa photos needed by noon"], ["cart", "Point of sale", "Refund needs a manager PIN"], ["doc", "Spreadsheet", "Cash flow: September tab updated"], ["list", "Tasks", "4 tasks due today"], ["inbox", "Drive", "3 people edited Tender response"], ["mail", "Old accounting app", "41 bank lines unmatched"], ["cart", "Point of sale", "Price change not synced"]];
-  const chip = (n, i) => `<div class="nchip${i % 4 === 1 ? " lit" : ""}"><span>${ICX[n[0]] || ICX.inbox}</span><div><small>${n[1]}</small><b>${n[2]}</b></div></div>`;
-  const track = (arr) => `<div class="nine-in">${[...arr, ...arr].map(chip).join("")}</div>`;
-  new IntersectionObserver(([e]) => $(".h2-nine").classList.toggle("is-off", !e.isIntersecting)).observe($(".h2-nine"));
-  $("#nine-a").innerHTML = track(NINE); $("#nine-b").innerHTML = track([...NINE].reverse());
+  const NINE = [
+    ["mail", "Mail", "Re: can you confirm the PO number?", "PO-2026-0418 is attached to the thread and the supplier replied", "a"],
+    ["bank", "Bank portal", "Card limit 85% used", "Top-up request drafted for the finance lead", "y"],
+    ["chat", "Chat", "Fatima: visa photos needed by noon", "Request filed on Fatima's record, reminder set", "a"],
+    ["cart", "Point of sale", "Refund needs a manager PIN", "Refund shown with who asked and why, approve in one tap", "y"],
+    ["doc", "Spreadsheet", "Cash flow: September tab updated", "Cash position now updates itself in Finance", "a"],
+    ["list", "Tasks", "4 tasks due today", "Folded into one daily digest at 9:00", "a"],
+    ["inbox", "Drive", "3 people edited Tender response", "One version, every edit tracked on the record", "a"],
+    ["mail", "Old accounting app", "41 bank lines unmatched", "38 matched by rules, 3 left for you to confirm", "y"],
+    ["cart", "Point of sale", "Price change not synced", "Price list pushed to every till automatically", "a"],
+  ];
+  const nGrid = $("#nine-grid"), nList = $("#no-list"), nMsg = $("#no-msg"), nBar = $("#no-bar"), nBoard = $(".nine-board");
+  $("#no-logo").innerHTML = window.CZ_NAV.mark(22);
+  nGrid.innerHTML = NINE.map((n, i) => `<button class="nc" type="button" data-i="${i}" aria-label="${n[1]}: ${n[2]}"><span class="nc-in"><span class="nc-f pain"><i class="ni">${ICX[n[0]] || ICX.inbox}</i><span><small>${n[1]}</small><b>${n[2]}</b></span><em class="dot"></em></span><span class="nc-f fix"><i class="ni">${ICX.ok}</i><span><small>${n[4] === "a" ? "Handled by a rule" : "Needs you"}</small><b>${n[3]}</b></span></span></span></button>`).join("");
+  const done = new Set(); let nTimer = null, nVisible = false, reduceN = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function nCount() {
+    let au = 0, yo = 0; done.forEach((i) => (NINE[i][4] === "a" ? au++ : yo++));
+    $("#n-auto").textContent = au; $("#n-you").textContent = yo; nBar.style.width = (done.size / NINE.length) * 100 + "%";
+    if (done.size === NINE.length) { nBoard.classList.add("all"); nMsg.innerHTML = `<b>${NINE.length} messages, ${au} handled by rules.</b> ${yo} are yours to decide.`; stopN(); }
+    else { nBoard.classList.remove("all"); nMsg.textContent = done.size ? `${NINE.length - done.size} more to sort…` : "Watching your apps…"; }
+  }
+  function resolve(i) {
+    if (done.has(i)) return; done.add(i);
+    const c = nGrid.children[i]; c.classList.add("ok"); c.setAttribute("aria-pressed", "true");
+    const n = NINE[i], y = n[4] === "y";
+    $(".no-empty", nList)?.remove();
+    nList.insertAdjacentHTML("afterbegin", `<div class="no-r ${y ? "y" : "a"}"><i class="ni">${ICX[n[0]] || ICX.inbox}</i><span><b>${n[3]}</b><small>${n[1]}</small></span>${y ? '<button class="no-a" type="button">Approve</button>' : "<u>Done</u>"}</div>`);
+    while (nList.children.length > 4) nList.lastElementChild.remove();
+    nCount();
+  }
+  function nextN() { const i = NINE.findIndex((_, k) => !done.has(k)); if (i < 0) return stopN(); resolve(i); }
+  function startN() { if (nTimer || done.size === NINE.length) return; nTimer = setInterval(nextN, 1500); }
+  function stopN() { clearInterval(nTimer); nTimer = null; }
+  function resetN() { stopN(); done.clear(); nList.innerHTML = '<p class="no-empty">Messages from your nine apps land here, sorted for you.</p>'; [...nGrid.children].forEach((c) => { c.classList.remove("ok"); c.removeAttribute("aria-pressed"); }); nCount(); setTimeout(() => { if (nVisible) startN(); }, 600); }
+  nGrid.addEventListener("click", (e) => { const c = e.target.closest(".nc"); if (c) resolve(+c.dataset.i); });
+  nList.addEventListener("click", (e) => { const b = e.target.closest(".no-a"); if (b) { b.outerHTML = '<u class="ok">Approved</u>'; } });
+  $("#no-replay").addEventListener("click", resetN);
+  if (reduceN) NINE.forEach((_, i) => resolve(i));
+  else new IntersectionObserver(([e]) => { nVisible = e.isIntersecting; if (nVisible) startN(); else stopN(); }, { threshold: 0.35 }).observe(nBoard);
 
   /* ---------- stats count-up ---------- */
   $$(".h2-stat b").forEach((b) => window.ONEERP.inView(b, () => { const to = +b.dataset.to, suf = b.dataset.suf || "", t0 = performance.now(); (function tick(t) { const k = clamp((t - t0) / 1400); b.textContent = Math.round(to * ease(k)).toLocaleString("en-US") + suf; if (k < 1) requestAnimationFrame(tick); })(t0); }, 0.6));
