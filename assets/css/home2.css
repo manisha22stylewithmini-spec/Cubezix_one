@@ -1182,3 +1182,9 @@ footer.site-footer{background:#fff;margin-top:0}
 .hf-desk{right:max(14px,calc(50% - 760px))}
 .hf-assets{left:max(34px,calc(50% - 700px))}
 .hf-people{right:max(34px,calc(50% - 700px))}
+
+/* stats band: same animated three-colour background, full width, same soft corners as the closing CTA */
+.h2-stats{position:relative;overflow:hidden;border-radius:40px;padding:84px 0 44px}
+.h2-stats > canvas.cta-shader{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
+.h2-stats > *:not(canvas){position:relative;z-index:2}
+@media (max-width:768px){.h2-stats{border-radius:30px}}

@@ -162,8 +162,8 @@
     });
   })();
   /* ---------- closing CTA: WebGL "Waves" shader in the logo colours (port of the 21st.dev ShaderBackground) ---------- */
-  (function ctaShader() {
-    const card = $(".h2-cta-card"); if (!card) return;
+  function shaderBg(card) {
+    if (!card) return;
     const canvas = document.createElement("canvas"); canvas.className = "cta-shader"; canvas.setAttribute("aria-hidden", "true");
     const gl = canvas.getContext("webgl", { antialias: false, premultipliedAlpha: false }); if (!gl) return;
     card.prepend(canvas); card.classList.add("has-shader");
@@ -205,7 +205,8 @@
     new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) go(); else if (raf) { cancelAnimationFrame(raf); raf = 0; } }, { rootMargin: "100px" }).observe(card);
     document.addEventListener("visibilitychange", () => { visible = document.visibilityState === "visible"; if (visible) go(); });
     addEventListener("resize", () => { if (still) { raf = 0; go(); } });
-  })();
+  }
+  shaderBg($(".h2-cta-card")); shaderBg($(".h2-stats"));
   const stage = $(".h2-stage");
   stage.insertAdjacentHTML("afterbegin", `<div class="h2-float f1" aria-hidden="true"><i class="ok"></i><div><b>Payroll sent</b><small>WPS file · 8 employees</small></div></div><div class="h2-float f2" aria-hidden="true"><i class="warn"></i><div><b>Visa expires in 30 days</b><small>Fatima · HR</small></div></div><div class="h2-float f3" aria-hidden="true"><i class="brand"></i><div><b>1 decision needs you</b><small>PO-2026-0418</small></div></div>`);
   [$(".h2-stage")].forEach((el) => new IntersectionObserver(([e]) => el.classList.toggle("is-off", !e.isIntersecting), { rootMargin: "100px" }).observe(el));
