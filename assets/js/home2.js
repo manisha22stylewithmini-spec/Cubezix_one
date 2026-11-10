@@ -191,7 +191,16 @@
   /* ---------- industries ---------- */
   const STRONG = { Trading: "#C8CE85", Retail: "#F2AFDB", Manufacturing: "#B4CBDF", Services: "#D6B8F9" };
   const IND = { Trading: ["Buy abroad, clear at the port, sell on. Every shipment costed from the supplier's invoice to the customer's payment.", "1 landed cost to confirm"], Retail: ["Several stores, one stock. Every branch's sales and shelves in view, before the busy weekend, not after it.", "1 store running short"], Manufacturing: ["Know what each product really costs, and which missing part will stop the line, while there is still time to order it.", "1 work order waiting for a part"], Services: ["Hours, budgets and invoices on every project, so the margin is protected while the work is still running.", "1 project heading over budget"] };
-  $("#ind-cards").innerHTML = INDUSTRIES.map((n, i) => `<a class="ic rv" href="${n[2]}" style="--p:${n[5]};--d:${n[6]};--b:${n[4]};--s:${STRONG[n[0]]};--dd:${i * 0.06}s;transition-delay:var(--dd)"><span class="tile">${n[0][0]}</span><h3>${n[0]}</h3><p>${IND[n[0]][0]}</p><div class="metric"><i>1</i>${IND[n[0]][1]}</div><span class="go">Read the guide ${IC.arrow}</span></a>`).join("");
+  const iwin = (title, body) => `<div class="ic-win"><div class="ic-bar"><i></i><i></i><i></i><span>${title}</span></div><div class="ic-body">${body}</div></div>`;
+  const irw = (l, r, cls = "") => `<div class="iw-r ${cls}"><span>${l}</span><b>${r}</b></div>`;
+  const ibar = (l, v, low) => `<div class="iw-b${low ? " low" : ""}"><span>${l}</span><i><u style="--w:${v}%"></u></i><b>${v}%</b></div>`;
+  const VIS = {
+    Trading: [iwin("SHP-0412 · landed cost", irw("Supplier invoice", "AED 38,400") + irw("Freight", "4,120") + irw("Customs and port", "3,980") + `<div class="iw-stack"><u style="--w:82%"></u><u style="--w:9%"></u><u style="--w:9%"></u></div>` + irw("Landed cost", "AED 46,500", "tot")), "1 landed cost to confirm"],
+    Retail: [iwin("Stock by store", ibar("Dubai Mall", 82) + ibar("Abu Dhabi", 64) + ibar("Sharjah", 18, true) + ibar("Ajman", 71)), "1 store running short"],
+    Manufacturing: [iwin("WO-218 · Cargo trolley", `<div class="iw-s ok"><i></i>Frame welded<em>Done</em></div><div class="iw-s ok"><i></i>Motor fitted<em>Done</em></div><div class="iw-s no"><i></i>Control board<em>Missing</em></div><div class="iw-s"><i></i>Final test<em>Waiting</em></div>`), "1 work order waiting for a part"],
+    Services: [iwin("Project budget · Marina fit-out", `<div class="iw-chart"><u style="--h:34%"></u><u style="--h:48%"></u><u style="--h:57%"></u><u style="--h:71%"></u><u style="--h:88%"></u><u class="hot" style="--h:104%"></u></div>` + irw("Spent", "AED 126K of 120K", "bad") + irw("Margin", "22%")), "1 project heading over budget"],
+  };
+  $("#ind-cards").innerHTML = INDUSTRIES.map((n, i) => `<a class="ic rv" href="${n[2]}" style="--p:${n[5]};--d:${n[6]};--b:${n[4]};--s:${STRONG[n[0]]};--dd:${i * 0.06}s;transition-delay:var(--dd)"><div class="ic-top"><span class="tile">${n[0][0]}</span><span class="go">Read the guide ${IC.arrow}</span></div><h3>${n[0]}</h3><p>${IND[n[0]][0]}</p><div class="ic-vis">${VIS[n[0]][0]}<div class="ic-chip"><i></i>${VIS[n[0]][1]}</div></div></a>`).join("");
 
   /* ---------- features ---------- */
   const mrow = (a, b2, tag) => `<div class="mv-row"><span>${a}</span><em>${b2 || ""}</em>${tag || ""}</div>`;
