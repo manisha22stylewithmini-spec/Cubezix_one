@@ -993,3 +993,7 @@
 .h2-tab:hover{background:rgba(58,76,225,.06)}
 .h2-tab.on:hover{background:var(--bg)}
 @media (max-width:768px){.h2-tabs{padding:5px;border-radius:18px}}
+
+/* nine apps: room above and below each row so lifted cards and shadows are not clipped */
+.nine-rows{padding:6px 0}
+.nine-rows .nine-track{padding:12px 0 14px;margin-bottom:0}
