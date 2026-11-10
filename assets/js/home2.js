@@ -240,9 +240,9 @@
   const STEPS = [["Walk through it", "A demo shaped around your company, your modules and your own processes, not a generic tour.", "Day 1"], ["We move you in", "We bring across customers, stock and balances, merge the duplicates, and set up VAT, roles and approvals with you.", "Week 1 to [x]"], ["Go live, and after", "Your dedicated contact stays on after launch, so every question goes to one person who knows your setup.", "Then, every day"]];
   const hw = $("#steps"), howSec = $("#how");
   const HCHK = "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg>", HARR = "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg>";
-  hw.innerHTML = `<div class="hx-prog"><span id="hx-lab">Step 1 of 3</span><i><u id="hx-bar"></u></i></div><div class="hx-cards">${STEPS.map((x, i) => `<article class="hx-c"><div class="hx-top"><span class="hx-ic">${HWI[i]}</span><span class="hx-n">Step 0${i + 1}</span><span class="hx-ck">${HCHK}</span></div><h3>${x[0]}</h3><p>${x[1]}</p><span class="hx-chip">${x[2]}</span>${i < 2 ? `<span class="hx-link"><i></i><b>${HARR}</b></span>` : ""}</article>`).join("")}</div>`;
+  hw.innerHTML = `<div class="hx-cards">${STEPS.map((x, i) => `<article class="hx-c"><div class="hx-top"><span class="hx-ic">${HWI[i]}</span><span class="hx-n">Step 0${i + 1}</span><span class="hx-ck">${HCHK}</span></div><h3>${x[0]}</h3><p>${x[1]}</p><span class="hx-chip">${x[2]}</span>${i < 2 ? `<span class="hx-link"><i></i><b>${HARR}</b></span>` : ""}</article>`).join("")}</div>`;
   {
-    const cards = $$(".hx-c", hw), links = $$(".hx-link", hw), lab = $("#hx-lab"), bar = $("#hx-bar");
+    const cards = $$(".hx-c", hw), links = $$(".hx-link", hw);
     const pinMQ = matchMedia("(min-width: 901px) and (min-height: 620px)");
     let pinned = false, lastKey = "";
     const apply = () => { pinned = pinMQ.matches && !matchMedia("(prefers-reduced-motion: reduce)").matches; howSec.classList.toggle("hw-pin", pinned); lastKey = ""; upd(); };
@@ -259,7 +259,6 @@
       const cur = Math.min(2, Math.floor(t));
       cards.forEach((c, i) => { const done = i < 2 ? t >= i + 1 : t >= 2.97; c.classList.toggle("done", done); c.classList.toggle("act", i === cur && !done); });
       links.forEach((l, i) => l.style.setProperty("--f", clamp(t - i, 0, 1).toFixed(3)));
-      lab.textContent = `Step ${cur + 1} of 3`; bar.style.width = (p * 100).toFixed(1) + "%";
     }
     pinMQ.addEventListener("change", apply); apply();
     window.ONEERP.onScroll(upd);

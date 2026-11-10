@@ -953,3 +953,5 @@
   .hx-link i{display:none}
 }
 @media (prefers-reduced-motion:reduce){.hx-c,.hx-c::before,.hx-ic,.hx-ck{transition:none}}
+
+.hx-prog{display:none}
