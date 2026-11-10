@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ONEERP · The one thing that needs you</title>
+<meta name="description" content="ONEERP runs finance, HR, payroll, inventory, sales, CRM, procurement and operations in one cloud platform, and only asks for you when the decision is yours.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="oneerp">
+
+<!-- 1 · HERO -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <h1 class="h1 rv">Everything in your company. One thing that needs you.</h1>
+      <p class="lead rv" style="--d:.1s">ONEERP runs finance, HR, payroll, inventory, sales, CRM, procurement and operations in one cloud platform, and only asks for you when the decision is yours.</p>
+      <div class="cta rv" style="--d:.2s"><a class="btn btn-primary" href="book-a-demo.html">Book a demo</a><a class="ulink" href="#approve-me" id="clear-link">Clear the one thing</a></div>
+    </div>
+    <div class="hero-card rv" style="--d:.15s">
+      <div class="card" id="po">
+        <div class="ticket-head">
+          <span class="ticket-ico" style="background:#EEF1F8"><span class="pill1 dark" style="width:18px;height:18px;font-size:10px">1</span></span>
+          <div><div class="ticket-meta">ONEERP <span class="mono">09:42</span></div><div class="ticket-title">Purchase order <span class="mono">PO-2026-0418</span></div></div>
+          <span class="needs" id="po-needs">Needs you <i class="pill1">1</i></span>
+        </div>
+        <div class="rows">
+          <div class="row"><span class="k">Supplier</span><span class="v">Gulf Pack Supplies</span></div>
+          <div class="row"><span class="k">Amount</span><span class="v mono" id="po-amt">AED 48,250.00</span></div>
+          <div class="row"><span class="k">Budget</span><span class="v warn" id="po-budget"></span></div>
+          <div class="row"><span class="k">Requested by</span><span class="v" id="po-req"></span></div>
+        </div>
+        <div class="card-foot" id="po-foot"><button class="btn btn-dark" id="approve">Approve <kbd>A</kbd></button><button class="btn-ghost" style="font-size:14px;font-weight:500">Review</button></div>
+      </div>
+      <div class="card po-after hide" id="po-after"></div>
+      <div class="card payroll-peek hide" id="po-peek"><div class="ticket-head" style="padding:14px 20px"><div class="ticket-title" style="font-size:14px">Payroll</div><span class="needs">Needs you <i class="pill1">1</i></span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · TRUST -->
+<section class="trust">
+  <div class="wrap">
+    <p class="strip rv">Built for UAE businesses in <b>Trading</b> · <b>Retail</b> · <b>Manufacturing</b> · <b>Services</b></p>
+    <p class="statement rv"><b>5+</b> years building software in the UAE. <b>20+</b> projects delivered. <b>1</b> dedicated contact for every client.</p>
+  </div>
+</section>
+
+<!-- 3 · NINE APPS → SORT -->
+<section class="sort" id="sort" data-theme="dark-start">
+  <div class="stage">
+    <div class="dark-layer" data-theme="dark">
+      <div class="wrap">
+        <div>
+          <h2 class="h2">Your company talks to you through nine apps.</h2>
+          <p class="sub">Most of it isn't for you.</p>
+          <div class="unread"><div class="lbl">UNREAD</div><div class="odo" id="odo"></div></div>
+          <a class="see" href="#sort-end">See what ONEERP does with it</a>
+        </div>
+        <div></div>
+      </div>
+    </div>
+    <div class="light-layer" id="light">
+      <div class="wrap">
+        <h2 class="h2">ONEERP sorts it all.<br>You see the one thing.</h2>
+        <p class="lead">Rules handle the routine. Updates wait in a digest. Only decisions reach you.</p>
+        <div class="cols3" id="cols3">
+          <div class="col3" id="c-rules"><div class="cap">Handled by your rules</div><div class="well" id="well-rules"><div class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="count" data-to="214">0</span></div><div class="under">handled automatically by your rules</div></div></div>
+          <div class="col3" id="c-fyi"><div class="cap">FYI</div><div class="well" id="well-fyi"><div class="big"><span class="count" data-to="37">0</span></div><div class="under">updates in today's digest</div></div></div>
+          <div class="col3 need" id="c-need"><div class="cap">Needs you</div><div class="well"><div class="mini"><div class="ttl"><span class="pill1 dark" style="width:18px;height:18px;font-size:9px">1</span><b>Payroll</b> <span class="mono" style="font-size:10px">09:41</span><span class="needs" style="margin-left:auto;font-size:11px">Needs you <i class="pill1" style="width:20px;height:20px;font-size:11px">1</i></span></div><div class="txt"><b>1 employee missing bank details</b>WPS run due 25 Oct</div><div style="display:flex;align-items:center;gap:10px;margin-left:26px;font-size:11px;color:var(--muted)">Requested by <span id="maria"></span></div><button class="btn-review">Review</button></div></div></div>
+        </div>
+        <p class="fine fine-note">Example figures</p>
+      </div>
+    </div>
+    <div id="flyers"></div>
+  </div>
+</section>
+<div id="sort-end"></div>
+
+<!-- 4 · WORKFLOWS -->
+<section class="wf" id="wf">
+  <div class="stage">
+    <div class="wrap">
+      <div class="head"><h2 class="h2">Every task arrives ready.<br>You just decide.</h2><p>Three everyday workflows, exactly as they run in ONEERP.</p></div>
+      <div class="grid">
+        <div class="wf-list" id="wf-list">
+          <div class="wf-item on" data-i="0"><h3>Payroll</h3><div class="more"><div><p>Fix one employee, then run the WPS payroll.</p><div class="steps"><span class="stepno">Step 1 of 4 · Missing bank details</span><ol></ol></div></div></div></div>
+          <div class="wf-item" data-i="1"><h3>Sales</h3><div class="more"><div><p>One record moves from quote to payment. Nobody types it twice.</p><div class="steps"><span class="stepno"></span><ol></ol></div></div></div></div>
+          <div class="wf-item" data-i="2"><h3>Inventory</h3><div class="more"><div><p>Stock runs low. A purchase order is one click away.</p><div class="steps"><span class="stepno"></span><ol></ol></div></div></div></div>
+        </div>
+        <div class="wf-card" id="wf-card"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · MODULES -->
+<section class="mods" id="mods">
+  <div class="wrap">
+    <h2 class="h3 rv" style="font-size:clamp(28px,3vw,38px)">Every module. One thing at a time.</h2>
+    <div class="grid">
+      <div class="mlist rv" id="mlist"></div>
+      <div class="card mdetail rv" id="mdetail" style="--d:.1s"></div>
+    </div>
+    <p class="fine" style="margin-top:18px;font-family:var(--font);font-size:11px;color:var(--muted)">Example data: every company, person and amount is fictional.</p>
+  </div>
+</section>
+
+<!-- 6 · INDUSTRY -->
+<section class="ind" id="ind">
+  <div class="wrap">
+    <h2 class="h2 rv">Same platform.<br>Shaped to your industry.</h2>
+    <div class="seg rv" id="ind-seg"><button class="on">Trading</button><button>Retail</button><button>Manufacturing</button><button>Services</button></div>
+    <div class="card ind-card rv" id="ind-card"></div>
+  </div>
+</section>
+
+<!-- 7 · SEVEN NAMES -->
+<section class="names" id="names">
+  <div class="wrap grid">
+    <div><h2 class="h2 rv">Seven names.<br>Three balances.</h2><p class="rv">In most old systems, the same customer is saved many different ways, each with its own balance. When we move your data into ONEERP, we find them and merge them into one.</p></div>
+    <div class="dupes rv" id="dupes">
+      <div class="cap eyebrow">Your old customer list</div>
+      <div class="th"><span>Name</span><span>Phone</span><span>Balance (AED)</span><span style="text-align:right">Match</span></div>
+      <div class="rowsw" id="dupe-rows"></div>
+      <div class="done-line">Merged into one record · 0 balances lost</div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · PIN -->
+<section class="pin" id="pin">
+  <div class="wrap">
+    <h2 class="h2 rv">One Pin. Every department.</h2>
+    <p class="lead rv" style="font-size:15px;margin-top:20px;max-width:22em">How our sister agency SquareZix runs campaigns across five teams in ONEERP.</p>
+    <div class="grid">
+      <div>
+        <div class="eyebrow rv">SquareZix · our sister agency</div>
+        <blockquote class="rv">“Digital marketing never sits in one department. With ONEERP, I pin a task to one person and watch it move across every team, without chasing anyone in a chat.”</blockquote>
+        <div class="who rv"><span id="kamal"></span><div><b>Kamal Senapati</b><small>Head of Digital Marketing, SquareZix</small></div></div>
+        <p class="ba rv">Before: tasks handed over in chats, lost between teams.<br>Now: every task is a Pin, every hand-off a Thing.</p>
+      </div>
+      <div>
+        <div class="pin-tree" id="pin-tree">
+          <div class="card pin-top">
+            <div class="ticket-head"><span class="ticket-ico">{{pin}}</span><div><div class="eyebrow" style="font-size:10px;margin-bottom:4px">PIN</div><div class="ticket-title">Product launch campaign</div></div><span class="needs pin-todo">Needs you <i class="pill1">1</i></span></div>
+            <div class="rows" style="padding-top:16px"><div class="row"><span class="k">Pinned to</span><span class="v" id="kamal2"></span></div><div class="row"><span class="k">Due</span><span class="v mono" style="font-size:13px">30 Oct</span></div></div>
+            <div class="card-foot" style="font-size:12.5px"><span class="pin-todo mono" style="font-size:11px;color:var(--muted)"><span id="things-done">0</span> Things · <span id="things-n">0</span> done</span><span class="okc pin-done">{{check}} Campaign launched · 3 teams · 0 chats</span></div>
+          </div>
+          <svg class="lines" viewBox="0 0 500 56" preserveAspectRatio="none"><path d="M250 0 V22 M250 22 C250 38 83 22 83 56 M250 22 V56 M250 22 C250 38 417 22 417 56" /></svg>
+          <div class="things" id="things"></div>
+        </div>
+        <p class="tiny" style="margin-top:20px">Illustration of how SquareZix works in ONEERP.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · UAE / CURRENCY -->
+<section class="uae" id="uae">
+  <div class="wrap">
+    <div class="top">
+      <div><h2 class="h2 rv">Built for how the UAE<br>does business.</h2></div>
+      <div style="text-align:right"><div class="seg rv" id="cur-seg"><button class="on">AED</button><button>SAR</button><button>USD</button></div><p>Every amount on this page changes with it.</p></div>
+    </div>
+    <div class="card settings rv">
+      <aside><div class="cap">Settings</div><a class="on">{{cur}} Currencies</a><a>{{shield}} Security</a><a>{{doc}} Tax</a><a>{{plug}} Integrations</a></aside>
+      <div class="main"><h4>Currencies</h4><div class="s">Multi-currency invoicing, payments and reporting.</div>
+        <dl><dt>Base currency</dt><dd>AED</dd><dt>Invoicing in</dt><dd>AED, SAR, USD</dd><dt>Reporting in</dt><dd id="rep-cur">AED</dd></dl>
+        <div class="acct" id="acct"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · PRICING + FAQ -->
+<section class="price-faq" id="faq">
+  <div class="wrap grid">
+    <div><div class="eyebrow">Pricing</div><div class="from">From</div><div class="amt"><span id="price-amt">≈ SAR 305</span><small>per user</small></div><p class="fine2">Converted at demo rates · billed in AED</p><a class="ulink see" href="pricing.html">See pricing</a></div>
+    <div><h2 class="h2 rv">Questions,<br>answered.</h2><div class="faq rv" id="faq-list"></div></div>
+  </div>
+</section>
+
+<!-- 11 · ONE THING LEFT -->
+<section class="final" id="final">
+  <div class="wrap grid">
+    <div>
+      <h2 class="h2 rv">One thing<br>left.</h2>
+      <p class="lead rv">A walkthrough of ONEERP, shaped around how your company works.</p>
+      <div class="booth rv" id="booth"><div class="body"><div class="screen">YOU'RE NEXT</div><div class="slot"></div><div class="tk"><div><div class="n">1</div><div class="co" id="booth-co"></div><div class="nq" id="booth-nq">No queue</div></div></div></div><div class="base"></div><div class="booth-line"></div></div>
+    </div>
+    <div class="card form rv" id="demo-form-home">
+      <h6>Book a demo</h6>
+      <div class="fld"><label>Full name</label><input name="name" autocomplete="name"></div>
+      <div class="fld"><label>Work email</label><input name="email" type="email" autocomplete="email"></div>
+      <div class="fld"><label>Company</label><input name="company" autocomplete="organization"></div>
+      <div class="fld"><label>Company size</label><div class="sel"><select name="size"><option value="">Choose a size</option><option>1 to 10</option><option>11 to 50</option><option>51 to 200</option><option>201 or more</option></select></div></div>
+      <div class="fld"><label>Phone <small>Optional</small></label><input name="phone" autocomplete="tel"></div>
+      <button class="btn btn-primary" type="button" id="home-book">Book a demo</button>
+      <p class="help">That's all we need. Your dedicated contact arranges the rest.</p>
+    </div>
+  </div>
+</section>
+
+<script src="assets/js/nav.js"></script>
+<script src="assets/js/shared.js"></script>
+<script src="assets/js/home.js"></script>
+</body>
+</html>

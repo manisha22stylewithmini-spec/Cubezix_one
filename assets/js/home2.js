@@ -1,0 +1,222 @@
+(function () {
+  const { IC, PRODUCTS, INDUSTRIES } = window.CZ_NAV;
+  const { fmt, rates, clamp, ease } = window.ONEERP;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const P = Object.fromEntries(PRODUCTS.map((p) => [p.k, p]));
+  const svg = (d, w = 18) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const ICX = { ...IC, inbox: svg('<path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/>'), chat: svg('<path d="M4 5h16v11H9l-5 4z"/>'), pen: svg('<path d="M4 20l1-4L16.5 4.5a2 2 0 013 3L8 19z"/><path d="M14 7l3 3"/>'), laptop: svg('<rect x="4" y="5" width="16" height="11" rx="2"/><path d="M2 19h20"/>'), shield: svg('<path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z"/>'), x: svg('<path d="M6 6l12 12M18 6L6 18"/>'), ok: svg('<path d="M5 12.5l4.5 4.5L19 7.5"/>') };
+
+  /* ---------- hero product window ---------- */
+  const row = (title, sub, right, mono) => `<div class="ui-row"><div class="grow"><b style="font-weight:500">${title}</b>${sub ? `<small>${sub}</small>` : ""}</div>${mono ? `<span class="mono">${mono}</span>` : ""}${right || ""}</div>`;
+  /* ---------- hero dashboard (dark device frame, pastel cards, chart, table, promo) ---------- */
+  const di = (d, w = 16) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const DI = { search: di('<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/>'), bell: di('<path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 004 0"/>'), chev: di('<path d="M6 9l6 6 6-6"/>', 14), sliders: di('<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>'), star: di('<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8 6.8 19.6l1-5.8L3.5 9.7l5.9-.8z"/>'), arrow: di('<path d="M5 12h14M13 6l6 6-6 6"/>', 14), out: di('<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>', 18), grid: di('<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>', 18), chat: di('<path d="M4 5h16v11H9l-5 4z"/>', 18), box: di('<path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>', 18), users: di('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c.6-3.6 3-5.2 6-5.2s5.4 1.6 6 5.2M16 5.4a3 3 0 010 5.4M18.5 14.8c1.6.6 2.5 2.2 2.8 4.2"/>', 18), pen: di('<path d="M4 20l1-4L16.5 4.5a2 2 0 013 3L8 19z"/><path d="M14 7l3 3"/>', 18), doc: di('<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/>', 18), wallet: di('<rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/>', 18), truck: di('<path d="M2 6h11v10H2zM13 9h5l3 3.5V16h-8"/><circle cx="6.5" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>', 18), bank: di('<path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/>', 18), clock: di('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', 18), check: di('<path d="M5 12.5l4.5 4.5L19 7.5"/>', 18), cart: di('<path d="M3 4h2.5l2 11h10l2-8H6.5"/><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/>', 18) };
+  const RAIL = [["erp", DI.grid, "ONE ERP"], ["desk", DI.chat, "ONE Desk"], ["assets", DI.box, "ONE Assets"], ["people", DI.users, "ONE People"], ["sign", DI.pen, "ONE Sign"]];
+  const spark = (s) => { const W = 320, H = 100, mn = Math.min(...s), mx = Math.max(...s); const pts = s.map((v, i) => [(i * W) / (s.length - 1), H - 10 - ((v - mn) / (mx - mn || 1)) * (H - 30)]); return { d: pts.map((q, i) => (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" "), pts, W, H }; };
+  const TONES = { lav: ["#F0E5FF", "#46325C", "#A57CD2"], mint: ["#D6F4DD", "#184829", "#4AA969"], sand: ["#FEE7CD", "#563504", "#C48225"], sky: ["#E2EDF7", "#303F4C", "#7896B0"], rose: ["#FEE2F3", "#572C49", "#C670AB"], aqua: ["#CAF5F3", "#024745", "#0AA7A4"] };
+  const av = (t, c) => `<span class="av" style="--c:${c}">${t}</span>`;
+  const AV = { h: av("HM", "#7896B0"), d: av("DK", "#C670AB"), m: av("MS", "#4AA969"), i: av("IK", "#C48225"), s: av("SR", "#6D2FE0") };
+  const stack = `<span class="a-stack">${AV.h}${AV.d}${AV.m}<i>+4</i></span>`;
+  const navG = (groups, active) => groups.map((g) => `<div class="a-g"><small>${g[0]}</small>${g[1].map((n) => `<a class="${n[0] === active ? "on" : ""}">${n[1]}<span>${n[0]}</span>${n[2] ? `<em>${n[2]}</em>` : ""}</a>`).join("")}</div>`).join("");
+  const gear = di('<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/>');
+  const plus = di('<path d="M12 5v14M5 12h14"/>', 14);
+  const dots = di('<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>', 16);
+  const msg = di('<path d="M4 5h16v11H9l-5 4z"/>', 13);
+  const clip = di('<path d="M20 11l-8 8a5 5 0 01-7-7l9-9a3.5 3.5 0 015 5l-9 9a2 2 0 01-3-3l8-8"/>', 13);
+  const cal = di('<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/>', 13);
+  const tabsBar = (tabs, on) => `<div class="a-tabs">${tabs.map((t, i) => `<span class="${i === on ? "on" : ""}">${t[0]}${t[1] ? `<em>${t[1]}</em>` : ""}</span>`).join("")}<span class="a-ico">${DI.sliders}</span><span class="a-ico">${DI.search}</span></div>`;
+  const shell = (k, o) => `<div class="app" style="--c:${P[k].c}"><aside class="a-side"><div class="a-ws"><i class="a-wl">${window.CZ_NAV.mark(24)}</i><span><b>${o.ws}</b><small>${o.wsub}</small></span>${DI.chev}</div><div class="a-search">${DI.search}<span>Search</span><kbd>/</kbd></div>${navG(o.groups, o.active)}<div class="a-user">${AV.h}<span><b>Hana M.</b><small>Finance lead</small></span>${DI.chev}</div></aside><div class="a-main"><div class="a-top"><span class="a-crumb">${o.crumb.map((c, i) => (i ? `<i>/</i>` : "") + `<b class="${i === o.crumb.length - 1 ? "cur" : ""}">${c}</b>`).join("")}</span><span class="a-tr">${stack}<span class="a-ic">${gear}</span><span class="a-ic">${DI.bell}<i></i></span><span class="a-btn">${plus}${o.btn}</span></div><div class="a-body">${o.body}</div></div></div>`;
+  const stat = (tone, ic, v, l, d) => { const t = TONES[tone]; return `<div class="a-stat"><span class="tile" style="background:${t[0]};color:${t[1]}">${ic}</span><span><small>${l}</small><b>${v}</b></span><em>${d}</em><u>View Details ${DI.arrow}</u></div>`; };
+  const kcard = (tag, tagc, title, desc, who, due, n, drag) => `<div class="k-card${drag ? " drag" : ""}"><span class="k-tag" style="--t:${tagc}">${tag}</span><b>${title}</b><p>${desc}</p><div class="k-foot"><span class="a-stack sm">${who}</span><span class="k-m">${cal}${due}</span><span class="k-m">${msg}${n}</span></div></div>`;
+  const kcol = (name, c, n, cards) => `<div class="k-col"><div class="k-h"><u style="--t:${c}">${name}</u><em>${n}</em><span>${dots}</span></div>${cards}</div>`;
+  const doc = (ti, sub, st, c) => `<div class="s-doc"><i class="tile">${DI.doc}</i><span><b>${ti}</b><small>${sub}</small></span><u class="st ${c}">${st}</u></div>`;
+  const PANELS_HTML = {
+    erp: () => shell("erp", { ws: "Gulf Pack Trading", wsub: "ONE ERP · 8 modules", active: "Overview", crumb: ["Finance", "Overview"], btn: "New entry",
+      groups: [["Workspace", [["Overview", DI.grid], ["Inbox", DI.chat, "3"], ["Approvals", DI.check, "5"]]], ["Modules", [["Finance", DI.bank], ["Sales", DI.cart], ["Inventory", DI.box], ["Payroll", DI.wallet], ["Procurement", DI.truck]]]],
+      body: `<h3>Welcome back, Hana</h3><p class="a-sub">Month-end close is two days away. Three decisions need you.</p>
+      <div class="a-banner"><span><b>October close</b><small>All bank lines matched except 3. Payroll file sent.</small></span><span class="a-prog"><i style="width:82%"></i></span><em>82%</em><u class="a-cta">Review ${DI.arrow}</u></div>
+      <div class="a-stats">${stat("sand", DI.bank, "214", "Bank lines matched", "+38")}${stat("mint", DI.wallet, "AED 957K", "Cash position", "+4.2%")}${stat("lav", DI.box, "1 item", "Below reorder", "Low")}</div>
+      ${tabsBar([["Approvals", "3"], ["Cash"], ["Payroll"], ["Stock"]], 0)}
+      <div class="a-table"><div class="a-th"><span>Item</span><span>Amount</span><span>Status</span><span>Owner</span></div>
+      <div class="a-tr2"><span class="nm"><i class="tile">${DI.cart}</i><span><b>Purchase order</b><small>PO-2026-0418</small></span></span><span class="mono">AED 48,250</span><span><u class="st warn">Over budget 6%</u></span><span>${AV.h} Hana</span></div>
+      <div class="a-tr2"><span class="nm"><i class="tile">${DI.bank}</i><span><b>Bank line</b><small>BL-2026-1093</small></span></span><span class="mono">AED 8,640</span><span><u class="st ok">Matched</u></span><span>${AV.m} Maria</span></div>
+      <div class="a-tr2"><span class="nm"><i class="tile">${DI.wallet}</i><span><b>Payroll run</b><small>October</small></span></span><span class="mono">AED 96,400</span><span><u class="st ok">WPS sent</u></span><span>${AV.m} Maria</span></div></div>` }),
+    desk: () => shell("desk", { ws: "Support", wsub: "ONE Desk · 6 agents", active: "Board", crumb: ["Support", "Ticket board"], btn: "New ticket",
+      groups: [["Queues", [["Board", DI.grid], ["My tickets", DI.chat, "4"], ["Unassigned", DI.users, "2"], ["At risk", DI.clock, "2"]]], ["Customers", [["Portal", DI.star], ["Knowledge base", DI.doc]]]],
+      body: `<div class="a-hd"><h3>Ticket board</h3>${tabsBar([["Board"], ["List"], ["Calendar"]], 0)}</div>
+      <div class="k-board">${kcol("To do", "#7896B0", 4, kcard("VPN", "#7896B0", "VPN not connecting", "Omar in Sales can't reach the file server from home.", AV.i + AV.s, "Today", 3) + kcard("Setup", "#C48225", "New starter setup", "Laptop, email and badge for Fatima on Monday.", AV.d, "Mon", 1))}
+      ${kcol("In progress", "#0AA7A4", 3, kcard("Hardware", "#0AA7A4", "Laptop won't charge", "Replacement charger ordered, loan unit handed over.", AV.i + AV.h, "2 h", 6, true) + kcard("Access", "#6D2FE0", "Shared drive access", "Finance folder for the audit team.", AV.m, "Wed", 2))}
+      ${kcol("Resolved", "#4AA969", 9, kcard("Email", "#4AA969", "Mailbox full", "Archive set up, quota raised.", AV.s, "Done", 4) + kcard("Printer", "#4AA969", "Printer offline", "Driver reinstalled on 3 PCs.", AV.i, "Done", 2))}</div>` }),
+    assets: () => shell("assets", { ws: "Assets", wsub: "ONE Assets · 66 devices", active: "All devices", crumb: ["Assets", "All devices"], btn: "Add device",
+      groups: [["Inventory", [["All devices", DI.box, "66"], ["Laptops", DI.grid, "42"], ["Phones", DI.chat, "18"], ["In repair", DI.clock, "3"]]], ["Places", [["Dubai office", DI.truck], ["Store room", DI.box]]]],
+      body: `<div class="v-split"><div class="v-list"><div class="v-fil"><span class="on">All</span><span>In use</span><span>In stock</span><span>Repair</span></div>
+      <div class="v-row on"><i class="tile">${DI.box}</i><span><b>MacBook Pro 14"</b><small>AST-0187 · Aisha Rahman</small></span><u class="st ok">In use</u></div>
+      <div class="v-row"><i class="tile">${DI.box}</i><span><b>iPhone 15</b><small>AST-0192 · Omar Khan</small></span><u class="st ok">In use</u></div>
+      <div class="v-row"><i class="tile">${DI.box}</i><span><b>Dell Latitude</b><small>AST-0204 · Store room</small></span><u class="st brand">In stock</u></div>
+      <div class="v-row"><i class="tile">${DI.box}</i><span><b>ThinkPad T14</b><small>AST-0211 · Repair desk</small></span><u class="st amber">In repair</u></div>
+      <div class="v-row"><i class="tile">${DI.box}</i><span><b>iPad Air</b><small>AST-0219 · Sara Reyes</small></span><u class="st ok">In use</u></div></div>
+      <div class="v-det"><div class="v-hero"><span class="v-dev">${DI.box.replace(/width="16" height="16"/, 'width="46" height="46"')}</span><span><small>AST-0187</small><b>MacBook Pro 14"</b><em>Holder: Aisha Rahman · Operations</em></span></div>
+      <div class="v-specs"><span><small>Serial</small><b>C02X4T</b></span><span><small>Bought</small><b>Mar 2025</b></span><span><small>Warranty</small><b>Mar 2028</b></span><span><small>Value</small><b>AED 9,200</b></span></div>
+      <div class="v-tl"><small>Custody timeline</small><div><i></i><span><b>Handed to Aisha</b><small>12 Jan · signed on receipt</small></span></div><div><i></i><span><b>Serviced</b><small>3 Jun · battery replaced</small></span></div><div class="x"><i></i><span><b>Return due</b><small>Review in 14 months</small></span></div></div></div></div>` }),
+    people: () => shell("people", { ws: "People", wsub: "ONE People · 24 staff", active: "Directory", crumb: ["People", "Directory"], btn: "Add employee",
+      groups: [["Team", [["Directory", DI.users, "24"], ["Leave", DI.clock, "3"], ["Payroll", DI.wallet]]], ["Hiring", [["Applicants", DI.star, "6"], ["Onboarding", DI.check]]]],
+      body: `<div class="p-wrap"><div class="p-dir"><div class="a-hd"><h3>Directory</h3><span class="a-chip">Dubai ${DI.chev}</span></div>
+      <div class="p-grid">${[["AR", "Aisha Rahman", "Operations", "#4AA969", 1], ["OK", "Omar Khan", "Sales", "#C48225", 0], ["FA", "Fatima Ali", "HR", "#C670AB", 0], ["RN", "Ravi Nair", "Finance", "#7896B0", 0], ["SR", "Sara Reyes", "Support", "#6D2FE0", 0], ["IK", "Imran K.", "IT", "#0AA7A4", 0]].map((e) => `<div class="p-card${e[4] ? " on" : ""}">${av(e[0], e[3])}<b>${e[1]}</b><small>${e[2]}</small></div>`).join("")}</div></div>
+      <div class="p-prof"><div class="p-top">${av("AR", "#4AA969")}<span><b>Aisha Rahman</b><small>Operations lead · since 2023</small></span></div>
+      <div class="p-rings"><span><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" stroke="#E6EAF3" stroke-width="4" fill="none"/><circle cx="18" cy="18" r="15" stroke="#4AA969" stroke-width="4" fill="none" stroke-dasharray="70 94" stroke-linecap="round" transform="rotate(-90 18 18)"/></svg><b>18</b><small>leave days</small></span><span><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" stroke="#E6EAF3" stroke-width="4" fill="none"/><circle cx="18" cy="18" r="15" stroke="#C670AB" stroke-width="4" fill="none" stroke-dasharray="86 94" stroke-linecap="round" transform="rotate(-90 18 18)"/></svg><b>96%</b><small>attendance</small></span></div>
+      <div class="p-docs"><small>Documents</small><div><span>Employment contract</span><u class="st ok">Signed</u></div><div><span>Emirates ID</span><u class="st ok">Valid</u></div><div><span>Visa</span><u class="st warn">30 days</u></div></div></div></div>` }),
+    sign: () => shell("sign", { ws: "Documents", wsub: "ONE Sign · 86 this month", active: "Pipeline", crumb: ["Documents", "Pipeline"], btn: "New document",
+      groups: [["Documents", [["Pipeline", DI.grid], ["Waiting on me", DI.pen, "2"], ["Completed", DI.check]]], ["Library", [["Templates", DI.doc], ["Company stamp", DI.star]]]],
+      body: `<h3>Signing pipeline</h3><div class="s-steps">${[["Draft", 3, 0], ["Sent", 5, 0], ["Signing", 4, 1], ["Stamped", 12, 0], ["Done", 62, 0]].map((s, i) => `<span class="${s[2] ? "on" : i < 2 ? "past" : ""}"><b>${s[1]}</b><small>${s[0]}</small></span>`).join("<i></i>")}</div>
+      <div class="s-wrap"><div class="s-list">${doc("Employment contract", "Aisha Rahman · 2 signers", "Waiting 1", "amber")}${doc("NDA · Gulf Pack", "Supplier · 2 signers", "Signed", "ok")}${doc("Offer letter", "New starter · 3 signers", "Signed", "ok")}${doc("Lease renewal", "Landlord · 2 signers", "Draft", "brand")}</div>
+      <div class="s-prev"><div class="s-page"><b>Employment contract</b><i></i><i></i><i class="short"></i><div class="s-sig"><span>Signed by Aisha<svg viewBox="0 0 120 32" fill="none" stroke="#2F36B8" stroke-width="2" stroke-linecap="round"><path d="M4 22c8-14 12-14 14-2s6 4 12-8c6-12 8 6 14 6s10-12 18-2 12 4 18-6"/></svg></span><span class="wait">Daniel, to sign</span></div><em class="stamp">STAMP</em></div><div class="s-bar"><span>Reminder in 2 h</span><u class="a-cta">Send reminder</u></div></div></div>` }),
+  };
+  const PANELS = Object.fromEntries(PRODUCTS.map((p) => [p.k, PANELS_HTML[p.k]]));
+  const tabs = $("#h2-tabs"), panels = $("#h2-panels"), win = $("#h2-window");
+  const rail = $("#h2-rail");
+  rail.innerHTML = `<span class="rail-logo">${window.CZ_NAV.mark(30)}</span><div class="rail-nav">${RAIL.map((r, i) => `<button class="rail-b" data-i="${i}" aria-label="${r[2]}" title="${r[2]}" style="--c:${PRODUCTS[i].c}">${r[1]}</button>`).join("")}</div><span class="rail-out">${DI.out}</span>`;
+  tabs.innerHTML = PRODUCTS.map((p, i) => `<button class="h2-tab" role="tab" data-k="${p.k}" style="--c:${p.c}" aria-selected="false"><i></i><span>${p.name}</span><b></b></button>`).join("");
+  panels.innerHTML = PRODUCTS.map((p) => `<div class="h2-panel" data-k="${p.k}" role="tabpanel"></div>`).join("");
+  let cur = -1, reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function select(i) {
+    const prev = cur; cur = i;
+    $$('.h2-glows i').forEach((g, k) => g.classList.toggle('on', k === i));
+    panels.style.setProperty('--dir', i >= prev ? 1 : -1);
+    const u = $('#w-url'); if (u) u.textContent = 'app.cubezix.one/' + PRODUCTS[i].k;
+    $$(".rail-b").forEach((b, k) => b.classList.toggle("on", k === i)); win.style.setProperty("--c", PRODUCTS[i].c);
+    $$(".h2-tab").forEach((t, k) => { const on = k === i; t.classList.toggle("on", on); t.setAttribute("aria-selected", on); if (on) { t.style.setProperty("--dur", "6s"); const b = $("b", t); b.style.animation = "none"; void b.offsetWidth; b.style.animation = ""; } });
+    $$(".h2-panel").forEach((p, k) => {
+      if (k === i && !p.firstChild) p.innerHTML = PANELS[p.dataset.k]();
+      if (k === prev && k !== i) { p.classList.add("out"); setTimeout(() => p.classList.remove("out"), 520); }
+      p.classList.toggle("on", k === i);
+    });
+  }
+  rail.addEventListener("click", (e) => { const b = e.target.closest(".rail-b"); if (b) { select(+b.dataset.i); if (!reduce) win.classList.add("paused"); } });
+  tabs.addEventListener("click", (e) => { const t = e.target.closest(".h2-tab"); if (t) { select($$(".h2-tab").indexOf(t)); if (!reduce) win.classList.add("paused"); } });
+  tabs.addEventListener("animationend", (e) => { if (e.target.tagName === "B" && !reduce) select((cur + 1) % PRODUCTS.length); });
+  win.addEventListener("mouseenter", () => win.classList.add("paused")); win.addEventListener("mouseleave", () => win.classList.remove("paused")); tabs.addEventListener("mouseenter", () => win.classList.add("paused")); tabs.addEventListener("mouseleave", () => win.classList.remove("paused"));
+  new IntersectionObserver(([e]) => win.classList.toggle("paused", !e.isIntersecting), { threshold: 0.2 }).observe(win);
+  const stage = $(".h2-stage");
+  stage.insertAdjacentHTML("afterbegin", `<div class="h2-float f1" aria-hidden="true"><i class="ok"></i><div><b>Payroll sent</b><small>WPS file · 8 employees</small></div></div><div class="h2-float f2" aria-hidden="true"><i class="warn"></i><div><b>Visa expires in 30 days</b><small>Fatima · HR</small></div></div><div class="h2-float f3" aria-hidden="true"><i class="brand"></i><div><b>1 decision needs you</b><small>PO-2026-0418</small></div></div>`);
+  [$(".h2-stage")].forEach((el) => new IntersectionObserver(([e]) => el.classList.toggle("is-off", !e.isIntersecting), { rootMargin: "100px" }).observe(el));
+  // Scroll-linked tilt, like ContainerScroll: the window starts tipped back and flattens as you scroll.
+  // rotateX 20 -> 0, scale 1.05 -> 1 (0.9 -> 1 on phones), driven by the shared rAF scroll pump.
+  if (!reduce) {
+    const winEl = $(".h2-window"), stageEl = $(".h2-stage"), mob = matchMedia("(max-width: 768px)");
+    let lastQ = -1, lastM = null;
+    window.ONEERP.onScroll(() => {
+      const r = stageEl.getBoundingClientRect(), vh = innerHeight;
+      if (r.top > vh + 200 || r.bottom < -200) return;
+      const q = Math.round(Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.85))) * 200) / 200;
+      if (q === lastQ && mob.matches === lastM) return;
+      lastQ = q; lastM = mob.matches;
+      winEl.style.transform = `rotateX(${(20 * (1 - q)).toFixed(2)}deg) scale(${(mob.matches ? 0.9 + 0.1 * q : 1.05 - 0.05 * q).toFixed(4)})`;
+    });
+  }
+  win.insertAdjacentHTML("afterbegin", '<div class="w-bar"><span class="w-dots"><i></i><i></i><i></i></span><span class="w-url"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span id="w-url">app.cubezix.one/erp</span></span><span class="w-sp"></span></div>');
+  stage.insertAdjacentHTML("afterbegin", '<div class="h2-glows" aria-hidden="true">' + PRODUCTS.map((p) => `<i style="--c:${p.c}"></i>`).join("") + "</div>");
+  select(0);
+  if (reduce) $$(".h2-tab b").forEach((b) => (b.style.display = "none"));
+
+  function below() {
+  /* ---------- nine apps marquee ---------- */
+  const NINE = [["mail", "Mail", "Re: can you confirm the PO number?"], ["bank", "Bank portal", "Card limit 85% used"], ["chat", "Chat", "Fatima: visa photos needed by noon"], ["cart", "Point of sale", "Refund needs a manager PIN"], ["doc", "Spreadsheet", "Cash flow: September tab updated"], ["list", "Tasks", "4 tasks due today"], ["inbox", "Drive", "3 people edited Tender response"], ["mail", "Old accounting app", "41 bank lines unmatched"], ["cart", "Point of sale", "Price change not synced"]];
+  const chip = (n, i) => `<div class="nchip${i % 4 === 1 ? " lit" : ""}"><span>${ICX[n[0]] || ICX.inbox}</span><div><small>${n[1]}</small><b>${n[2]}</b></div></div>`;
+  const track = (arr) => `<div class="nine-in">${[...arr, ...arr].map(chip).join("")}</div>`;
+  new IntersectionObserver(([e]) => $(".h2-nine").classList.toggle("is-off", !e.isIntersecting)).observe($(".h2-nine"));
+  $("#nine-a").innerHTML = track(NINE); $("#nine-b").innerHTML = track([...NINE].reverse());
+
+  /* ---------- stats count-up ---------- */
+  $$(".h2-stat b").forEach((b) => window.ONEERP.inView(b, () => { const to = +b.dataset.to, suf = b.dataset.suf || "", t0 = performance.now(); (function tick(t) { const k = clamp((t - t0) / 1400); b.textContent = Math.round(to * ease(k)).toLocaleString("en-US") + suf; if (k < 1) requestAnimationFrame(tick); })(t0); }, 0.6));
+
+  /* ---------- before / after ---------- */
+  const BEFORE = ["Orders, invoices and stock live in three different files", "Requests get lost in chats and shared inboxes", "Laptops and phones nobody can fully account for", "Payroll dates and visa expiries tracked from memory", "Contracts printed, signed and chased by phone"];
+  const AFTER = ["One record for every customer, item and amount", "Every request has an owner and a deadline", "Every device has a holder and a history", "Pay day and permits flagged before they lapse", "Documents signed and stamped online, with a trail"];
+  $("#ba-before").innerHTML = BEFORE.map((t) => `<li>${ICX.x}<span>${t}</span></li>`).join("");
+  $("#ba-after").innerHTML = AFTER.map((t) => `<li>${ICX.ok}<span>${t}</span></li>`).join("");
+
+  const bar = (w, c) => `<div class="mv-bar"><i style="width:${w}%;${c ? "background:" + c : ""}"></i></div>`;
+  /* ---------- products bento ---------- */
+  const PC = {
+    erp: { cls: "wide", p: "Finance, HR, payroll, inventory, sales, CRM, procurement and operations on one set of records, with UAE VAT, WPS and e-invoicing built in.", li: ["Every dirham in and out, matched to your books", "Purchases checked against budget before anyone signs", "One decision at a time, with the numbers beside it"] },
+    desk: { p: "A helpdesk for your customers and your staff. Every request gets an owner and a time to reply.", li: ["Email, portal, chat and device agent", "SLAs and escalation to the team lead"] },
+    assets: { p: "Every laptop and phone: who has it, what was repaired, and when it comes back.", li: ["Serial, warranty and handover signature", "Return checklist when someone leaves"], soon: true },
+    people: { p: "One file for each employee, from the first applicant to the last day.", li: ["Leave, attendance and expense claims", "Payslips and WPS-ready payroll"] },
+    sign: { p: "Sign and stamp contracts and letters online, in order, with an audit trail.", li: ["Company stamp and signing order", "Reminders before a document goes stale"] },
+  };
+  const PV = {
+    erp: `<div class="pv erp"><div><small>Handled by rules</small><b>214</b></div><div><small>Digest</small><b>37</b></div><div class="need"><small>Needs you</small><b>1</b><u>Approve</u></div></div>`,
+    desk: `<div class="pv list">${[["Laptop won't charge", "In progress", "brand"], ["VPN not connecting", "At risk", "amber"], ["New starter setup", "On track", "ok"]].map((t) => `<div><span>${t[0]}</span><i class="${t[2]}">${t[1]}</i></div>`).join("")}</div>`,
+    assets: `<div class="pv steps">${["Record", "Hand over", "Look after", "Return"].map((t, i) => `<span class="${i < 3 ? "d" : ""}"><i>${i + 1}</i>${t}</span>`).join("")}</div>`,
+    people: `<div class="pv leave"><div><span>Annual leave</span><em>18 of 30 days</em></div>${bar(60, "#C670AB")}<div><span>Sick leave</span><em>13 of 15 days</em></div>${bar(87, "#C670AB")}</div>`,
+    sign: `<div class="pv sign"><svg viewBox="0 0 120 32" fill="none" stroke="#C48225" stroke-width="2" stroke-linecap="round"><path d="M4 22c8-14 12-14 14-2s6 4 12-8c6-12 8 6 14 6s10-12 18-2 12 4 18-6"/></svg><span>Signed 14:02</span><div class="stamp s">STAMP</div></div>`,
+  };
+  $("#bento").innerHTML = PRODUCTS.map((p, i) => { const c = PC[p.k]; return `<a class="pc ${c.cls || ""} rv" href="${p.href}" style="--c:${p.c};--soft:${p.soft};--deep:${p.deep};--d:${i * 0.06}s">${c.soon ? '<span class="soon">COMING SOON</span>' : ""}<div class="pn"><i></i>${p.name}${p.flag ? `<em>${p.flag}</em>` : ""}</div><p>${c.p}</p>${p.k === "erp" ? `<div class="chips2">${p.modules.map((m) => `<span>${ICX[m[0]]}${m[1]}</span>`).join("")}</div>` : ""}<ul>${c.li.map((l) => `<li>${l}</li>`).join("")}</ul>${PV[p.k] || ""}<span class="go">Explore ${p.name} ${IC.arrow}</span></a>`; }).join("");
+
+  /* ---------- industries ---------- */
+  const STRONG = { Trading: "#C8CE85", Retail: "#F2AFDB", Manufacturing: "#B4CBDF", Services: "#D6B8F9" };
+  const IND = { Trading: ["Buy abroad, clear at the port, sell on. Every shipment costed from the supplier's invoice to the customer's payment.", "1 landed cost to confirm"], Retail: ["Several stores, one stock. Every branch's sales and shelves in view, before the busy weekend, not after it.", "1 store running short"], Manufacturing: ["Know what each product really costs, and which missing part will stop the line, while there is still time to order it.", "1 work order waiting for a part"], Services: ["Hours, budgets and invoices on every project, so the margin is protected while the work is still running.", "1 project heading over budget"] };
+  $("#ind-cards").innerHTML = INDUSTRIES.map((n, i) => `<a class="ic rv" href="${n[2]}" style="--p:${n[5]};--d:${n[6]};--b:${n[4]};--s:${STRONG[n[0]]};--dd:${i * 0.06}s;transition-delay:var(--dd)"><span class="tile">${n[0][0]}</span><h3>${n[0]}</h3><p>${IND[n[0]][0]}</p><div class="metric"><i>1</i>${IND[n[0]][1]}</div><span class="go">Read the guide ${IC.arrow}</span></a>`).join("");
+
+  /* ---------- features ---------- */
+  const mrow = (a, b2, tag) => `<div class="mv-row"><span>${a}</span><em>${b2 || ""}</em>${tag || ""}</div>`;
+  const FEAT = [
+    ["inbox", "One inbox for decisions", "Rules handle the routine. Only the decisions that are yours reach you, ready to act on.", "", "big", `<div class="mv"><div class="mv-row hl"><span><b>Purchase order PO-0418</b><small>Over budget by 6%</small></span><u>Approve</u></div>${mrow("31 bank lines matched", "by your rules", '<i class="ok">Done</i>')}${mrow("Reminders sent", "4 overdue invoices", '<i class="ok">Done</i>')}</div>`],
+    ["bank", "Finance and VAT", "Cash, invoices and 5% VAT matched to the bank, with the return prepared for review.", "ONE ERP", "", `<div class="mv">${mrow("HARBOUR LINE FRT", "AED 8,640.00")}<div class="mv-link"><i></i><b>Matched to INV-2026-0531</b></div>${mrow("VAT return", "Due 28 Oct", '<i class="brand">Ready</i>')}</div>`],
+    ["wallet", "Payroll and WPS", "Pay day on time, with the Wage Protection System file held until every employee is complete.", "ONE ERP", "", `<div class="mv"><div class="mv-top"><b>Payroll · October</b><em>8 of 8</em></div>${bar(100)}${mrow("WPS file", "AED 96,400.00", '<i class="ok">Sent</i>')}</div>`],
+    ["users", "HR, visas and permits", "Contracts, visas and leave on one file, flagged 30 days before they expire.", "ONE People", "", `<div class="mv">${mrow("Visa · Fatima", "21 Nov 2026", '<i class="warn">30 days</i>')}${mrow("Emirates ID · Omar", "Mar 2027", '<i class="ok">Valid</i>')}${mrow("Contract · Aisha", "Signed", '<i class="ok">Valid</i>')}</div>`],
+    ["box", "Inventory", "Stock in every location, counted as it moves, with reorders raised for you.", "ONE ERP", "", `<div class="mv"><div class="mv-top"><b>Shipping carton 40×30</b><em>120 in stock</em></div><div class="mv-bar red"><i style="width:20%"></i><s style="left:33%"></s></div><div class="mv-top"><small>Reorder at 200</small><u>Create PO</u></div></div>`],
+    ["target", "Sales and CRM", "One record from the first lead and quote to the payment. Nothing delivered goes unbilled.", "ONE ERP", "", `<div class="mv"><div class="mv-steps"><span class="d">Quote</span><span class="d">Order</span><span class="d">Delivery</span><span class="c">Invoice</span><span>Paid</span></div>${mrow("QT-2026-0187", "AED 25,200.00")}</div>`],
+    ["cart", "Procurement", "Purchase orders checked against budget before anyone signs.", "ONE ERP", "", `<div class="mv"><div class="mv-top"><b>Packaging budget</b><em>106%</em></div><div class="mv-bar red"><i style="width:100%"></i></div>${mrow("PO-2026-0418", "Held for approval", '<i class="warn">Over</i>')}</div>`],
+    ["chat", "Helpdesk", "Every request gets an owner and a deadline, from email, portal, chat or the device agent.", "ONE Desk", "big", `<div class="mv"><div class="mv-top"><b>Laptop won't charge</b><i class="teal">Resolved</i></div>${bar(46, "#0AA7A4")}<div class="mv-top"><small>First reply 14 of 30 min</small><small>Imran</small></div></div>`],
+    ["pen", "E-sign and stamps", "Contracts signed in order and stamped online, with a full audit trail.", "ONE Sign", "big", `<div class="mv"><div class="mv-sig"><svg viewBox="0 0 120 32" fill="none" stroke="#2F36B8" stroke-width="2" stroke-linecap="round"><path d="M4 22c8-14 12-14 14-2s6 4 12-8c6-12 8 6 14 6s10-12 18-2 12 4 18-6"/></svg><span class="stamp s">STAMP</span></div>${mrow("Aisha signed", "14:02", '<i class="ok">Signed</i>')}</div>`],
+  ];
+  const ORDER = [0, 1, 2, 3, 4, 5, 7, 6, 8];
+  $("#feat-grid").innerHTML = ORDER.map((k) => FEAT[k]).map((f, i) => `<div class="fc ${f[4]} rv" style="--d:${(i % 3) * 0.06}s">${f[5]}<div class="fh"><div class="fi">${ICX[f[0]]}</div>${f[3] ? `<span class="from">${f[3]}</span>` : ""}</div><h3>${f[1]}</h3><p>${f[2]}</p></div>`).join("");
+
+  /* ---------- inbox spotlight (interactive approve) ---------- */
+  const inbox = $("#inbox-demo");
+  const pc = () => `<div class="card" id="po2"><div class="ticket-head"><span class="ticket-ico"><span class="pill1 dark" style="width:18px;height:18px;font-size:10px">1</span></span><div><div class="ticket-meta">CubeZixONE <span class="mono">09:42</span></div><div class="ticket-title">Purchase order <span class="mono">PO-2026-0418</span></div></div><span class="needs" id="po2-n">Needs you <i class="pill1">1</i></span></div><div class="rows"><div class="row"><span class="k">Supplier</span><span class="v">Gulf Pack Supplies</span></div><div class="row"><span class="k">Amount</span><span class="v mono">AED 48,250.00</span></div><div class="row"><span class="k">Budget</span><span class="v warn">${ICX.x.replace("<svg", '<svg width="14" height="14"')} Over budget by 6%</span></div><div class="row"><span class="k">Requested by</span><span class="v">Hana · Finance</span></div></div><div class="card-foot" id="po2-f"><button class="btn btn-dark" id="po2-a">Approve</button><button class="btn-ghost" style="font-size:14px;font-weight:500">Review</button></div></div><div class="card hide" id="po2-t" style="padding:6px 22px"></div>`;
+  inbox.innerHTML = pc();
+  $("#po2-a").addEventListener("click", () => {
+    $("#po2-n").style.opacity = 0;
+    const d = new Date(), t = [d.getHours(), d.getMinutes(), d.getSeconds()].map((n) => String(n).padStart(2, "0")).join(":");
+    $("#po2-f").innerHTML = `<span class="okc" style="font-size:14px">${ICX.ok.replace("<svg", '<svg width="14" height="14"')} Approved</span><span class="mono" style="margin-left:auto;font-size:13px;color:var(--ink-2)">${t}</span>`;
+    const tl = $("#po2-t"); tl.classList.remove("hide");
+    tl.innerHTML = [["Stock reserved", "Inventory", "+0.04s"], ["Supplier notified", "Procurement", "+0.06s"], ["Budget updated", "Finance", "+0.07s"], ["Posted to ledger", "Finance", "+0.09s"]].map((s) => `<div class="tl">${ICX.ok.replace("<svg", '<svg width="13" height="13"')}<b>${s[0]}</b><small>${s[1]}</small><span class="t">${s[2]}</span></div>`).join("");
+    $$(".tl", tl).forEach((r, i) => setTimeout(() => r.classList.add("in"), 200 + i * 240));
+  });
+
+  /* ---------- how it works ---------- */
+  const STEPS = [["Walk through it", "A demo shaped around your company, your modules and your own processes, not a generic tour.", "Day 1"], ["We move you in", "We bring across customers, stock and balances, merge the duplicates, and set up VAT, roles and approvals with you.", "Week 1 to [x]"], ["Go live, and after", "Your dedicated contact stays on after launch, so every question goes to one person who knows your setup.", "Then, every day"]];
+  $("#steps").innerHTML = STEPS.map((s, i) => `<div class="st rv" style="--d:${i * 0.08}s"><div class="n">0${i + 1}</div><h3>${s[0]}</h3><p>${s[1]}</p><span class="chip2">${s[2]}</span></div>`).join("");
+
+  /* ---------- comparison ---------- */
+  const CMP = [["Setup", "Weeks, with one contact guiding you", "Months, or never finished"], ["UAE VAT, WPS and e-invoicing", "Built in and kept current", "Plugins or manual workarounds"], ["One record across modules", "Typed once, used everywhere", "Re-typed between tools"], ["Dedicated contact", "One named person, from demo to go-live", "A ticket queue"], ["Helpdesk, assets and e-sign", "Included in the same family", "Separate tools to buy and connect"], ["Pricing", "Per user, in AED, SAR or USD", "Per module, per seat, per consultant day"]];
+  $("#cmp").innerHTML = `<div class="cr"><span>Feature</span><span>CubeZixONE</span><span>Others</span></div>` + CMP.map((r) => `<div class="cr"><span>${r[0]}</span><span><span class="y">${ICX.ok}${r[1]}</span></span><span><span class="n">${ICX.x}${r[2]}</span></span></div>`).join("");
+
+  /* ---------- pricing ---------- */
+  let ccy = "AED";
+  const PL = [["Starter", "For small teams starting with the ERP basics.", { aed: 299 }, ["Finance, Sales and CRM modules", "UAE VAT built in", "Dedicated contact", "Data migration help"], "Book a demo", false], ["Growth", "All eight ERP modules plus the helpdesk.", { tbc: true }, ["Everything in Starter", "All eight ERP modules", "ONE Desk helpdesk", "WPS payroll and e-invoicing"], "Book a demo", true], ["Scale", "The whole CubeZixONE family for larger teams.", { talk: true }, ["Everything in Growth", "ONE People, ONE Assets, ONE Sign", "Roles, approvals and SLAs", "Priority support"], "Talk to us", false]];
+  function renderPrice() {
+    $("#price").innerHTML = PL.map((p, i) => { const a = p[2]; const amt = a.aed ? `<span>${ccy} ${Math.round(a.aed * rates[ccy])}</span><small>per user / month</small>` : a.tbc ? `<span style="color:var(--faint)">[TBC]</span><small>per user / month</small>` : `<span>Custom</span>`; return `<div class="pp ${p[5] ? "pop" : ""} rv in">${p[5] ? '<span class="badge">Most popular</span>' : ""}<h3>${p[0]}</h3><p class="sub">${p[1]}</p><div class="amt">${amt}</div><div class="note">${a.aed ? "Converted at demo rates · billed in AED · [confirm]" : "[Price to be confirmed]"}</div><ul>${p[3].map((l) => `<li>${l}</li>`).join("")}</ul><a class="btn ${p[5] ? "btn-primary" : "btn-soft"}" href="book-a-demo.html">${p[4]}</a></div>`; }).join("");
+  }
+  renderPrice();
+  $$("#cur button").forEach((b) => b.addEventListener("click", () => { ccy = b.textContent; $$("#cur button").forEach((x) => x.classList.toggle("on", x === b)); renderPrice(); }));
+
+  /* ---------- clients ---------- */
+  const Q = [["From the initial IT consultation to the seamless implementation, CubeZix demonstrated a deep understanding of our unique IT infrastructure needs. Their expertise in network security, cloud computing and infrastructure management has significantly enhanced our operational efficiency.", "Samarth V", "Assistant Finance Manager, Al Rama International FZCO", "#7896B0"], ["CubeZix's responsiveness is impressive; they are always quick to address any issues that arise, minimizing downtime and keeping our operations seamless. Beyond maintenance, they offer valuable advice and proactive solutions.", "Tarek Nachnouchi", "Chief Product Officer, Arabyads", "#0AA7A4"], ["CubeZix's proactive maintenance approach is a standout feature. They regularly monitor our systems, perform routine check-ups, and provide detailed reports on our IT health.", "Aman Nasser", "Director, International Textile Exports Ltd", "#C670AB"]];
+  $("#quotes").innerHTML = Q.map((q, i) => `<figure class="qc rv" style="--d:${i * 0.08}s"><div class="stars" aria-label="5 stars">★★★★★</div><p>${q[0]}</p><figcaption class="who"><span class="av lg" style="--c:${q[3]}">${q[1].split(" ").map((w) => w[0]).join("").slice(0, 2)}</span><div><b>${q[1]}</b><small>${q[2]}</small></div></figcaption></figure>`).join("");
+
+  /* ---------- faq ---------- */
+  const FAQ = [["How long does it take to go live?", "It depends on your size and modules. Most companies go live in [timeframe]. Your dedicated contact plans every step with you."], ["Can we start with just one product?", "Yes. Start with the ERP, the helpdesk or HR on their own, and add the rest later. They share records when you run them together."], ["Can you move our data from our current system?", "Yes. We migrate your customers, items and balances, and clean up duplicates along the way, so you start with one clean record for everything."], ["Does it handle UAE VAT, WPS and e-invoicing?", "Yes. VAT at 5% is built in, WPS salary files are prepared from the payroll run, and e-invoicing is supported as the UAE rules come into force."], ["Where is our data stored, and is it secure?", "[Hosting location and security details.] Access is controlled with roles, two-factor login and a full audit trail."], ["What does our dedicated contact do?", "One person at CubeZix who knows your setup, from your first demo through go-live and beyond."]];
+  const faq = $("#faq-list");
+  faq.innerHTML = FAQ.map((f, i) => `<div class="fq ${i === 0 ? "open" : ""}"><div class="q">${f[0]}</div><div class="a">${f[1]}</div><span class="chev">${ICX.chev || ""}</span></div>`).join("");
+  faq.addEventListener("click", (e) => { const q = e.target.closest(".fq"); if (!q) return; const was = q.classList.contains("open"); $$(".fq", faq).forEach((x) => x.classList.remove("open")); if (!was) q.classList.add("open"); });
+
+    window.ONEERP.observeReveal();
+  }
+  if ("requestIdleCallback" in window) requestIdleCallback(below, { timeout: 700 }); else setTimeout(below, 250);
+  window.ONEERP.observeReveal();
+})();

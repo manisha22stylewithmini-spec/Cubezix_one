@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>(1) ONEERP for trading businesses in the UAE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="industries-trading">
+
+<section class="p-hero g-hero">
+  <div class="wrap">
+    <div class="eyebrow rv">01 · Trading</div>
+    <h1 class="reveal-text rv"><span class="m">You buy</span> in dollars, <span class="m">clear</span> at the port, <span class="m">sell</span> in dirhams and <span class="m">get paid</span> weeks later.</h1>
+    <div class="grid">
+      <div class="rv">
+        <p>A short guide for UAE importers, distributors and re-exporters: what a shipment really costs, the customs and VAT rules that shape it, and what ONEERP takes off your desk between the supplier's invoice and the customer's payment.</p>
+        <div class="cta"><a class="btn btn-primary" href="book-a-demo.html?industry=Trading">Book a demo</a><a class="ulink" href="#s2">Follow one shipment</a></div>
+      </div>
+      <div class="toc rv" id="toc"></div>
+    </div>
+  </div>
+</section>
+
+<section class="psec" id="s2">
+  <div class="wrap">
+    <div class="eyebrow">02 · One shipment, start to finish</div>
+    <h2 class="h2 rv">From the supplier's invoice<br>to the customer's payment.</h2>
+    <div class="timeline" id="timeline"></div>
+  </div>
+</section>
+
+<section class="psec" id="s3">
+  <div class="wrap">
+    <div class="eyebrow">03 · The rules every trader works within</div>
+    <h2 class="h2 rv">Duty, VAT and<br>the free zone.</h2>
+    <div class="uae-rows"><div class="lst" id="rules"></div><div></div></div>
+  </div>
+</section>
+
+<section class="psec" id="s4">
+  <div class="wrap">
+    <div class="eyebrow">04 · What reaches you, and what doesn't</div>
+    <h2 class="h2 rv">One landed cost<br>to confirm.</h2>
+    <div class="card rv" style="max-width:560px;margin-top:56px" id="lc-card"></div>
+  </div>
+</section>
+
+<section class="psec" id="s5">
+  <div class="wrap">
+    <div class="eyebrow">05 · Questions traders ask</div>
+    <h2 class="h2 rv">Questions<br>traders ask.</h2>
+    <div class="acc rv" id="qa"></div>
+  </div>
+</section>
+
+<section class="cta-end">
+  <div class="wrap grid">
+    <div><h2 class="h2 rv">See it with your<br>own shipments.</h2><p class="rv">A walkthrough of ONEERP, shaped around how your trading business works.</p><a class="btn btn-primary rv" href="book-a-demo.html?industry=Trading">Book a demo</a></div>
+    <div></div>
+  </div>
+</section>
+
+<script src="assets/js/nav.js"></script>
+<script src="assets/js/shared.js"></script>
+<script>
+(function () {
+  const { ICONS } = window.ONEERP; const $ = (s) => document.querySelector(s);
+  const T = ["One shipment, start to finish", "The rules every trader works within", "What reaches you, and what doesn't", "Questions traders ask"];
+  $("#toc").innerHTML = `<div class="cap">IN THIS GUIDE</div>` + T.map((t, i) => `<a href="#s${i + 2}"><span>${String(i + 2).padStart(2, "0")}</span>${t}${ICONS.check}</a>`).join("") + `<a class="final-link" href="book-a-demo.html?industry=Trading" style="border:0"><span style="width:auto">→</span> Book a demo <i class="pill1">1</i></a>`;
+  const steps = [["Supplier invoice", "USD 12,400.00 · converted at the day's rate", "AED 45,539.00"], ["Freight and insurance", "Booked against the shipment, not the month", "AED 6,120.00"], ["Customs duty and clearing", "5% duty on CIF value, cleared at Jebel Ali", "AED 10,281.00"], ["Landed cost, a carton", "Total divided across 1,380 cartons", "AED 44.78"], ["Customer invoice and payment", "Sold in dirhams, matched when the bank line arrives", "Paid in 38 days"]];
+  $("#timeline").innerHTML = steps.map((s, i) => `<div class="tl-i rv ${i === 3 ? "on" : ""}"><h5>${s[0]}</h5><p>${s[1]}</p><div class="amt">${s[2]}</div></div>`).join("");
+  const rules = [["Duty", "5% on most goods, charged on the CIF value at the first point of entry.", ["GCC customs union: pay once, move freely within the Gulf"]], ["VAT", "5% on imports, recovered on your return; reverse charge where it applies.", ["registration required above AED 375,000", "returns due 28 days after each tax period"]], ["Free zone", "[Designated-zone rules and what changes for stock held in one.]", []], ["Documents", "Bill of lading, commercial invoice, certificate of origin: kept on the shipment.", []]];
+  $("#rules").innerHTML = rules.map((r) => `<div class="fr rv"><span class="k">${r[0]}</span><div><div class="head">${r[1]}</div>${r[2].length ? `<span class="det">${r[2].join("<br>")}</span>` : ""}</div></div>`).join("");
+  $("#lc-card").innerHTML = `<div class="ticket-head"><span class="ticket-ico">${ICONS.truck}</span><div><div class="ticket-meta">Shipments</div><div class="ticket-title">Container <span class="mono">MSKU 204118</span></div></div><span class="needs">Needs you <i class="pill1">1</i></span></div><div class="rows"><div class="okc" style="padding:6px 0 10px">${ICONS.check} Cleared customs at Jebel Ali</div><div class="row" style="grid-template-columns:100px 1fr"><span class="k" style="font-size:12px">Landed cost</span><span class="v mono" style="font-size:12.5px">AED 61,940.00</span></div><div class="row" style="grid-template-columns:100px 1fr"><span class="k" style="font-size:12px">Covers</span><span class="v" style="font-size:13px">Freight, customs duty, clearing</span></div></div><div class="card-foot"><button class="btn btn-dark">Confirm landed cost</button><span class="fine">14 shipments in transit · 2.4 days average clearance</span></div>`;
+  const qa = [["What does one shipment really cost?", "Everything from the supplier's invoice to the customer's payment, on one record, so the price you quote includes duty, freight and clearing.", ["Cost"]], ["Can I hold stock in a free zone?", "[Free-zone stock handling to confirm.]", ["Stock"]], ["How do I get paid weeks later and still know my margin?", "The margin is fixed when the landed cost is confirmed, and the payment is matched to the invoice when it arrives.", ["Margin"]], ["Does it handle several currencies?", "Yes: AED as the base, with USD and SAR invoices and payments.", ["Currency"]]];
+  $("#qa").innerHTML = qa.map((q) => `<div class="acc-i"><div class="acc-h"><span>${q[0]}</span><span class="tags">${q[2].map((t) => `<span>${t}</span>`).join("")}</span>${ICONS.chev}</div><div class="acc-b"><div><div style="padding:6px 24px 26px;font-size:14.5px;color:var(--ink-2);max-width:40em;line-height:1.6">${q[1]}</div></div></div></div>`).join("");
+  $("#qa").addEventListener("click", (e) => { const h = e.target.closest(".acc-h"); if (!h) return; const it = h.parentElement, was = it.classList.contains("on"); document.querySelectorAll("#qa .acc-i").forEach((x) => x.classList.remove("on")); if (!was) it.classList.add("on"); });
+  window.ONEERP.observeReveal();
+})();
+</script>
+</body>
+</html>

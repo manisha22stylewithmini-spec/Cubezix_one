@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>(1) Book a demo · ONEERP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="demo">
+
+<section class="d-hero">
+  <div class="wrap">
+    <div class="eyebrow rv">01 · Book a demo</div>
+    <h1 class="h2 rv" id="d-title" style="font-size:clamp(38px,4.4vw,60px)"><span>One thing</span> <span class="gray" style="font-weight:500">left.</span> Hand it to us.</h1>
+    <div class="cols">
+      <div>
+        <div class="eyebrow sm rv">From you</div>
+        <form class="card form rv" id="demo-form" novalidate>
+          <div class="fld"><label>Full name</label><input name="name" autocomplete="name" required></div>
+          <div class="fld"><label>Work email</label><input name="email" type="email" autocomplete="email" required></div>
+          <div class="fld"><label>Company</label><input name="company" autocomplete="organization" required></div>
+          <div class="fld"><label>Company size</label><div class="chips" id="size-chips"><button type="button">1 to 10</button><button type="button">11 to 50</button><button type="button">51 to 200</button><button type="button">201 or more</button></div></div>
+          <div class="two"><div class="fld"><label>Phone <small>Optional</small></label><input name="phone" autocomplete="tel"></div><div class="fld hide" id="ind-fld"><label>Industry <small>Optional</small></label><input name="industry"></div></div>
+          <p class="help" style="text-align:left;margin:-4px 0 18px">Only if you'd rather we call (or message you on WhatsApp).</p>
+          <div class="fld" id="know"><label style="font-size:14px">Anything they should know first?</label><p class="help" style="text-align:left;margin:-2px 0 12px">Optional. Tap any that apply and they're added to your request.</p><div class="chips" id="know-chips"><button type="button">We use spreadsheets today</button><button type="button">We have an old ERP</button><button type="button">Multiple branches</button><button type="button">UAE VAT and WPS</button><button type="button">Arabic support</button></div></div>
+          <button class="btn btn-primary" type="submit" id="submit">Book a demo</button>
+          <p class="help">Your details go to your dedicated contact and no one else. Nothing is sent until you press Book a demo. <a class="ulink" href="#">Privacy policy</a></p>
+          <div class="sent-line"><span>Handed to your dedicated contact</span><span class="t" id="sent-t"></span></div>
+        </form>
+      </div>
+      <div>
+        <div class="eyebrow sm rv">To your dedicated contact</div>
+        <div class="who-c rv"><span class="av lg" style="--c:#697284"></span><div>[Name]<small>Your dedicated contact · CubeZix</small></div><span class="st" id="d-st">Nothing waiting</span></div>
+        <p class="msg rv" id="d-msg">One person, not a queue. Your request goes straight to them, and they shape the demo around how your company works.</p>
+        <div class="card crm rv" id="crm"></div>
+        <p class="d-note">Illustration: your request as your dedicated contact sees it in ONEERP. [Confirm CubeZix handles demo requests in ONEERP.]</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="assets/js/nav.js"></script>
+<script src="assets/js/shared.js"></script>
+<script src="assets/js/demo.js"></script>
+</body>
+</html>
