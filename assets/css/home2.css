@@ -1081,3 +1081,8 @@
 .nine-head > b .hl{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;font-size:1.12em;letter-spacing:-.015em;line-height:.9;padding-right:.04em}
 .nine-head > span:last-child{font-size:clamp(16px,1.35vw,18.5px);margin-top:20px;max-width:32em}
 .nine-head > .eyebrow{margin-bottom:22px}
+
+/* hero character field (replaces the dot grid) */
+.h2-hero::before{display:none}
+.h2-ascii{position:absolute;left:0;top:0;z-index:0;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 32%,#000 35%,transparent 88%);mask-image:radial-gradient(ellipse 80% 70% at 50% 32%,#000 35%,transparent 88%)}
+.h2-hero>.wrap{position:relative;z-index:1}

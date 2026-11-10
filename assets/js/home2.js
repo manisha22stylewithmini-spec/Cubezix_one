@@ -101,6 +101,63 @@
   new IntersectionObserver(([e]) => win.classList.toggle("paused", !e.isIntersecting), { threshold: 0.2 }).observe(win);
   { const cm = $("#cta-mark"); if (cm) cm.innerHTML = `<svg class="cm-svg" viewBox="30 40 410 560" aria-hidden="true"><defs><linearGradient id="cg-a" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#80D1D4"/><stop offset="1" stop-color="#3F7FE0"/></linearGradient><linearGradient id="cg-b" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2B4A86"/><stop offset=".25" stop-color="#2B2FA0"/><stop offset=".7" stop-color="#5B45E6"/><stop offset="1" stop-color="#633ADD"/></linearGradient></defs><path d="M190 76C140 86 98 96 74 108 54 119 50 138 50 168V468C50 498 62 520 88 534 122 550 160 556 190 556Z" fill="url(#cg-a)"/><path d="M190 150V96C190 72 212 58 242 62 296 70 350 102 384 120 402 130 392 150 368 150Z" fill="url(#cg-b)"/><path d="M190 480V536C190 560 212 574 242 570 296 562 352 532 408 500 432 486 424 462 398 462 320 442 270 440 190 480Z" fill="url(#cg-b)"/><text x="66" y="380" textLength="350" lengthAdjust="spacingAndGlyphs" font-family="Sora,Inter,sans-serif" font-weight="700" font-size="190" fill="#fff">ONE</text></svg>`; }
   { const nb = $(".nine-head b"); if (nb && !nb.querySelector(".sw")) { const ws = nb.textContent.trim().split(/\s+/); nb.setAttribute("aria-label", ws.join(" ")); nb.innerHTML = ws.map((w, i) => `<span class="sw${i >= ws.length - 2 ? " hl hl" + (i - (ws.length - 2)) : ""}" style="--i:${i}" aria-hidden="true">${w}</span>`).join(" "); } }
+  /* ---------- hero background: character field that wakes up around the cursor (Dovetail-style) ---------- */
+  (function asciiField() {
+    const hero = $(".h2-hero"); if (!hero) return;
+    const cv = document.createElement("canvas"); cv.className = "h2-ascii"; cv.setAttribute("aria-hidden", "true"); hero.prepend(cv);
+    const ctx = cv.getContext("2d");
+    const CH = "01<>/*+=:.%|-#0101";
+    const CELL = 22, R = 170, rnd = () => CH[(Math.random() * CH.length) | 0];
+    const STOPS = [[58, 76, 225], [80, 66, 223], [99, 58, 221]];
+    const reduceA = matchMedia("(prefers-reduced-motion: reduce)").matches, hoverA = matchMedia("(hover: hover)").matches;
+    let W = 0, H = 0, cols = 0, rows = 0, base = [], alt = [], en = new Float32Array(0), colCol = [];
+    let mx = -9999, my = -9999, inside = false, raf = 0, onScreen = true;
+    const mix = (t) => { const k = t < 0.5 ? 0 : 1, f = t < 0.5 ? t / 0.5 : (t - 0.5) / 0.5, a = STOPS[k], b = STOPS[k + 1]; return a.map((v, i) => Math.round(v + (b[i] - v) * f)); };
+    function size() {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = hero.clientWidth; H = hero.clientHeight;
+      cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + "px"; cv.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cols = Math.ceil(W / CELL); rows = Math.ceil(H / CELL);
+      const n = cols * rows; base = new Array(n); alt = new Array(n); en = new Float32Array(n);
+      for (let i = 0; i < n; i++) { base[i] = Math.random() < 0.38 ? rnd() : " "; alt[i] = rnd(); }
+      colCol = Array.from({ length: cols }, (_, c) => mix(cols > 1 ? c / (cols - 1) : 0));
+      draw();
+    }
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.font = '600 13px "Geist Mono", ui-monospace, monospace'; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        const i = r * cols + c, e = en[i];
+        const ch = e > 0.18 ? (base[i] === " " ? alt[i] : base[i]) : base[i];
+        if (ch === " ") continue;
+        if (e > 0.02) { const k = (i % 7 === 0) ? [128, 209, 212] : colCol[c]; ctx.fillStyle = `rgba(${k[0]},${k[1]},${k[2]},${Math.min(1, 0.14 + e * 0.95).toFixed(3)})`; }
+        else ctx.fillStyle = "rgba(20,22,63,.07)";
+        ctx.fillText(ch, c * CELL + CELL / 2, r * CELL + CELL / 2);
+      }
+    }
+    function tick() {
+      raf = 0; let alive = false;
+      const c0 = Math.max(0, ((mx - R) / CELL) | 0), c1 = Math.min(cols - 1, ((mx + R) / CELL) | 0);
+      const r0 = Math.max(0, ((my - R) / CELL) | 0), r1 = Math.min(rows - 1, ((my + R) / CELL) | 0);
+      for (let i = 0; i < en.length; i++) if (en[i] > 0.005) { en[i] *= 0.9; alive = true; } else en[i] = 0;
+      if (inside) for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) {
+        const dx = c * CELL + CELL / 2 - mx, dy = r * CELL + CELL / 2 - my, d = Math.sqrt(dx * dx + dy * dy);
+        if (d < R) { const i = r * cols + c, t = 1 - d / R, target = Math.pow(t, 1.3); if (target > en[i]) en[i] = target; alive = true; if (Math.random() < 0.14 * t) alt[i] = rnd(); if (base[i] !== " " && Math.random() < 0.05 * t) base[i] = rnd(); }
+      }
+      draw();
+      if ((alive || inside) && onScreen) raf = requestAnimationFrame(tick);
+    }
+    const kick = () => { if (!raf && onScreen) raf = requestAnimationFrame(tick); };
+    if (hoverA && !reduceA) {
+      hero.addEventListener("pointermove", (e) => { const b = hero.getBoundingClientRect(); mx = e.clientX - b.left; my = e.clientY - b.top; inside = true; kick(); }, { passive: true });
+      hero.addEventListener("pointerleave", () => { inside = false; kick(); });
+    }
+    new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) kick(); }).observe(hero);
+    if ("ResizeObserver" in window) { let t; new ResizeObserver(() => { clearTimeout(t); t = setTimeout(size, 120); }).observe(hero); }
+    size();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+  })();
   const stage = $(".h2-stage");
   stage.insertAdjacentHTML("afterbegin", `<div class="h2-float f1" aria-hidden="true"><i class="ok"></i><div><b>Payroll sent</b><small>WPS file · 8 employees</small></div></div><div class="h2-float f2" aria-hidden="true"><i class="warn"></i><div><b>Visa expires in 30 days</b><small>Fatima · HR</small></div></div><div class="h2-float f3" aria-hidden="true"><i class="brand"></i><div><b>1 decision needs you</b><small>PO-2026-0418</small></div></div>`);
   [$(".h2-stage")].forEach((el) => new IntersectionObserver(([e]) => el.classList.toggle("is-off", !e.isIntersecting), { rootMargin: "100px" }).observe(el));
