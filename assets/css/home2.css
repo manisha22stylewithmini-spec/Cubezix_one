@@ -1009,3 +1009,23 @@
 .h2-cta-card .cta-acc{background:linear-gradient(95deg,#FFFFFF 0%,#CFF1F2 35%,#C9C4FF 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .h2-cta-card p{font-family:"Outfit",sans-serif;font-weight:400;font-size:clamp(17px,1.5vw,21px);line-height:1.55;letter-spacing:0;max-width:25em;margin:30px auto 40px;color:rgba(255,255,255,.88)}
 .h2-cta-card .btn{font-family:var(--font)}
+
+/* closing CTA v2: heavy grotesk + pixel-serif accent word + 3D logo tile */
+.h2-cta-card{font-family:"Inter",system-ui,sans-serif}
+.h2-cta-card .cta-eyebrow{font:500 clamp(15px,1.4vw,18px)/1.3 "Inter",sans-serif;color:rgba(255,255,255,.8);margin-bottom:22px}
+.h2-cta-card .h2.cta-h{font-family:"Inter",sans-serif;font-weight:700;font-size:clamp(44px,7.4vw,104px);line-height:1;letter-spacing:-.05em;max-width:none;margin:0 auto;text-wrap:balance;color:#fff}
+.cta-h .l1,.cta-h .l2{display:block}
+.cta-h .l2{margin-top:.06em;display:flex;align-items:center;justify-content:center;gap:.16em;flex-wrap:wrap}
+.cta-h .pxf{font-family:"Pixelify Sans","Inter",sans-serif;font-style:normal;font-weight:500;letter-spacing:-.015em;color:#fff;text-shadow:0 0 28px rgba(255,255,255,.25)}
+.cta-mark{display:inline-grid;place-items:center;width:1.12em;height:1.12em;border-radius:.3em;background:linear-gradient(150deg,#FFFFFF 0%,#EEF0FF 60%,#DCD8FF 100%);box-shadow:0 .08em .16em -.04em rgba(20,22,63,.45),0 .3em .5em -.14em rgba(20,22,63,.5),inset 0 -.06em .1em rgba(99,58,221,.18),inset 0 .05em .06em rgba(255,255,255,.9);transform:rotate(-6deg);animation:ctamark 6s ease-in-out infinite;vertical-align:middle}
+.cta-mark svg{height:.82em;width:auto;display:block}
+@keyframes ctamark{50%{transform:rotate(4deg) translateY(-.05em)}}
+.h2-cta-card p{font-family:"Inter",sans-serif;font-weight:400;font-size:clamp(18px,1.7vw,24px);line-height:1.5;letter-spacing:-.01em;max-width:27em;margin:34px auto 42px;color:rgba(255,255,255,.92)}
+.h2-cta-card .px{position:absolute;width:12px;height:12px;background:#fff;opacity:.5;animation:pxtw 3.2s steps(2,end) infinite;z-index:0}
+.h2-cta-card .px.p1{left:9%;top:22%}.h2-cta-card .px.p2{left:15%;top:64%;width:8px;height:8px;animation-delay:-1s;background:#BFEFF0}
+.h2-cta-card .px.p3{right:10%;top:26%;width:8px;height:8px;animation-delay:-2s;background:#CFC9FF}
+.h2-cta-card .px.p4{right:16%;top:68%;animation-delay:-.6s}
+.h2-cta-card .px.p5{left:50%;top:9%;width:8px;height:8px;animation-delay:-1.8s}
+@keyframes pxtw{0%,100%{opacity:.15}50%{opacity:.6}}
+@media (max-width:640px){.h2-cta-card .px{display:none}.cta-h .l2{gap:.1em}}
+@media (prefers-reduced-motion:reduce){.cta-mark,.h2-cta-card .px{animation:none}}

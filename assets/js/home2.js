@@ -99,6 +99,7 @@
   tabs.addEventListener("animationend", (e) => { if (e.target.tagName === "B" && !reduce) select((cur + 1) % PRODUCTS.length); });
   win.addEventListener("mouseenter", () => win.classList.add("paused")); win.addEventListener("mouseleave", () => win.classList.remove("paused")); tabs.addEventListener("mouseenter", () => win.classList.add("paused")); tabs.addEventListener("mouseleave", () => win.classList.remove("paused"));
   new IntersectionObserver(([e]) => win.classList.toggle("paused", !e.isIntersecting), { threshold: 0.2 }).observe(win);
+  { const cm = $("#cta-mark"); if (cm) cm.innerHTML = window.CZ_NAV.mark(100); }
   const stage = $(".h2-stage");
   stage.insertAdjacentHTML("afterbegin", `<div class="h2-float f1" aria-hidden="true"><i class="ok"></i><div><b>Payroll sent</b><small>WPS file · 8 employees</small></div></div><div class="h2-float f2" aria-hidden="true"><i class="warn"></i><div><b>Visa expires in 30 days</b><small>Fatima · HR</small></div></div><div class="h2-float f3" aria-hidden="true"><i class="brand"></i><div><b>1 decision needs you</b><small>PO-2026-0418</small></div></div>`);
   [$(".h2-stage")].forEach((el) => new IntersectionObserver(([e]) => el.classList.toggle("is-off", !e.isIntersecting), { rootMargin: "100px" }).observe(el));
