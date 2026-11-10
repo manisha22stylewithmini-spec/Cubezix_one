@@ -158,6 +158,13 @@
     size();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
   })();
+  (function typeAccent() {
+    $$(".h2-head .h2, .ac-head .h2").forEach((h) => {
+      if (h.querySelector(".acc")) return;
+      const words = h.textContent.trim().split(/\s+/), n = words.length <= 2 ? 1 : 2;
+      h.innerHTML = words.slice(0, -n).join(" ") + (words.length > n ? " " : "") + `<span class="acc">${words.slice(-n).join(" ")}</span>`;
+    });
+  })();
   const stage = $(".h2-stage");
   stage.insertAdjacentHTML("afterbegin", `<div class="h2-float f1" aria-hidden="true"><i class="ok"></i><div><b>Payroll sent</b><small>WPS file · 8 employees</small></div></div><div class="h2-float f2" aria-hidden="true"><i class="warn"></i><div><b>Visa expires in 30 days</b><small>Fatima · HR</small></div></div><div class="h2-float f3" aria-hidden="true"><i class="brand"></i><div><b>1 decision needs you</b><small>PO-2026-0418</small></div></div>`);
   [$(".h2-stage")].forEach((el) => new IntersectionObserver(([e]) => el.classList.toggle("is-off", !e.isIntersecting), { rootMargin: "100px" }).observe(el));
