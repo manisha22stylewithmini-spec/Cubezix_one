@@ -134,35 +134,49 @@
     ["mail", "Old accounting app", "41 bank lines unmatched", "38 matched by rules, 3 left for you to confirm", "y"],
     ["cart", "Point of sale", "Price change not synced", "Price list pushed to every till automatically", "a"],
   ];
-  const nz = (n, i) => `<div class="nz" data-i="${i}" role="button" tabindex="0" aria-label="${n[1]}: ${n[2]}. Tap to fix"><div class="nz-in"><div class="nz-f pain"><span class="ni">${ICX[n[0]] || ICX.inbox}</span><span class="nz-t"><small>${n[1]}</small><b>${n[2]}</b></span><em class="dot"></em><u class="tapfix">Tap to fix</u></div><div class="nz-f fix"><span class="ni">${ICX.ok}</span><span class="nz-t"><small>${n[4] === "a" ? "Handled by a rule" : "Needs you"}</small><b>${n[3]}</b></span>${n[4] === "y" ? '<button class="no-a" type="button">Approve</button>' : '<u class="dn">Done</u>'}</div></div></div>`;
+  const nz = (n, i) => `<div class="nz" data-i="${i}" role="button" tabindex="0" aria-label="${n[1]}: ${n[2]}. Hover or tap to see the fix"><div class="nz-in"><div class="nz-f pain"><span class="ni">${ICX[n[0]] || ICX.inbox}</span><span class="nz-t"><small>${n[1]}</small><b>${n[2]}</b></span><em class="dot"></em><u class="tapfix">See the fix</u></div><div class="nz-f fix"><span class="ni">${ICX.ok}</span><span class="nz-t"><small>${n[4] === "a" ? "Handled by a rule" : "Needs you"}</small><b>${n[3]}</b></span>${n[4] === "y" ? '<button class="no-a" type="button">Approve</button><u class="dn ok apd">Approved</u>' : '<u class="dn">Done</u>'}</div></div></div>`;
   const ntrack = (ids) => `<div class="nine-in">${[...ids, ...ids].map((i) => nz(NINE[i], i)).join("")}</div>`;
   $("#nine-a").innerHTML = ntrack([0, 1, 2, 3, 4]); $("#nine-b").innerHTML = ntrack([5, 6, 7, 8]);
-  const nRows = $(".nine-rows"), nMsg = $("#no-msg"), nBar = $("#no-bar"), nSum = $(".nine-sum");
-  const done = new Set(); let nTimer = null, nVisible = false;
-  const reduceN = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  function nCount() {
-    let au = 0, yo = 0; done.forEach((i) => (NINE[i][4] === "a" ? au++ : yo++));
-    $("#n-auto").textContent = au; $("#n-you").textContent = yo; nBar.style.width = (done.size / NINE.length) * 100 + "%";
-    if (done.size === NINE.length) { nSum.classList.add("all"); nMsg.innerHTML = `${NINE.length} messages sorted. <b>${yo}</b> are yours to decide.`; stopN(); }
-    else { nSum.classList.remove("all"); nMsg.textContent = done.size ? `${NINE.length - done.size} more to sort…` : "Watching your apps…"; }
+  const nRows = $(".nine-rows"), nCur = $(".nine-cur");
+  const reduceN = matchMedia("(prefers-reduced-motion: reduce)").matches, touchN = matchMedia("(hover: none)").matches;
+  let tok = 0, nVisible = false, idleT = null;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const nVisibleCards = () => { const rr = nRows.getBoundingClientRect(); return $$(".nz", nRows).filter((c) => { const r = c.getBoundingClientRect(); return r.left > rr.left + rr.width * 0.12 && r.right < rr.right - rr.width * 0.12 && r.top >= rr.top - 2 && r.bottom <= rr.bottom + 2; }); };
+  const curTo = (el, fx, fy) => { const rr = nRows.getBoundingClientRect(), r = el.getBoundingClientRect(); nCur.style.transform = `translate(${(r.left - rr.left + r.width * fx).toFixed(0)}px,${(r.top - rr.top + r.height * fy).toFixed(0)}px)`; };
+  function tourStop() { tok++; clearTimeout(idleT); nCur.classList.remove("on", "click"); nRows.classList.remove("tour"); $$(".nz.demo", nRows).forEach((c) => c.classList.remove("demo", "appr-d")); }
+  async function tourStart() {
+    if (reduceN) return; tourStop(); const my = tok; let last = null;
+    const live = () => my === tok && nVisible;
+    nCur.style.transition = "none"; const first = nVisibleCards()[0]; if (first) curTo(first, 0.5, 0.5); void nCur.offsetWidth; nCur.style.transition = "";
+    while (live()) {
+      const cs = nVisibleCards().filter((c) => c !== last); if (!cs.length) { await sleep(500); continue; }
+      const c = cs[Math.floor(Math.random() * cs.length)]; last = c;
+      nRows.classList.add("tour"); nCur.classList.add("on"); curTo(c, 0.62, 0.55);
+      await sleep(1100); if (!live()) break;
+      c.classList.add("demo");
+      await sleep(1700); if (!live()) break;
+      const btn = $(".no-a", c);
+      if (btn && !c.classList.contains("appr")) {
+        curTo(btn, 0.5, 0.5); await sleep(900); if (!live()) break;
+        nCur.classList.add("click"); await sleep(260); c.classList.add("appr-d"); nCur.classList.remove("click");
+        await sleep(1500); if (!live()) break;
+        c.classList.remove("appr-d");
+      }
+      c.classList.remove("demo"); nRows.classList.remove("tour");
+      await sleep(1300);
+    }
+    if (my === tok) tourStop();
   }
-  function resolve(i) {
-    if (done.has(i)) return; done.add(i);
-    $$(`.nz[data-i="${i}"]`, nRows).forEach((c) => c.classList.add("ok"));
-    nCount();
-  }
-  function nextN() { const i = NINE.findIndex((_, k) => !done.has(k)); if (i < 0) return stopN(); resolve(i); }
-  function startN() { if (nTimer || done.size === NINE.length) return; nTimer = setInterval(nextN, 1700); }
-  function stopN() { clearInterval(nTimer); nTimer = null; }
-  function resetN() { stopN(); done.clear(); $$(".nz", nRows).forEach((c) => c.classList.remove("ok")); nCount(); setTimeout(() => { if (nVisible) startN(); }, 700); }
+  nRows.addEventListener("mouseenter", () => { if (!touchN) tourStop(); });
+  nRows.addEventListener("mouseleave", () => { if (!touchN && nVisible) { clearTimeout(idleT); idleT = setTimeout(tourStart, 2200); } });
   nRows.addEventListener("click", (e) => {
-    const b = e.target.closest(".no-a"); if (b) { e.stopPropagation(); b.outerHTML = '<u class="dn ok">Approved</u>'; return; }
-    const c = e.target.closest(".nz"); if (c) resolve(+c.dataset.i);
+    const b = e.target.closest(".no-a"); if (b) { e.stopPropagation(); b.closest(".nz").classList.add("appr"); return; }
+    if (touchN) { const c = e.target.closest(".nz"); if (c) { const on = c.classList.contains("show"); $$(".nz.show", nRows).forEach((x) => x.classList.remove("show")); if (!on) c.classList.add("show"); tourStop(); } }
   });
-  nRows.addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("nz")) { e.preventDefault(); resolve(+e.target.dataset.i); } });
-  $("#no-replay").addEventListener("click", resetN);
-  if (reduceN) NINE.forEach((_, i) => resolve(i));
-  else new IntersectionObserver(([e]) => { nVisible = e.isIntersecting; $(".nine-rows").classList.toggle("is-off", !nVisible); if (nVisible) startN(); else stopN(); }, { threshold: 0.3 }).observe(nRows);
+  nRows.addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("nz")) { e.preventDefault(); e.target.classList.toggle("show"); } });
+  nRows.addEventListener("focusin", (e) => { if (e.target.classList.contains("nz")) e.target.classList.add("show"); });
+  nRows.addEventListener("focusout", (e) => { if (e.target.classList.contains("nz")) e.target.classList.remove("show"); });
+  new IntersectionObserver(([e]) => { nVisible = e.isIntersecting; nRows.classList.toggle("is-off", !nVisible); if (nVisible) { clearTimeout(idleT); idleT = setTimeout(tourStart, 900); } else tourStop(); }, { threshold: 0.35 }).observe(nRows);
 
   /* ---------- stats count-up ---------- */
   $$(".h2-stat b").forEach((b) => window.ONEERP.inView(b, () => { const to = +b.dataset.to, suf = b.dataset.suf || "", t0 = performance.now(); (function tick(t) { const k = clamp((t - t0) / 1400); b.textContent = Math.round(to * ease(k)).toLocaleString("en-US") + suf; if (k < 1) requestAnimationFrame(tick); })(t0); }, 0.6));
