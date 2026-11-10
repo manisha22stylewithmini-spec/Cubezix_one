@@ -1060,3 +1060,15 @@
 .cta-h .pxf{text-transform:uppercase;font-size:.92em;letter-spacing:.01em}
 
 .cta-h .pxf::after{display:none}
+
+/* nine apps heading: wide heavy grotesk title, Space Grotesk labels, brand-gradient highlight */
+.h2-trusted .nine-head{margin-bottom:34px}
+.nine-head > .eyebrow{display:inline-flex;align-items:center;gap:10px;font:500 11px/1 "Space Grotesk",sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.nine-head > .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#80D1D4,#3A4CE1 55%,#633ADD);box-shadow:0 0 0 4px rgba(58,76,225,.14)}
+.nine-head > b{display:block;max-width:15em;margin:0 auto;font-family:"Archivo","Inter",sans-serif;font-stretch:125%;font-weight:800;font-size:clamp(32px,4.8vw,62px);line-height:1.04;letter-spacing:-.035em;color:var(--ink);text-wrap:balance}
+.nine-head > b .sw{display:inline-block;margin:0;font-size:inherit;color:inherit;opacity:0;transform:translateY(.45em);transition:opacity .6s var(--ease),transform .75s var(--ease);transition-delay:calc(var(--i)*70ms)}
+.nine-head.in > b .sw{opacity:1;transform:none}
+.nine-head > b .hl{background:linear-gradient(95deg,#80D1D4 0%,#3A4CE1 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nine-head > b .hl1{background:linear-gradient(95deg,#3A4CE1 0%,#633ADD 100%);-webkit-background-clip:text;background-clip:text}
+.nine-head > span:last-child{display:block;max-width:34em;margin:22px auto 0;font:400 clamp(16px,1.5vw,20px)/1.55 "Space Grotesk","Inter",sans-serif;letter-spacing:0;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.nine-head > b .sw{opacity:1;transform:none;transition:none}}
