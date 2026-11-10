@@ -132,7 +132,7 @@
         const ch = e > 0.18 ? (base[i] === " " ? alt[i] : base[i]) : base[i];
         if (ch === " ") continue;
         if (e > 0.02) { const k = (i % 7 === 0) ? [128, 209, 212] : colCol[c]; ctx.fillStyle = `rgba(${k[0]},${k[1]},${k[2]},${Math.min(1, 0.14 + e * 0.95).toFixed(3)})`; }
-        else ctx.fillStyle = "rgba(20,22,63,.07)";
+        else ctx.fillStyle = "rgba(20,22,63,.032)";
         ctx.fillText(ch, c * CELL + CELL / 2, r * CELL + CELL / 2);
       }
     }
@@ -149,10 +149,6 @@
       if ((alive || inside) && onScreen) raf = requestAnimationFrame(tick);
     }
     const kick = () => { if (!raf && onScreen) raf = requestAnimationFrame(tick); };
-    if (hoverA && !reduceA) {
-      hero.addEventListener("pointermove", (e) => { const b = hero.getBoundingClientRect(); mx = e.clientX - b.left; my = e.clientY - b.top; inside = true; kick(); }, { passive: true });
-      hero.addEventListener("pointerleave", () => { inside = false; kick(); });
-    }
     new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) kick(); }).observe(hero);
     if ("ResizeObserver" in window) { let t; new ResizeObserver(() => { clearTimeout(t); t = setTimeout(size, 120); }).observe(hero); }
     size();
@@ -253,7 +249,7 @@
       geo = cards.map((c, i) => {
         const t = tabEls[i] || tabs, tr = t.getBoundingClientRect();
         const cx = c.offsetLeft + c.offsetWidth / 2, cy = c.offsetTop + c.offsetHeight / 2;
-        return { dx: tr.left - hr.left + tr.width / 2 - cx, dy: tr.top - hr.top + tr.height / 2 - cy };
+        return { dx: tr.left - hr.left + tr.width / 2 - cx, dy: tr.top - hr.top + tr.height / 2 - cy, k: Math.min(0.8, Math.max(0.35, 1 - (tr.width * 0.9) / c.offsetWidth)) };
       });
       const st = stage.getBoundingClientRect().top + scrollY;
       end = Math.max(200, st - innerHeight * 0.45);
@@ -264,9 +260,10 @@
       const p = clamp(scrollY / end, 0, 1), e = Math.round(p * p * (3 - 2 * p) * 400) / 400;
       if (e === lastE) return; lastE = e;
       cards.forEach((c, i) => {
-        const g = geo[i], d = i * 0.035, q = clamp((e - d) / (1 - d), 0, 1);
-        c.style.transform = `translate(${(g.dx * q).toFixed(1)}px,${(g.dy * q).toFixed(1)}px) scale(${(1 - 0.78 * q).toFixed(3)})`;
-        c.style.opacity = q < 0.7 ? 1 : Math.max(0, 1 - (q - 0.7) / 0.3).toFixed(3);
+        const g = geo[i], d = i * 0.03, q = clamp((e - d) / (1 - d), 0, 1), t = tabEls[i];
+        c.style.transform = `translate(${(g.dx * Math.pow(q, 2.4)).toFixed(1)}px,${(g.dy * q).toFixed(1)}px) scale(${(1 - g.k * q).toFixed(3)})`;
+        c.style.opacity = q < 0.9 ? 1 : Math.max(0, 1 - (q - 0.9) / 0.1).toFixed(3);
+        if (t) t.classList.toggle("caught", q >= 0.97);
       });
       wrapEl.classList.toggle("gone", e >= 1);
     }
