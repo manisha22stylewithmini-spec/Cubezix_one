@@ -878,3 +878,6 @@
 @keyframes curclick{0%{opacity:.9;transform:scale(.4)}100%{opacity:0;transform:scale(1.8)}}
 @media (hover:none){.nine-cur span{display:none}}
 @media (prefers-reduced-motion:reduce){.nine-cur{display:none}}
+
+.h2-tab{height:40px;gap:7px;padding:0 14px 0 8px;font-size:13px}.h2-tab i{width:24px;height:24px}
+@media (max-width:768px){.h2-tab{padding:0 9px}.h2-tab i{width:26px;height:26px}}
