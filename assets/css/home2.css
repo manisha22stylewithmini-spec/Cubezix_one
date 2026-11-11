@@ -1315,3 +1315,9 @@ footer.site-footer{background:#fff;margin-top:0}
 .st-rest{background:linear-gradient(90deg,rgba(128,209,212,.28),rgba(99,58,221,.28));box-shadow:none}
 
 .h2-stats .st-bar .st-lo,.h2-stats .st-bar .st-hi{color:var(--muted);margin:0;max-width:none;font:400 12px "Space Grotesk",sans-serif}
+
+/* stats band: equal air above and below */
+.h2-stats{margin:0;padding:0}
+.sf{margin-top:0}
+.h2-stats{margin:96px 0}
+@media (max-width:768px){.h2-stats{margin:64px 0}}
