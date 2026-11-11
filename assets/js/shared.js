@@ -129,3 +129,23 @@
   // hash scrolling for in-page module anchors
   if (location.hash) setTimeout(() => { const t = document.querySelector(location.hash); if (t) window.ONEERP.scrollTo(t); }, 400);
 })();
+
+/* footer wordmark: scale so the letters touch the left and right edge of the footer content */
+(function fitWordmark() {
+  const el = document.querySelector(".wordmark.cz-word"); if (!el) return;
+  const wrap = el.closest(".wrap") || el.parentElement, cv = document.createElement("canvas").getContext("2d");
+  function fit() {
+    const cs = getComputedStyle(el), fam = cs.fontFamily, wt = cs.fontWeight, text = el.textContent, ls = -0.06;
+    cv.font = `${wt} 100px ${fam}`;
+    const m = cv.measureText(text), L = -m.actualBoundingBoxLeft, R = m.width - m.actualBoundingBoxRight;
+    const cw = wrap.clientWidth - parseFloat(getComputedStyle(wrap).paddingLeft) - parseFloat(getComputedStyle(wrap).paddingRight);
+    // advance width at 100px including letter-spacing, then ink width = advance - bearings - spacing the last glyph carries
+    const adv = m.width + ls * 100 * text.length, ink = adv - L - R - ls * 100;
+    const size = (100 * cw) / ink * 1.005;
+    el.style.fontSize = size.toFixed(2) + "px"; el.style.letterSpacing = ls + "em"; el.style.textAlign = "left";
+    el.style.transform = `translateX(${(-L * size / 100).toFixed(2)}px)`;
+  }
+  const run = () => requestAnimationFrame(fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(run); else run();
+  let t; addEventListener("resize", () => { clearTimeout(t); t = setTimeout(run, 100); });
+})();
