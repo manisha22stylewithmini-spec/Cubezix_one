@@ -100,7 +100,6 @@
   win.addEventListener("mouseenter", () => win.classList.add("paused")); win.addEventListener("mouseleave", () => win.classList.remove("paused")); tabs.addEventListener("mouseenter", () => win.classList.add("paused")); tabs.addEventListener("mouseleave", () => win.classList.remove("paused"));
   new IntersectionObserver(([e]) => win.classList.toggle("paused", !e.isIntersecting), { threshold: 0.2 }).observe(win);
   { const cm = $("#cta-mark"); if (cm) cm.innerHTML = window.CZ_NAV.mark(100); }
-  { const nb = $(".nine-head b"); if (nb && !nb.querySelector(".sw")) { const ws = nb.textContent.trim().split(/\s+/); nb.setAttribute("aria-label", ws.join(" ")); nb.innerHTML = ws.map((w, i) => `<span class="sw${i >= ws.length - 2 ? " hl hl" + (i - (ws.length - 2)) : ""}" style="--i:${i}" aria-hidden="true">${w}</span>`).join(" "); } }
   /* ---------- hero background: character field that wakes up around the cursor (Dovetail-style) ---------- */
   (function asciiField() {
     const hero = $(".h2-hero"); if (!hero) return;
@@ -162,13 +161,13 @@
     });
   })();
   /* ---------- closing CTA: WebGL "Waves" shader in the logo colours (port of the 21st.dev ShaderBackground) ---------- */
-  function shaderBg(card) {
+  function shaderBg(card, stops = [0, 0.5, 1]) {
     if (!card) return;
     const canvas = document.createElement("canvas"); canvas.className = "cta-shader"; canvas.setAttribute("aria-hidden", "true");
     const gl = canvas.getContext("webgl", { antialias: false, premultipliedAlpha: false }); if (!gl) return;
     card.prepend(canvas); card.classList.add("has-shader");
     const VERT = "attribute vec2 a_position;void main(){gl_Position=vec4(a_position,0.0,1.0);}";
-    const FRAG = "#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\nuniform vec3 u_colors[8];\nuniform vec4 u_scene;\nuniform vec4 u_shape;\nuniform vec4 u_surface;\nuniform vec4 u_finish;\nuniform vec4 u_transform;\nuniform vec4 u_space;\nuniform vec4 u_cursor;\n#define u_resolution u_scene.xy\n#define u_time u_scene.z\n#define u_colorCount u_scene.w\n#define u_scale u_shape.x\n#define u_intensity u_shape.y\n#define u_paramA u_shape.z\n#define u_warp u_shape.w\n#define u_detail u_surface.x\n#define u_contrast u_surface.y\n#define u_brightness u_surface.z\n#define u_saturation u_surface.w\n#define u_hue u_finish.x\n#define u_vignette u_finish.y\n#define u_blur u_finish.z\n#define u_grain u_finish.w\n#ifdef GL_FRAGMENT_PRECISION_HIGH\n#define u_seed u_transform.x\n#else\n#define u_seed mod(u_transform.x, 31.0)\n#endif\n#define u_rotate u_transform.y\n#define u_drift u_transform.z\n#define u_oklab u_transform.w\n#define u_offset u_space.xy\n#define u_mouse u_space.zw\nfloat hash21(vec2 p) {\n#ifndef GL_FRAGMENT_PRECISION_HIGH\n  p = mod(p, 31.0);\n#endif\n  p = fract(p * vec2(234.34, 435.345));\n  p += dot(p, p + 34.23);\n  return fract(p.x * p.y);\n}\nfloat grainHash(vec2 p) {\n  vec3 p3 = fract(vec3(p.xyx) * 0.1031);\n  p3 += dot(p3, p3.yzx + 33.33);\n  return fract((p3.x + p3.y) * p3.z);\n}\nfloat noise(vec2 p) {\n  vec2 i = floor(p); vec2 f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);\n  return mix(mix(hash21(i), hash21(i + vec2(1.0, 0.0)), u.x), mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u.x), u.y);\n}\nfloat fbm(vec2 p) {\n  float v = 0.0; float a = 0.5;\n  for (int i = 0; i < 5; i++) { v += a * noise(p); p = p * 2.03 + vec2(17.0, 9.2); a *= 0.5; }\n  return v;\n}\nvec3 palette(float x) {\n  float n = max(u_colorCount - 1.0, 1.0);\n  float f = clamp(x, 0.0, 1.0) * n;\n  vec3 col = u_colors[0];\n  for (int i = 0; i < 7; i++) {\n    if (float(i) < n) col = mix(col, u_colors[i + 1], smoothstep(0.0, 1.0, clamp(f - float(i), 0.0, 1.0)));\n  }\n  return col;\n}\nvec3 shade(vec2 uv, vec2 p, float t) {\n  float y = uv.y + sin(uv.x * (3.0 + u_intensity * 9.0) + t * 0.8) * 0.08 + (fbm(p * 2.0 + t * 0.1) - 0.5) * u_intensity * 0.6;\n  return palette(y);\n}\nvoid main() {\n  vec2 uv = gl_FragCoord.xy / u_resolution.xy;\n  vec2 screenUv = uv;\n  vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);\n  uv = p * min(u_resolution.x, u_resolution.y) / u_resolution.xy + 0.5;\n  p *= u_scale;\n  if (abs(u_rotate) > 0.0001) { float cr = cos(u_rotate), sr = sin(u_rotate); p = mat2(cr, -sr, sr, cr) * p; }\n  p += u_offset;\n  if (u_drift > 0.0001) p += u_drift * vec2(sin(u_time * 0.31), cos(u_time * 0.23));\n  if (u_warp > 0.0) p += u_warp * (vec2(fbm(p * u_detail + u_seed), fbm(p * u_detail + vec2(5.2, 1.3))) - 0.5);\n  vec3 col;\n  if (u_blur > 0.0) {\n    float e = u_blur; float pe = e * u_scale;\n    vec2 uvE = vec2(e) * min(u_resolution.x, u_resolution.y) / u_resolution.xy;\n    col  = shade(uv, p, u_time) * 0.36;\n    col += shade(uv + vec2(uvE.x, 0.0), p + vec2(pe, 0.0), u_time) * 0.16;\n    col += shade(uv - vec2(uvE.x, 0.0), p - vec2(pe, 0.0), u_time) * 0.16;\n    col += shade(uv + vec2(0.0, uvE.y), p + vec2(0.0, pe), u_time) * 0.16;\n    col += shade(uv - vec2(0.0, uvE.y), p - vec2(0.0, pe), u_time) * 0.16;\n  } else { col = shade(uv, p, u_time); }\n  if (abs(u_contrast - 1.0) > 0.0001) col = (col - 0.5) * u_contrast + 0.5;\n  if (abs(u_saturation - 1.0) > 0.0001) { float luma = dot(col, vec3(0.299, 0.587, 0.114)); col = mix(vec3(luma), col, u_saturation); }\n  if (abs(u_brightness) > 0.0001) col += u_brightness;\n  if (u_vignette > 0.0001) { float vd = length(screenUv - 0.5) * 1.41421356; col *= 1.0 - u_vignette * smoothstep(0.35, 1.0, vd); }\n  if (u_grain > 0.0001) col += (grainHash(gl_FragCoord.xy + vec2(u_seed * 17.0, u_seed * 31.0)) - 0.5) * u_grain;\n  gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);\n}";
+    const FRAG = "#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\nuniform vec3 u_colors[8];\nuniform vec4 u_scene;\nuniform vec4 u_shape;\nuniform vec4 u_surface;\nuniform vec4 u_finish;\nuniform vec4 u_transform;\nuniform vec4 u_space;\nuniform vec4 u_cursor;\n#define u_resolution u_scene.xy\n#define u_time u_scene.z\n#define u_colorCount u_scene.w\n#define u_scale u_shape.x\n#define u_intensity u_shape.y\n#define u_paramA u_shape.z\n#define u_warp u_shape.w\n#define u_detail u_surface.x\n#define u_contrast u_surface.y\n#define u_brightness u_surface.z\n#define u_saturation u_surface.w\n#define u_hue u_finish.x\n#define u_vignette u_finish.y\n#define u_blur u_finish.z\n#define u_grain u_finish.w\n#ifdef GL_FRAGMENT_PRECISION_HIGH\n#define u_seed u_transform.x\n#else\n#define u_seed mod(u_transform.x, 31.0)\n#endif\n#define u_rotate u_transform.y\n#define u_drift u_transform.z\n#define u_oklab u_transform.w\n#define u_offset u_space.xy\n#define u_mouse u_space.zw\nfloat hash21(vec2 p) {\n#ifndef GL_FRAGMENT_PRECISION_HIGH\n  p = mod(p, 31.0);\n#endif\n  p = fract(p * vec2(234.34, 435.345));\n  p += dot(p, p + 34.23);\n  return fract(p.x * p.y);\n}\nfloat grainHash(vec2 p) {\n  vec3 p3 = fract(vec3(p.xyx) * 0.1031);\n  p3 += dot(p3, p3.yzx + 33.33);\n  return fract((p3.x + p3.y) * p3.z);\n}\nfloat noise(vec2 p) {\n  vec2 i = floor(p); vec2 f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);\n  return mix(mix(hash21(i), hash21(i + vec2(1.0, 0.0)), u.x), mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u.x), u.y);\n}\nfloat fbm(vec2 p) {\n  float v = 0.0; float a = 0.5;\n  for (int i = 0; i < 5; i++) { v += a * noise(p); p = p * 2.03 + vec2(17.0, 9.2); a *= 0.5; }\n  return v;\n}\nuniform vec3 u_stops;\nvec3 palette(float x) {\n  x = clamp(x, 0.0, 1.0);\n  vec3 col = mix(u_colors[0], u_colors[1], smoothstep(u_stops.x, u_stops.y, x));\n  return mix(col, u_colors[2], smoothstep(u_stops.y, u_stops.z, x));\n}\nvec3 shade(vec2 uv, vec2 p, float t) {\n  float y = uv.y + sin(uv.x * (3.0 + u_intensity * 9.0) + t * 0.8) * 0.08 + (fbm(p * 2.0 + t * 0.1) - 0.5) * u_intensity * 0.6;\n  return palette(y);\n}\nvoid main() {\n  vec2 uv = gl_FragCoord.xy / u_resolution.xy;\n  vec2 screenUv = uv;\n  vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);\n  uv = p * min(u_resolution.x, u_resolution.y) / u_resolution.xy + 0.5;\n  p *= u_scale;\n  if (abs(u_rotate) > 0.0001) { float cr = cos(u_rotate), sr = sin(u_rotate); p = mat2(cr, -sr, sr, cr) * p; }\n  p += u_offset;\n  if (u_drift > 0.0001) p += u_drift * vec2(sin(u_time * 0.31), cos(u_time * 0.23));\n  if (u_warp > 0.0) p += u_warp * (vec2(fbm(p * u_detail + u_seed), fbm(p * u_detail + vec2(5.2, 1.3))) - 0.5);\n  vec3 col;\n  if (u_blur > 0.0) {\n    float e = u_blur; float pe = e * u_scale;\n    vec2 uvE = vec2(e) * min(u_resolution.x, u_resolution.y) / u_resolution.xy;\n    col  = shade(uv, p, u_time) * 0.36;\n    col += shade(uv + vec2(uvE.x, 0.0), p + vec2(pe, 0.0), u_time) * 0.16;\n    col += shade(uv - vec2(uvE.x, 0.0), p - vec2(pe, 0.0), u_time) * 0.16;\n    col += shade(uv + vec2(0.0, uvE.y), p + vec2(0.0, pe), u_time) * 0.16;\n    col += shade(uv - vec2(0.0, uvE.y), p - vec2(0.0, pe), u_time) * 0.16;\n  } else { col = shade(uv, p, u_time); }\n  if (abs(u_contrast - 1.0) > 0.0001) col = (col - 0.5) * u_contrast + 0.5;\n  if (abs(u_saturation - 1.0) > 0.0001) { float luma = dot(col, vec3(0.299, 0.587, 0.114)); col = mix(vec3(luma), col, u_saturation); }\n  if (abs(u_brightness) > 0.0001) col += u_brightness;\n  if (u_vignette > 0.0001) { float vd = length(screenUv - 0.5) * 1.41421356; col *= 1.0 - u_vignette * smoothstep(0.35, 1.0, vd); }\n  if (u_grain > 0.0001) col += (grainHash(gl_FragCoord.xy + vec2(u_seed * 17.0, u_seed * 31.0)) - 0.5) * u_grain;\n  gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);\n}";
     const U = { colors: [[0.388235, 0.227451, 0.866667], [0.227451, 0.298039, 0.882353], [0.501961, 0.819608, 0.831373], [0.501961, 0.819608, 0.831373], [0.501961, 0.819608, 0.831373], [0.501961, 0.819608, 0.831373], [0.501961, 0.819608, 0.831373], [0.501961, 0.819608, 0.831373]], colorCount: 3, scale: 2.0, intensity: 0.54, paramA: 0.47, warp: 0.042, detail: 1.536, contrast: 1.12, brightness: -0.02, saturation: 1.0, hue: 0, vignette: 0.21, blur: 0.002, grain: 0.07, seed: 4012.0, rotate: 5.6549, offsetX: 0.11, offsetY: -0.19, drift: 0.116, oklab: 0, timeScale: -0.727 };
     const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); return s; };
     const prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, VERT)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG)); gl.linkProgram(prog);
@@ -178,7 +177,7 @@
     const loc = gl.getAttribLocation(prog, "a_position"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const L = (n) => gl.getUniformLocation(prog, n);
     const uScene = L("u_scene"), uSpace = L("u_space");
-    gl.uniform3fv(L("u_colors"), new Float32Array(U.colors.flat()));
+    gl.uniform3fv(L("u_colors"), new Float32Array(U.colors.flat())); gl.uniform3f(L("u_stops"), stops[0], stops[1], stops[2]);
     gl.uniform4f(L("u_shape"), U.scale, U.intensity, U.paramA, U.warp);
     gl.uniform4f(L("u_surface"), U.detail, U.contrast, U.brightness, U.saturation);
     gl.uniform4f(L("u_finish"), U.hue, U.vignette, U.blur, U.grain);
@@ -206,7 +205,7 @@
     document.addEventListener("visibilitychange", () => { visible = document.visibilityState === "visible"; if (visible) go(); });
     addEventListener("resize", () => { if (still) { raf = 0; go(); } });
   }
-  shaderBg($(".h2-cta-card")); shaderBg($(".h2-stats"));
+  shaderBg($(".h2-cta-card"), [0.05, 0.35, 0.85]);
   const stage = $(".h2-stage");
   stage.insertAdjacentHTML("afterbegin", `<div class="h2-float f1" aria-hidden="true"><i class="ok"></i><div><b>Payroll sent</b><small>WPS file · 8 employees</small></div></div><div class="h2-float f2" aria-hidden="true"><i class="warn"></i><div><b>Visa expires in 30 days</b><small>Fatima · HR</small></div></div><div class="h2-float f3" aria-hidden="true"><i class="brand"></i><div><b>1 decision needs you</b><small>PO-2026-0418</small></div></div>`);
   [$(".h2-stage")].forEach((el) => new IntersectionObserver(([e]) => el.classList.toggle("is-off", !e.isIntersecting), { rootMargin: "100px" }).observe(el));
@@ -278,64 +277,139 @@
   if (reduce) $$(".h2-tab b").forEach((b) => (b.style.display = "none"));
 
   function below() {
-  /* ---------- nine apps marquee ---------- */
-  const NINE = [
-    ["mail", "Mail", "Re: can you confirm the PO number?", "PO-2026-0418 attached to the thread, supplier replied", "a"],
-    ["bank", "Bank portal", "Card limit 85% used", "Top-up request drafted for the finance lead", "y"],
-    ["chat", "Chat", "Fatima: visa photos needed by noon", "Request filed on Fatima's record, reminder set", "a"],
-    ["cart", "Point of sale", "Refund needs a manager PIN", "Refund shown with who and why. One tap to approve", "y"],
-    ["doc", "Spreadsheet", "Cash flow: September tab updated", "Cash position now updates itself in Finance", "a"],
-    ["list", "Tasks", "4 tasks due today", "Folded into one daily digest at 9:00", "a"],
-    ["inbox", "Drive", "3 people edited Tender response", "One version, every edit tracked on the record", "a"],
-    ["mail", "Old accounting app", "41 bank lines unmatched", "38 matched by rules, 3 left for you to confirm", "y"],
-    ["cart", "Point of sale", "Price change not synced", "Price list pushed to every till automatically", "a"],
-  ];
-  const nz = (n, i) => `<div class="nz" data-i="${i}" role="button" tabindex="0" aria-label="${n[1]}: ${n[2]}. Hover or tap to see the fix"><div class="nz-in"><div class="nz-f pain"><span class="ni">${ICX[n[0]] || ICX.inbox}</span><span class="nz-t"><small>${n[1]}</small><b>${n[2]}</b></span><em class="dot"></em><u class="tapfix">See the fix</u></div><div class="nz-f fix"><span class="ni">${ICX.ok}</span><span class="nz-t"><small>${n[4] === "a" ? "Handled by a rule" : "Needs you"}</small><b>${n[3]}</b></span>${n[4] === "y" ? '<button class="no-a" type="button">Approve</button><u class="dn ok apd">Approved</u>' : '<u class="dn">Done</u>'}</div></div></div>`;
-  const ntrack = (ids) => `<div class="nine-in">${[...ids, ...ids].map((i) => nz(NINE[i], i)).join("")}</div>`;
-  $("#nine-a").innerHTML = ntrack([0, 1, 2, 3, 4]); $("#nine-b").innerHTML = ntrack([5, 6, 7, 8]);
-  const nRows = $(".nine-rows"), nCur = $(".nine-cur");
-  const reduceN = matchMedia("(prefers-reduced-motion: reduce)").matches, touchN = matchMedia("(hover: none)").matches;
-  let tok = 0, nVisible = false, idleT = null;
-  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-  const nVisibleCards = () => { const rr = nRows.getBoundingClientRect(); return $$(".nz", nRows).filter((c) => { const r = c.getBoundingClientRect(); return r.left > rr.left + rr.width * 0.12 && r.right < rr.right - rr.width * 0.12 && r.top >= rr.top - 2 && r.bottom <= rr.bottom + 2; }); };
-  const curTo = (el, fx, fy) => { const rr = nRows.getBoundingClientRect(), r = el.getBoundingClientRect(); nCur.style.transform = `translate(${(r.left - rr.left + r.width * fx).toFixed(0)}px,${(r.top - rr.top + r.height * fy).toFixed(0)}px)`; };
-  function tourStop() { tok++; clearTimeout(idleT); nCur.classList.remove("on", "click"); nRows.classList.remove("tour"); $$(".nz.demo", nRows).forEach((c) => c.classList.remove("demo", "appr-d")); }
-  async function tourStart() {
-    if (reduceN) return; tourStop(); const my = tok; let last = null;
-    const live = () => my === tok && nVisible;
-    nCur.style.transition = "none"; const first = nVisibleCards()[0]; if (first) curTo(first, 0.5, 0.5); void nCur.offsetWidth; nCur.style.transition = "";
-    while (live()) {
-      const cs = nVisibleCards().filter((c) => c !== last); if (!cs.length) { await sleep(500); continue; }
-      const c = cs[Math.floor(Math.random() * cs.length)]; last = c;
-      nRows.classList.add("tour"); nCur.classList.add("on"); curTo(c, 0.62, 0.55);
-      await sleep(1100); if (!live()) break;
-      c.classList.add("demo");
-      await sleep(1700); if (!live()) break;
-      const btn = $(".no-a", c);
-      if (btn && !c.classList.contains("appr")) {
-        curTo(btn, 0.5, 0.5); await sleep(900); if (!live()) break;
-        nCur.classList.add("click"); await sleep(260); c.classList.add("appr-d"); nCur.classList.remove("click");
-        await sleep(1500); if (!live()) break;
-        c.classList.remove("appr-d");
+  /* ---------- too many apps → one place: pinned scroll story ---------- */
+  (function sortFlow() {
+    const sec = $("#nine.sf"); if (!sec) return;
+    const pin = $(".sf-pin", sec), dark = $(".sf-dark", sec), sheet = $(".sf-sheet", sec), fly = $(".sf-fly", sec), head = $(".sf-head", sec);
+    const cols = { r: $('.sf-col[data-b="r"]', sec), f: $('.sf-col[data-b="f"]', sec), n: $('.sf-col[data-b="n"]', sec) };
+    const sums = $$(".sf-sum", sec), dec = $(".sf-dec", sec), nums = $$(".sf-sum [data-to]", sec), copy = $(".sf-copy", sec), unread = $("#sf-unread");
+    const I = {
+      sheet: svg('<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/>', 16),
+      calc: svg('<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/>', 16),
+      bank: svg('<path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/>', 16),
+      tasks: svg('<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/>', 16),
+      folder: svg('<path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>', 16),
+      mail: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>', 16),
+      pos: svg('<path d="M4 7V5h3M17 5h3v2M4 17v2h3M17 19h3v-2"/><path d="M8 9v6M11 9v6M14 9v6M17 9v6"/>', 16),
+      cal: svg('<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>', 16),
+      chat: svg('<path d="M4 5h16v11H9l-5 4z"/>', 16),
+    };
+    // [icon, app, time, title, sub, badge, bucket]  r = handled by a rule, f = FYI digest, n = needs you
+    const N = [
+      ["sheet", "Spreadsheet", "08:30", "Cash flow: November tab updated", "Edited by Youssef", "99+", "f"],
+      ["calc", "Old accounting app", "now", "41 bank lines unmatched", "Current account", "47", "r"],
+      ["bank", "Bank portal", "09:12", "3 cheques cleared", "Total AED 7,950", "23", "r"],
+      ["tasks", "Tasks", "09:41", "Due Thursday: stock take", "Store 2", "12", "f"],
+      ["folder", "Drive", "2m", "Contract_v3_final.pdf was shared", "Shared by Arjun", "8", "f"],
+      ["mail", "Mail", "07:58", "Statement of account: October", "3 invoices open, 1 overdue", "31", "r"],
+      ["pos", "Point of sale", "08:55", "Daily sales report", "Store 1 and Store 2", "312", "r"],
+      ["cal", "Calendar", "09:12", "Month-end review moved to 16:00", "Room 2, with Hana and Youssef", "3", "f"],
+      ["sheet", "Spreadsheet", "now", "Overtime sheet: 4 rows highlighted", "Payroll, November", "17", "r"],
+      ["folder", "Drive", "4m", "Folder moved: HR / Visas 2026", "Moved by Aisha", "5", "f"],
+      ["chat", "Chat", "09:20", "Fatima: visa photos needed by noon", "HR group", "9", "r"],
+      ["pos", "Point of sale", "1m", "Price change not synced", "3 tills still on the old list", "6", "r"],
+      ["sheet", "Spreadsheet", "1m", "Price list (copy) was shared", "Anyone with the link can view", "47", "f"],
+      ["tasks", "Tasks", "08:20", "7 tasks moved to next week", "Operations board", "22", "f"],
+      ["mail", "Mail", "09:02", "Re: can you confirm the PO number?", "Al Noor Trading", "14", "r"],
+      ["calc", "Old accounting app", "09:33", "VAT export needs a re-run", "Q3, after late invoices", "2", "r"],
+      ["bank", "Bank portal", "09:38", "New beneficiary added", "Added by Youssef, pending", "1", "f"],
+      ["folder", "Drive", "09:41", "3 people edited Tender response", "Aisha, Arjun, Sara", "18", "f"],
+      ["bank", "Bank portal", "09:41", "1 employee missing bank details", "WPS run due 25 Nov", "1", "n"],
+    ];
+    fly.innerHTML = N.map((n) => `<div class="sf-card" data-b="${n[6]}"><span class="sf-ic">${I[n[0]]}</span><span class="sf-tx"><span class="sf-ap">${n[1]} <time>${n[2]}</time></span><b>${n[3]}</b><small>${n[4]}</small></span><em class="sf-bd">${n[5]}</em></div>`).join("");
+    const cards = $$(".sf-card", fly), M = cards.length;
+    // stable pseudo-random pile layout
+    const rnd = (i, k) => { const x = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return x - Math.floor(x); };
+    const PILE = cards.map((_, i) => ({ x: (rnd(i, 1) - 0.5) * 2, y: (i / (M - 1) - 0.5) * 2 + (rnd(i, 2) - 0.5) * 0.35, z: -260 + rnd(i, 3) * 330, rz: (rnd(i, 4) - 0.5) * 9, op: 0.5 + rnd(i, 5) * 0.5 }));
+    const order = cards.map((c, i) => i);
+    const inCol = { r: [], f: [], n: [] }; cards.forEach((c, i) => inCol[c.dataset.b].push(i));
+    const mq = matchMedia("(min-width: 901px) and (min-height: 620px)"), still = matchMedia("(prefers-reduced-motion: reduce)");
+    const eio = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2), lerp = (x, y, t) => x + (y - x) * t, seg = (p, a, b) => clamp((p - a) / (b - a), 0, 1);
+    let on = false, W = 0, H = 0, cw = 300, ch = 80, A = null, Bc = null, land = {}, spread = 1, lastP = -1, counted = false;
+
+    function measure() {
+      on = mq.matches && !still.matches;
+      sec.classList.toggle("sf-on", on); sec.classList.toggle("sf-static", !on);
+      sheet.style.transform = ""; sheet.style.borderRadius = ""; cards.forEach((c) => (c.style.transform = ""));
+      const fr = fly.getBoundingClientRect(); W = fr.width; H = fr.height;
+      const cr = cols.r.getBoundingClientRect();
+      cw = Math.round(Math.min(330, Math.max(232, cr.width - 40))); fly.style.setProperty("--cw", cw + "px");
+      ch = cards[0].offsetHeight || 80;
+      if (on) {
+        spread = Math.min(1, W / 1440);
+        const hr = head.getBoundingClientRect();
+        A = { x: W * 0.69, y: H * 0.54 };                                    // pile over the dark panel
+        Bc = { x: Math.min(W - cw * 0.5 - 40 * spread - 24, Math.max(hr.right - fr.left + cw * 0.75, W * 0.72)), y: Math.max(hr.top - fr.top + hr.height * 0.5, 72 + 150) }; // pile beside the sheet title
+        for (const k in cols) { const r = cols[k].getBoundingClientRect(); land[k] = { x: r.left - fr.left + (r.width - cw) / 2, y: r.top - fr.top + 52 }; }
+        sheet.style.transform = "translateY(100%)";
+      } else {
+        spread = Math.min(0.5, W / 900);
+        const dr = dark.getBoundingClientRect(), cpr = copy.getBoundingClientRect();
+        fly.style.height = dr.height + "px";
+        A = { x: W / 2, y: cpr.bottom - dr.top + 215 };
+        nums.forEach((n) => (n.textContent = counted ? n.dataset.to : "0"));
       }
-      c.classList.remove("demo"); nRows.classList.remove("tour");
-      await sleep(1300);
+      if (on) fly.style.height = "";
+      lastP = -1; frame();
     }
-    if (my === tok) tourStop();
-  }
-  nRows.addEventListener("mouseenter", () => { if (!touchN) tourStop(); });
-  nRows.addEventListener("mouseleave", () => { if (!touchN && nVisible) { clearTimeout(idleT); idleT = setTimeout(tourStart, 2200); } });
-  nRows.addEventListener("click", (e) => {
-    const b = e.target.closest(".no-a"); if (b) { e.stopPropagation(); b.closest(".nz").classList.add("appr"); return; }
-    if (touchN) { const c = e.target.closest(".nz"); if (c) { const on = c.classList.contains("show"); $$(".nz.show", nRows).forEach((x) => x.classList.remove("show")); if (!on) c.classList.add("show"); tourStop(); } }
-  });
-  nRows.addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("nz")) { e.preventDefault(); e.target.classList.toggle("show"); } });
-  nRows.addEventListener("focusin", (e) => { if (e.target.classList.contains("nz")) e.target.classList.add("show"); });
-  nRows.addEventListener("focusout", (e) => { if (e.target.classList.contains("nz")) e.target.classList.remove("show"); });
-  new IntersectionObserver(([e]) => { nVisible = e.isIntersecting; nRows.classList.toggle("is-off", !nVisible); if (nVisible) { clearTimeout(idleT); idleT = setTimeout(tourStart, 900); } else tourStop(); }, { threshold: 0.35 }).observe(nRows);
+
+    function pileAt(i, c, k = 0) { const g = PILE[i]; return { x: c.x + g.x * 300 * spread * (1 - 0.4 * k) - cw / 2, y: c.y + g.y * 210 * Math.max(spread, 0.6) * (1 - 0.5 * k) - ch / 2, z: g.z, rx: 24, ry: -16, rz: -6 + g.rz, s: 1 - 0.12 * k, op: g.op }; }
+    const put = (el, t, op) => { el.style.transform = `translate3d(${t.x.toFixed(1)}px,${t.y.toFixed(1)}px,${t.z.toFixed(1)}px) rotateX(${t.rx.toFixed(2)}deg) rotateY(${t.ry.toFixed(2)}deg) rotateZ(${t.rz.toFixed(2)}deg) scale(${t.s.toFixed(3)})`; el.style.opacity = op.toFixed(3); };
+
+    function frame() {
+      if (!A) return;
+      if (!on) { cards.forEach((c, i) => { const t = pileAt(i, A); put(c, t, i < 11 ? t.op : 0); }); return; }
+      const r = sec.getBoundingClientRect(), total = Math.max(1, r.height - innerHeight);
+      const p = Math.round(clamp(-r.top / total, 0, 1) * 2000) / 2000; if (p === lastP) return; lastP = p;
+      // B: sheet rises (0.06 → 0.30)
+      const b = eio(seg(p, 0.06, 0.3)), top = (1 - b) * H;
+      sheet.style.transform = `translateY(${top.toFixed(1)}px)`; sheet.style.borderRadius = `${Math.min(40, top * 0.4).toFixed(1)}px ${Math.min(40, top * 0.4).toFixed(1)}px 0 0`;
+      copy.style.opacity = (1 - seg(p, 0.12, 0.26)).toFixed(3); copy.style.transform = `translateY(${(-40 * b).toFixed(1)}px) scale(${(1 - 0.04 * b).toFixed(3)})`;
+      if (top < 60 === dark.hasAttribute("data-theme")) { if (top < 60) dark.removeAttribute("data-theme"); else dark.setAttribute("data-theme", "dark"); }
+      const drift = seg(p, 0, 0.3), pc = { x: lerp(A.x, Bc.x, b), y: lerp(A.y, Bc.y, b) - 30 * drift };
+      // C: cards fly into their column (0.30 → 0.70), D: columns collapse into totals (0.72 → 0.88)
+      const d = eio(seg(p, 0.72, 0.86)), dn = eio(seg(p, 0.78, 0.9)), q = [];
+      order.forEach((i, k) => { const st = 0.3 + (k / M) * 0.3; q[i] = eio(seg(p, st, st + 0.1)); });
+      for (const k in inCol) {
+        const list = inCol[k];
+        list.forEach((i, idx) => {
+          let depth = 0; for (let j = idx + 1; j < list.length; j++) depth += q[list[j]];
+          const s0 = pileAt(i, pc, b), L = land[k], t = q[i];
+          const e = { x: L.x, y: L.y - Math.min(depth, 3.2) * 9, z: 0, rx: 0, ry: 0, rz: 0, s: 1 - Math.min(depth, 4) * 0.045 };
+          const cur = { x: lerp(s0.x, e.x, t), y: lerp(s0.y, e.y, t) - Math.sin(Math.PI * t) * 70, z: lerp(s0.z, 0, t), rx: lerp(s0.rx, 0, t), ry: lerp(s0.ry, 0, t), rz: lerp(s0.rz, 0, t), s: lerp(s0.s, e.s, t) };
+          let op = lerp(s0.op, 1, t) * (depth > 3 ? Math.max(0, 1 - (depth - 3)) : 1);
+          const coll = k === "n" ? dn : d;
+          if (coll > 0) { cur.y += 34 * coll; cur.s *= 1 - 0.08 * coll; op *= 1 - coll; }
+          put(cards[i], cur, op);
+          cards[i].style.zIndex = t > 0 && t < 1 ? 60 : 10 + idx;
+        });
+      }
+      sums.forEach((el) => { el.style.opacity = d.toFixed(3); el.style.transform = `translateY(${((1 - d) * 16).toFixed(1)}px)`; });
+      nums.forEach((n) => (n.textContent = Math.round(+n.dataset.to * ease(seg(p, 0.72, 0.9))).toLocaleString("en-US")));
+      dec.style.opacity = dn.toFixed(3); dec.style.transform = `translateY(${((1 - dn) * 18).toFixed(1)}px) scale(${(0.97 + 0.03 * dn).toFixed(3)})`;
+      sec.classList.toggle("sf-end", dn > 0.6);
+    }
+
+    // unread counter counts up when the panel first comes into view; static totals count when the sheet shows
+    window.ONEERP.inView(dark, () => { const to = 252, t0 = performance.now(); (function tick(t) { const k = clamp((t - t0) / 1500); unread.textContent = Math.round(to * ease(k)); if (k < 1) requestAnimationFrame(tick); })(t0); }, 0.3);
+    window.ONEERP.inView($(".sf-cols", sec), () => { counted = true; if (on) return; nums.forEach((n) => { const to = +n.dataset.to, t0 = performance.now(); (function tick(t) { const k = clamp((t - t0) / 1300); n.textContent = Math.round(to * ease(k)); if (k < 1) requestAnimationFrame(tick); })(t0); }); }, 0.3);
+
+    $(".sf-link", sec).addEventListener("click", (e) => {
+      e.preventDefault();
+      if (on) { const top = sec.getBoundingClientRect().top + scrollY, total = sec.offsetHeight - innerHeight; scrollTo({ top: top + total * 0.92, behavior: still.matches ? "auto" : "smooth" }); }
+      else sheet.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    $(".sf-review", sec).addEventListener("click", (e) => { const btn = e.currentTarget; btn.closest(".sf-dec").classList.add("ok"); btn.textContent = "Reviewed, payroll can run"; });
+
+    mq.addEventListener("change", measure); still.addEventListener("change", measure);
+    let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(measure, 150); });
+    window.ONEERP.onScroll(frame);
+    measure();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(measure, 50));
+  })();
 
   /* ---------- stats count-up ---------- */
-  $$(".h2-stat b").forEach((b) => window.ONEERP.inView(b, () => { const to = +b.dataset.to, suf = b.dataset.suf || "", t0 = performance.now(); (function tick(t) { const k = clamp((t - t0) / 1400); b.textContent = Math.round(to * ease(k)).toLocaleString("en-US") + suf; if (k < 1) requestAnimationFrame(tick); })(t0); }, 0.6));
+  $$(".h2-stat b").forEach((b) => { const card = b.closest(".h2-stat"), pct = +card.dataset.pct || 0, put = (v) => { const suf = (b.dataset.suf || "").trim(); b.innerHTML = Math.round(+b.dataset.to * v).toLocaleString("en-US") + (suf ? `<i>${b.dataset.suf.startsWith(" ") ? "&nbsp;" : ""}${suf}</i>` : ""); }; put(0); window.ONEERP.inView(b, () => { const t0 = performance.now(); (function tick(t) { const k = ease(clamp((t - t0) / 1400)); put(k); card.style.setProperty("--p", (pct * k).toFixed(2)); if (k < 1) requestAnimationFrame(tick); })(t0); }, 0.6); });
 
   /* ---------- before / after ---------- */
   const BEFORE = ["Orders, invoices and stock live in three different files", "Requests get lost in chats and shared inboxes", "Laptops and phones nobody can fully account for", "Payroll dates and visa expiries tracked from memory", "Contracts printed, signed and chased by phone"];
@@ -357,7 +431,7 @@
     desk: `<div class="pv list">${[["Laptop won't charge", "In progress", "brand"], ["VPN not connecting", "At risk", "amber"], ["New starter setup", "On track", "ok"]].map((t) => `<div><span>${t[0]}</span><i class="${t[2]}">${t[1]}</i></div>`).join("")}</div>`,
     assets: `<div class="pv steps">${["Record", "Hand over", "Look after", "Return"].map((t, i) => `<span class="${i < 3 ? "d" : ""}"><i>${i + 1}</i>${t}</span>`).join("")}</div>`,
     people: `<div class="pv leave"><div><span>Annual leave</span><em>18 of 30 days</em></div>${bar(60, "#633ADD")}<div><span>Sick leave</span><em>13 of 15 days</em></div>${bar(87, "#633ADD")}</div>`,
-    sign: `<div class="pv sign"><svg viewBox="0 0 120 32" fill="none" stroke="#2B2FA0" stroke-width="2" stroke-linecap="round"><path d="M4 22c8-14 12-14 14-2s6 4 12-8c6-12 8 6 14 6s10-12 18-2 12 4 18-6"/></svg><span>Signed 14:02</span><div class="stamp s">STAMP</div></div>`,
+    sign: `<div class="pv sign"><svg viewBox="0 0 120 32" fill="none" stroke="#2B2FA0" stroke-width="2" stroke-linecap="round"><path d="M4 22c8-14 12-14 14-2s6 4 12-8c6-12 8 6 14 6s10-12 18-2 12 4 18-6"/></svg><span>Signed 14:02</span><span class="seal" aria-hidden="true"><svg viewBox="0 0 100 100"><defs><path id="sra" d="M50 50m-33 0a33 33 0 1 1 66 0a33 33 0 1 1-66 0"/></defs><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="24" fill="none" stroke="currentColor" stroke-width="1.2"/><text font-family="Inter,sans-serif" font-size="9.5" font-weight="700" letter-spacing="2.2" fill="currentColor"><textPath href="#sra" startOffset="0">CUBEZIX ONE · APPROVED · </textPath></text><path d="M50 33l4.7 9.6 10.6 1.5-7.7 7.5 1.8 10.5-9.4-5-9.4 5 1.8-10.5-7.7-7.5 10.6-1.5z" fill="currentColor"/></svg></span></div>`,
   };
   $("#bento").innerHTML = PRODUCTS.map((p, i) => { const c = PC[p.k]; return `<a class="pc ${c.cls || ""} rv" href="${p.href}" style="--c:${p.c};--soft:${p.soft};--deep:${p.deep};--d:${i * 0.06}s">${c.soon ? '<span class="soon">COMING SOON</span>' : ""}<div class="pn"><i></i>${p.name}${p.flag ? `<em>${p.flag}</em>` : ""}</div><p>${c.p}</p>${p.k === "erp" ? `<div class="chips2">${p.modules.map((m) => `<span>${ICX[m[0]]}${m[1]}</span>`).join("")}</div>` : ""}<ul>${c.li.map((l) => `<li>${l}</li>`).join("")}</ul>${PV[p.k] || ""}<span class="go">Explore ${p.name} ${IC.arrow}</span></a>`; }).join("");
 
@@ -386,7 +460,7 @@
     ["target", "Sales and CRM", "One record from the first lead and quote to the payment. Nothing delivered goes unbilled.", "ONE ERP", "", `<div class="mv"><div class="mv-steps"><span class="d">Quote</span><span class="d">Order</span><span class="d">Delivery</span><span class="c">Invoice</span><span>Paid</span></div>${mrow("QT-2026-0187", "AED 25,200.00")}</div>`],
     ["cart", "Procurement", "Purchase orders checked against budget before anyone signs.", "ONE ERP", "", `<div class="mv"><div class="mv-top"><b>Packaging budget</b><em>106%</em></div><div class="mv-bar red"><i style="width:100%"></i></div>${mrow("PO-2026-0418", "Held for approval", '<i class="warn">Over</i>')}</div>`],
     ["chat", "Helpdesk", "Every request gets an owner and a deadline, from email, portal, chat or the device agent.", "ONE Desk", "big", `<div class="mv"><div class="mv-top"><b>Laptop won't charge</b><i class="teal">Resolved</i></div>${bar(46, "#0AA7A4")}<div class="mv-top"><small>First reply 14 of 30 min</small><small>Imran</small></div></div>`],
-    ["pen", "E-sign and stamps", "Contracts signed in order and stamped online, with a full audit trail.", "ONE Sign", "big", `<div class="mv"><div class="mv-sig"><svg viewBox="0 0 120 32" fill="none" stroke="#2F36B8" stroke-width="2" stroke-linecap="round"><path d="M4 22c8-14 12-14 14-2s6 4 12-8c6-12 8 6 14 6s10-12 18-2 12 4 18-6"/></svg><span class="stamp s">STAMP</span></div>${mrow("Aisha signed", "14:02", '<i class="ok">Signed</i>')}</div>`],
+    ["pen", "E-sign and stamps", "Contracts signed in order and stamped online, with a full audit trail.", "ONE Sign", "big", `<div class="mv"><div class="mv-sig"><svg viewBox="0 0 120 32" fill="none" stroke="#2F36B8" stroke-width="2" stroke-linecap="round"><path d="M4 22c8-14 12-14 14-2s6 4 12-8c6-12 8 6 14 6s10-12 18-2 12 4 18-6"/></svg><span class="seal" aria-hidden="true"><svg viewBox="0 0 100 100"><defs><path id="srb" d="M50 50m-33 0a33 33 0 1 1 66 0a33 33 0 1 1-66 0"/></defs><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="24" fill="none" stroke="currentColor" stroke-width="1.2"/><text font-family="Inter,sans-serif" font-size="9.5" font-weight="700" letter-spacing="2.2" fill="currentColor"><textPath href="#srb" startOffset="0">CUBEZIX ONE · APPROVED · </textPath></text><path d="M50 33l4.7 9.6 10.6 1.5-7.7 7.5 1.8 10.5-9.4-5-9.4 5 1.8-10.5-7.7-7.5 10.6-1.5z" fill="currentColor"/></svg></span></div>${mrow("Aisha signed", "14:02", '<i class="ok">Signed</i>')}</div>`],
   ];
   const ORDER = [0, 1, 2, 3, 4, 5, 7, 6, 8];
   $("#feat-grid").innerHTML = ORDER.map((k) => FEAT[k]).map((f, i) => `<div class="fc ${f[4]} rv" style="--d:${(i % 3) * 0.06}s">${f[5]}<div class="fh"><div class="fi">${ICX[f[0]]}</div>${f[3] ? `<span class="from">${f[3]}</span>` : ""}</div><h3>${f[1]}</h3><p>${f[2]}</p></div>`).join("");

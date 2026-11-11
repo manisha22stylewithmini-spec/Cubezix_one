@@ -77,7 +77,6 @@
         <div><h6>Industries</h6><a href="industries.html">All industries</a>${INDUSTRIES.map((n) => `<a href="${n[2]}">${n[0]}</a>`).join("")}</div>
         <div><h6>Company</h6><a href="company.html">About CubeZixONE</a><a href="company.html#contact">Contact</a><a href="book-a-demo.html">Book a demo</a><a href="#">Privacy policy</a><a href="#">Terms of use</a></div>
       </div>
-      <div class="fstatus"><span class="ok">${IC.check} All caught up</span><span class="pend"><i class="dot"></i><a href="book-a-demo.html">1 thing needs you: Book a demo ${IC.arrow}</a></span></div>
       <div class="wordmark cz-word" aria-label="CubeZixONE">CubeZix<span>ONE</span></div>
       <div class="fbot"><span>© 2026 [CubeZixONE company legal name] · Burlington Tower, Business Bay, Dubai</span><span class="fsis"><a href="https://cubezix.com" rel="noopener">CubeZix</a><a href="https://squarezix.com" rel="noopener">SquareZix</a></span></div></div>`;
   }
