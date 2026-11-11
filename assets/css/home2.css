@@ -1338,3 +1338,7 @@ footer.site-footer{background:#fff;margin-top:0}
 .ic:hover .ic-bar i:nth-child(1){color:rgba(80,10,10,.7)}
 .ic:hover .ic-bar i:nth-child(2){color:rgba(95,60,0,.7)}
 .ic:hover .ic-bar i:nth-child(3){color:rgba(0,70,10,.7)}
+
+/* green control: macOS full-screen glyph (two opposing triangles) */
+.ic-bar i:nth-child(3)::before{content:"";width:7px;height:7px;margin:0;font-size:0;transform:none;opacity:0;transition:opacity .2s;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1 1h5.2L1 6.2z M9 9H3.8L9 3.8z' fill='%23064B12'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+.ic:hover .ic-bar i:nth-child(3)::before{opacity:.85}
