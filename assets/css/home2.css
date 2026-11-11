@@ -1321,3 +1321,20 @@ footer.site-footer{background:#fff;margin-top:0}
 .sf{margin-top:0}
 .h2-stats{margin:96px 0}
 @media (max-width:768px){.h2-stats{margin:64px 0}}
+
+/* industry tiles: icon instead of a letter */
+.h2-ind .ic .tile{color:var(--d)}
+.h2-ind .ic .tile svg{width:22px;height:22px}
+
+/* macOS-style window controls on the dashboard previews */
+.ic-bar{gap:7px}
+.ic-bar i{position:relative;width:11px;height:11px;border-radius:50%;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.18);display:grid;place-items:center;font:700 8px/1 -apple-system,"Inter",sans-serif;font-style:normal;color:rgba(70,20,20,.0);transition:color .2s}
+.ic-bar i:nth-child(1){background:#FF5F57}
+.ic-bar i:nth-child(2){background:#FEBC2E}
+.ic-bar i:nth-child(3){background:#28C840}
+.ic-bar i:nth-child(1)::before{content:"\00d7";font-size:10px;margin-top:-1px}
+.ic-bar i:nth-child(2)::before{content:"\2212";font-size:9px;margin-top:-1px}
+.ic-bar i:nth-child(3)::before{content:"\2197\FE0E";font-size:7px;transform:rotate(0)}
+.ic:hover .ic-bar i:nth-child(1){color:rgba(80,10,10,.7)}
+.ic:hover .ic-bar i:nth-child(2){color:rgba(95,60,0,.7)}
+.ic:hover .ic-bar i:nth-child(3){color:rgba(0,70,10,.7)}

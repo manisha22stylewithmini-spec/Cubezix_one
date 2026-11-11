@@ -436,6 +436,12 @@
   $("#bento").innerHTML = PRODUCTS.map((p, i) => { const c = PC[p.k]; return `<a class="pc ${c.cls || ""} rv" href="${p.href}" style="--c:${p.c};--soft:${p.soft};--deep:${p.deep};--d:${i * 0.06}s">${c.soon ? '<span class="soon">COMING SOON</span>' : ""}<div class="pn"><i></i>${p.name}${p.flag ? `<em>${p.flag}</em>` : ""}</div><p>${c.p}</p>${p.k === "erp" ? `<div class="chips2">${p.modules.map((m) => `<span>${ICX[m[0]]}${m[1]}</span>`).join("")}</div>` : ""}<ul>${c.li.map((l) => `<li>${l}</li>`).join("")}</ul>${PV[p.k] || ""}<span class="go">Explore ${p.name} ${IC.arrow}</span></a>`; }).join("");
 
   /* ---------- industries ---------- */
+  const INDICON = {
+    Trading: svg('<path d="M3 15l1.6 4h14.8L21 15z"/><path d="M5 15V9h10v6"/><path d="M15 11h3l1.5 4"/><path d="M8 9V6h4v3"/><path d="M2 21c1.5 0 1.5-1 3-1s1.5 1 3 1 1.5-1 3-1 1.5 1 3 1 1.5-1 3-1 1.5 1 3 1"/>', 22),
+    Retail: svg('<path d="M4 9l1.5-5h13L20 9"/><path d="M4 9a2.67 2.67 0 005.33 0 2.67 2.67 0 005.34 0A2.67 2.67 0 0020 9"/><path d="M5 12v8h14v-8"/><path d="M10 20v-5h4v5"/>', 22),
+    Manufacturing: svg('<path d="M3 21V10l6 4V10l6 4V6h3v15z"/><path d="M3 21h18"/><path d="M8 17h1M12 17h1M16 17h1"/>', 22),
+    Services: svg('<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5a1.5 1.5 0 011.5-1.5h3A1.5 1.5 0 0115 5v2"/><path d="M3 13h18"/><path d="M10.5 13v1.5h3V13"/>', 22),
+  };
   const STRONG = { Trading: "#9ADFDF", Retail: "#C3C9FA", Manufacturing: "#B9CDF5", Services: "#D6B8F9" };
   const IND = { Trading: ["Buy abroad, clear at the port, sell on. Every shipment costed from the supplier's invoice to the customer's payment.", "1 landed cost to confirm"], Retail: ["Several stores, one stock. Every branch's sales and shelves in view, before the busy weekend, not after it.", "1 store running short"], Manufacturing: ["Know what each product really costs, and which missing part will stop the line, while there is still time to order it.", "1 work order waiting for a part"], Services: ["Hours, budgets and invoices on every project, so the margin is protected while the work is still running.", "1 project heading over budget"] };
   const iwin = (title, body) => `<div class="ic-win"><div class="ic-bar"><i></i><i></i><i></i><span>${title}</span></div><div class="ic-body">${body}</div></div>`;
@@ -447,7 +453,7 @@
     Manufacturing: [iwin("WO-218 · Cargo trolley", `<div class="iw-s ok"><i></i>Frame welded<em>Done</em></div><div class="iw-s ok"><i></i>Motor fitted<em>Done</em></div><div class="iw-s no"><i></i>Control board<em>Missing</em></div><div class="iw-s"><i></i>Final test<em>Waiting</em></div>`), "1 work order waiting for a part"],
     Services: [iwin("Project budget · Marina fit-out", `<div class="iw-chart"><u style="--h:34%"></u><u style="--h:48%"></u><u style="--h:57%"></u><u style="--h:71%"></u><u style="--h:88%"></u><u class="hot" style="--h:104%"></u></div>` + irw("Spent", "AED 126K of 120K", "bad") + irw("Margin", "22%")), "1 project heading over budget"],
   };
-  $("#ind-cards").innerHTML = INDUSTRIES.map((n, i) => `<a class="ic rv" href="${n[2]}" style="--p:${n[5]};--d:${n[6]};--b:${n[4]};--s:${STRONG[n[0]]};--dd:${i * 0.06}s;transition-delay:var(--dd)"><div class="ic-top"><span class="tile">${n[0][0]}</span><span class="go">Read the guide ${IC.arrow}</span></div><h3>${n[0]}</h3><p>${IND[n[0]][0]}</p><div class="ic-vis">${VIS[n[0]][0]}<div class="ic-chip"><i></i>${VIS[n[0]][1]}</div></div></a>`).join("");
+  $("#ind-cards").innerHTML = INDUSTRIES.map((n, i) => `<a class="ic rv" href="${n[2]}" style="--p:${n[5]};--d:${n[6]};--b:${n[4]};--s:${STRONG[n[0]]};--dd:${i * 0.06}s;transition-delay:var(--dd)"><div class="ic-top"><span class="tile">${INDICON[n[0]]}</span><span class="go">Read the guide ${IC.arrow}</span></div><h3>${n[0]}</h3><p>${IND[n[0]][0]}</p><div class="ic-vis">${VIS[n[0]][0]}<div class="ic-chip"><i></i>${VIS[n[0]][1]}</div></div></a>`).join("");
 
   /* ---------- features ---------- */
   const mrow = (a, b2, tag) => `<div class="mv-row"><span>${a}</span><em>${b2 || ""}</em>${tag || ""}</div>`;
