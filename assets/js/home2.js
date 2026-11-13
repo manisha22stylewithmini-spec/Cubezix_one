@@ -325,7 +325,7 @@
     const inCol = { r: [], f: [], n: [] }; cards.forEach((c, i) => inCol[c.dataset.b].push(i));
     const mq = matchMedia("(min-width: 901px) and (min-height: 620px)"), still = matchMedia("(prefers-reduced-motion: reduce)");
     const eio = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2), lerp = (x, y, t) => x + (y - x) * t, seg = (p, a, b) => clamp((p - a) / (b - a), 0, 1);
-    let on = false, W = 0, H = 0, cw = 300, ch = 80, A = null, Bc = null, land = {}, spread = 1, lastP = -1, counted = false;
+    let on = false, W = 0, H = 0, cw = 300, ch = 80, A = null, Bc = null, land = {}, spread = 1, lastP = -1, counted = false, bshrink = 1;
 
     function measure() {
       on = mq.matches && !still.matches;
@@ -339,8 +339,19 @@
         spread = Math.min(1, W / 1440);
         const hr = head.getBoundingClientRect();
         A = { x: W * 0.69, y: H * 0.54 };                                    // pile over the dark panel
-        Bc = { x: Math.min(W - cw * 0.5 - 40 * spread - 24, Math.max(hr.right - fr.left + cw * 0.75, W * 0.72)), y: Math.max(hr.top - fr.top + hr.height * 0.5, 72 + 150) }; // pile beside the sheet title
-        for (const k in cols) { const r = cols[k].getBoundingClientRect(); land[k] = { x: r.left - fr.left + (r.width - cw) / 2, y: r.top - fr.top + 52 }; }
+        // keep the pile clear of the title: measure where the heading text really ends, fit the pile into the space to its right
+        const tr = document.createRange(); let textRight = 0;
+        $$(".sf-head h2, .sf-head p", sec).forEach((n) => { tr.selectNodeContents(n); [...tr.getClientRects()].forEach((q) => { textRight = Math.max(textRight, q.right - fr.left); }); });
+        let half = (cw * 0.88 + 270 * spread) / 2 + 34; bshrink = 1;
+        const room = W - 16 - (textRight + 36);
+        if (room < half * 2) { bshrink = Math.max(0.5, room / (half * 2)); half *= bshrink; }
+        Bc = { x: textRight + 36 + half, y: Math.max(hr.top - fr.top + hr.height * 0.5, 72 + 150) };
+        let midY = 88;
+        for (const k in cols) {
+          const r = cols[k].getBoundingClientRect(), lab = $(".sf-lab", cols[k]), sm = $(".sf-sum", cols[k]);
+          if (sm) { const top = lab.offsetTop + lab.offsetHeight, bot = sm.offsetTop, peek = 9; midY = top + (bot - top - ch - peek) / 2 + peek; }
+          land[k] = { x: r.left - fr.left + (r.width - cw) / 2, y: r.top - fr.top + midY };
+        }
         sheet.style.transform = "translateY(100%)";
       } else {
         spread = Math.min(0.5, W / 900);
@@ -353,12 +364,41 @@
       lastP = -1; frame();
     }
 
-    function pileAt(i, c, k = 0) { const g = PILE[i]; return { x: c.x + g.x * 300 * spread * (1 - 0.4 * k) - cw / 2, y: c.y + g.y * 210 * Math.max(spread, 0.6) * (1 - 0.5 * k) - ch / 2, z: g.z, rx: 24, ry: -16, rz: -6 + g.rz, s: 1 - 0.12 * k, op: g.op }; }
+    function pileAt(i, c, k = 0) { const g = PILE[i], sh = 1 - (1 - bshrink) * k; return { x: c.x + g.x * 300 * spread * (1 - 0.55 * k) * sh - cw / 2, y: c.y + g.y * 210 * Math.max(spread, 0.6) * (1 - 0.5 * k) * sh - ch / 2, z: g.z, rx: 24, ry: -16, rz: -6 + g.rz, s: (1 - 0.12 * k) * sh, op: g.op }; }
+    /* ---- life on top of the scroll story: cards arrive from the right, drift when idle, react to the cursor ---- */
+    const BASE = []; let entT0 = -1, mxp = -9999, myp = -9999, sx = 0, sy = 0, looping = false, vis = false;
+    function render(now) {
+      const fr = fly.getBoundingClientRect(), calm = still.matches, amp = on ? 1 : 0.55, T = now * 0.001;
+      const hasP = mxp > -9000, tx = hasP ? clamp((mxp - fr.left) / fr.width, 0, 1) * 2 - 1 : 0, ty = hasP ? clamp((myp - fr.top) / fr.height, 0, 1) * 2 - 1 : 0;
+      sx += (tx - sx) * 0.07; sy += (ty - sy) * 0.07;
+      cards.forEach((c, i) => {
+        const b = BASE[i]; if (!b) return;
+        const g = PILE[i], df = (g.z + 260) / 330, w = 1 - b.q, t = b.t;
+        const e = calm ? 1 : entT0 < 0 ? 0 : eio(clamp((now - entT0 - i * 55) / 950, 0, 1));
+        let dx = (1 - e) * (W * 0.5 + 160 * (1 - df)), dy = 0, rx = 0, ry = 0, rz = (1 - e) * 8, s = 1;
+        if (!calm && w > 0) {
+          dx += (Math.sin(T * 0.8 + i * 1.7) * 5 - sx * df * 44) * w * amp;
+          dy += (Math.cos(T * 0.7 + i * 2.3) * 8 - sy * df * 30) * w * amp;
+          rz += Math.sin(T * 0.6 + i) * 0.7 * w;
+          ry += sx * 6 * w * amp; rx -= sy * 5 * w * amp;
+          if (hasP) {
+            const ddx = t.x + cw / 2 + dx - (mxp - fr.left), ddy = t.y + ch / 2 + dy - (myp - fr.top), d = Math.hypot(ddx, ddy), R = 210;
+            if (d < R) { const k = Math.pow(1 - d / R, 2), n = d || 1; dx += (ddx / n) * k * 70 * w; dy += (ddy / n) * k * 52 * w; s += k * 0.05 * w; rz += (ddx / R) * k * 6 * w; }
+          }
+        }
+        c.style.transform = `translate3d(${(t.x + dx).toFixed(1)}px,${(t.y + dy).toFixed(1)}px,${t.z.toFixed(1)}px) rotateX(${(t.rx + rx).toFixed(2)}deg) rotateY(${(t.ry + ry).toFixed(2)}deg) rotateZ(${(t.rz + rz).toFixed(2)}deg) scale(${(t.s * s).toFixed(3)})`;
+        c.style.opacity = (b.op * e).toFixed(3); c.style.zIndex = b.z;
+      });
+    }
+    function loop(now) { if (!vis) { looping = false; return; } render(now); requestAnimationFrame(loop); }
+    sec.addEventListener("pointermove", (e) => { if (e.pointerType === "touch") return; mxp = e.clientX; myp = e.clientY; }, { passive: true });
+    sec.addEventListener("pointerleave", () => { mxp = myp = -9999; });
+    new IntersectionObserver(([en]) => { vis = en.isIntersecting; if (vis) { if (entT0 < 0) entT0 = performance.now(); if (!looping && !still.matches) { looping = true; requestAnimationFrame(loop); } } }, { rootMargin: "80px" }).observe(sec);
     const put = (el, t, op) => { el.style.transform = `translate3d(${t.x.toFixed(1)}px,${t.y.toFixed(1)}px,${t.z.toFixed(1)}px) rotateX(${t.rx.toFixed(2)}deg) rotateY(${t.ry.toFixed(2)}deg) rotateZ(${t.rz.toFixed(2)}deg) scale(${t.s.toFixed(3)})`; el.style.opacity = op.toFixed(3); };
 
     function frame() {
       if (!A) return;
-      if (!on) { cards.forEach((c, i) => { const t = pileAt(i, A); put(c, t, i < 11 ? t.op : 0); }); return; }
+      if (!on) { cards.forEach((c, i) => { const t = pileAt(i, A); BASE[i] = { t, op: i < 11 ? t.op : 0, q: 0, z: 10 + i }; }); if (!looping) render(performance.now()); return; }
       const r = sec.getBoundingClientRect(), total = Math.max(1, r.height - innerHeight);
       const p = Math.round(clamp(-r.top / total, 0, 1) * 2000) / 2000; if (p === lastP) return; lastP = p;
       // B: sheet rises (0.06 → 0.30)
@@ -378,16 +418,20 @@
           const e = { x: L.x, y: L.y - Math.min(depth, 3.2) * 9, z: 0, rx: 0, ry: 0, rz: 0, s: 1 - Math.min(depth, 4) * 0.045 };
           const cur = { x: lerp(s0.x, e.x, t), y: lerp(s0.y, e.y, t) - Math.sin(Math.PI * t) * 70, z: lerp(s0.z, 0, t), rx: lerp(s0.rx, 0, t), ry: lerp(s0.ry, 0, t), rz: lerp(s0.rz, 0, t), s: lerp(s0.s, e.s, t) };
           let op = lerp(s0.op, 1, t) * (depth > 3 ? Math.max(0, 1 - (depth - 3)) : 1);
-          const coll = k === "n" ? dn : d;
-          if (coll > 0) { cur.y += 34 * coll; cur.s *= 1 - 0.08 * coll; op *= 1 - coll; }
-          put(cards[i], cur, op);
-          cards[i].style.zIndex = t > 0 && t < 1 ? 60 : 10 + idx;
+          if (k === "n") { if (dn > 0) { cur.y += 34 * dn; cur.s *= 1 - 0.08 * dn; op *= 1 - dn; } }
+          else {
+            // while the totals count up, thin the stack from the back and leave the front two as filler
+            const keep = 2, nb = Math.max(1, list.length - keep);
+            if (idx < nb) { const a0 = (idx / nb) * 0.55, f = seg(d, a0, a0 + 0.45); op *= 1 - f; cur.y -= 8 * f; cur.s *= 1 - 0.03 * f; }
+          }
+          BASE[i] = { t: cur, op, q: t, z: t > 0 && t < 1 ? 60 : 10 + idx };
         });
       }
       sums.forEach((el) => { el.style.opacity = d.toFixed(3); el.style.transform = `translateY(${((1 - d) * 16).toFixed(1)}px)`; });
       nums.forEach((n) => (n.textContent = Math.round(+n.dataset.to * ease(seg(p, 0.72, 0.9))).toLocaleString("en-US")));
       dec.style.opacity = dn.toFixed(3); dec.style.transform = `translateY(${((1 - dn) * 18).toFixed(1)}px) scale(${(0.97 + 0.03 * dn).toFixed(3)})`;
       sec.classList.toggle("sf-end", dn > 0.6);
+      if (!looping) render(performance.now());
     }
 
     // unread counter counts up when the panel first comes into view; static totals count when the sheet shows
