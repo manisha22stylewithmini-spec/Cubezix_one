@@ -1,0 +1,5 @@
+.fp-hero{padding-bottom:30px}
+.fp-chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:28px}
+.fp-chip{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#fff;border:1px solid rgba(20,22,63,.09);color:var(--ink);font:600 14px var(--font);transition:transform .25s var(--ease),border-color .25s}
+.fp-chip:hover{transform:translateY(-2px);border-color:rgba(58,76,225,.4)}.fp-chip svg{width:14px;height:14px;transition:transform .25s}.fp-chip:hover svg{transform:translateX(3px)}
+.fp-sec{padding-block:70px}
