@@ -285,45 +285,56 @@
   }
   win.insertAdjacentHTML("afterbegin", '<div class="w-bar"><span class="w-dots"><i></i><i></i><i></i></span><span class="w-url"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span id="w-url">app.cubezix.one/erp</span></span><span class="w-sp"></span></div>');
   stage.insertAdjacentHTML("afterbegin", '<div class="h2-glows" aria-hidden="true">' + HP.map((p) => `<i style="--c:${p.c}"></i>`).join("") + "</div>");
-  /* ---------- hero product cards that fly into their tabs on scroll (Steep-style) ---------- */
+  /* ---------- hero module cards: 4 cards on the right (2 modules each = all 8), they fall onto the dashboard's module list on scroll and the effect ends there ---------- */
   (function heroFlow() {
     const hero = $(".h2-hero"); if (!hero) return;
     const big = matchMedia("(min-width: 1280px)"), still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const av2 = (t, c) => `<span class="hf-av" style="--c:${c}">${t}</span>`;
-    const BODY = {
-      erp: `<div class="hf-big">AED 957K</div><small class="hf-sm">Cash position · 3 accounts</small><svg class="hf-bars" viewBox="0 0 120 34" aria-hidden="true">${[10, 16, 13, 20, 18, 26, 23, 31].map((h, i) => `<rect x="${i * 15}" y="${34 - h}" width="9" height="${h}" rx="2.5" fill="${i > 5 ? "#633ADD" : "#3A4CE1"}" opacity="${0.35 + i * 0.08}"/>`).join("")}</svg>`,
-      desk: `<div class="hf-row"><b>12</b><small>open tickets</small></div><div class="hf-meter"><i style="width:78%"></i></div><small class="hf-sm"><em class="hf-dot"></em>98% on time · 2 at risk</small>`,
-      assets: `<div class="hf-row"><b>66</b><small>devices</small></div><div class="hf-chips"><span>42 in use</span><span>6 spare</span><span>3 repair</span></div>`,
-      people: `<div class="hf-avs">${av2("AR", "#80D1D4")}${av2("OK", "#3A4CE1")}${av2("FA", "#633ADD")}${av2("+21", "#E9E8FF")}</div><div class="hf-row"><b>96%</b><small>present today</small></div>`,
-      sign: `<svg class="hf-sig" viewBox="0 0 120 30" fill="none" stroke="#3A4CE1" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 21c8-14 12-14 14-2s6 4 12-8c6-12 8 6 14 6s10-12 18-2 12 4 18-6"/></svg><small class="hf-sm"><em class="hf-ok">✓</em>Contract signed and stamped</small>`,
+    const MI = {
+      Finance: "M12 3a9 9 0 100 18 9 9 0 000-18zM9.5 9.5c.5-1 1.5-1.5 2.5-1.5 1.5 0 2.5.8 2.5 2s-1 1.6-2.5 2-2.5.8-2.5 2 1 2 2.5 2c1 0 2-.5 2.5-1.5",
+      Sales: "M4 5h2l2 10h9l2-7H7M10 19h.01M16 19h.01", CRM: "M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z",
+      Inventory: "M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8", Procurement: "M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2",
+      Payroll: "M3 7h18v10H3zM3 11h18M7 15h3", HR: "M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 3.6-7 8-7s8 3 8 7", Operations: "M4 14l4-4 3 3 5-6 4 4M4 20h16",
     };
+    const GROUPS = [
+      [["Finance", "AED 957K", "cash position"], ["Sales", "14", "quotes open"]],
+      [["CRM", "46", "new leads"], ["Inventory", "1,240", "items in stock"]],
+      [["Procurement", "14", "orders approved"], ["Payroll", "Nov 25", "WPS run ready"]],
+      [["HR", "12", "leave requests"], ["Operations", "96%", "tasks on time"]],
+    ];
+    const row = (m) => `<div class="hm"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${MI[m[0]]}"/></svg></i><div><small>${m[0]}</small><b>${m[1]}</b><em>${m[2]}</em></div></div>`;
     const wrapEl = document.createElement("div"); wrapEl.className = "hf-wrap"; wrapEl.setAttribute("aria-hidden", "true");
-    wrapEl.innerHTML = PRODUCTS.map((p) => `<div class="hf hf-${p.k}" data-k="${p.k}"><div class="hf-in" style="--c:${p.c}"><div class="hf-h"><i>${TABICON[p.k]}</i><span>${p.name}</span></div>${BODY[p.k] || ""}</div></div>`).join("");
+    wrapEl.innerHTML = GROUPS.map((g, i) => `<div class="hf hc${i}"><div class="hf-in hf-mods">${g.map(row).join("")}</div></div>`).join("");
     hero.insertBefore(wrapEl, hero.querySelector(".wrap"));
-    const cards = $$(".hf", wrapEl), tabEls = $$(".h2-tab", tabs);
+    const cards = $$(".hf", wrapEl), winEl = $(".h2-window");
     let geo = [], end = 1, lastE = -1;
+    const navBtns = () => $$(".h2-panels .ed-nav button", hero);
     function measure() {
       if (!big.matches) return;
       cards.forEach((c) => (c.style.transform = ""));
-      const hr = hero.getBoundingClientRect();
+      const keep = winEl ? winEl.style.transform : ""; if (winEl) winEl.style.transform = "none"; // measure the dashboard in its final, flat state
+      const hr = hero.getBoundingClientRect(), nb = navBtns();
       geo = cards.map((c, i) => {
-        const t = tabEls[i] || tabs, tr = t.getBoundingClientRect();
+        const a = nb[i * 2], z = nb[i * 2 + 1] || a; if (!a) return { dx: 0, dy: 0, k: 0.4 };
+        const ra = a.getBoundingClientRect(), rz = z.getBoundingClientRect();
+        const tx = (ra.left + rz.right) / 2 - hr.left, ty = (ra.top + rz.bottom) / 2 - hr.top;
         const cx = c.offsetLeft + c.offsetWidth / 2, cy = c.offsetTop + c.offsetHeight / 2;
-        return { dx: tr.left - hr.left + tr.width / 2 - cx, dy: tr.top - hr.top + tr.height / 2 - cy, k: Math.min(0.8, Math.max(0.35, 1 - (tr.width * 0.9) / c.offsetWidth)) };
+        return { dx: tx - cx, dy: ty - cy, k: Math.min(0.78, Math.max(0.3, 1 - (rz.right - ra.left) / c.offsetWidth)) };
       });
+      if (winEl) winEl.style.transform = keep;
       const st = stage.getBoundingClientRect().top + scrollY;
-      end = Math.max(200, st - innerHeight * 0.45);
+      end = Math.max(240, st - innerHeight * 0.3);
       lastE = -1; frame();
     }
     function frame() {
       if (!big.matches || still || !geo.length) return;
       const p = clamp(scrollY / end, 0, 1), e = Math.round(p * p * (3 - 2 * p) * 400) / 400;
       if (e === lastE) return; lastE = e;
+      const nb = navBtns();
       cards.forEach((c, i) => {
-        const g = geo[i], d = i * 0.03, q = clamp((e - d) / (1 - d), 0, 1), t = tabEls[i];
-        c.style.transform = `translate(${(g.dx * Math.pow(q, 2.4)).toFixed(1)}px,${(g.dy * q).toFixed(1)}px) scale(${(1 - g.k * q).toFixed(3)})`;
-        c.style.opacity = q < 0.9 ? 1 : Math.max(0, 1 - (q - 0.9) / 0.1).toFixed(3);
-        if (t) t.classList.toggle("caught", q >= 0.97);
+        const g = geo[i], d = i * 0.04, q = clamp((e - d) / (1 - d), 0, 1);
+        c.style.transform = `translate(${(g.dx * q).toFixed(1)}px,${(g.dy * Math.pow(q, 1.6)).toFixed(1)}px) scale(${(1 - g.k * q).toFixed(3)})`;
+        c.style.opacity = q < 0.92 ? 1 : Math.max(0, 1 - (q - 0.92) / 0.08).toFixed(3);
+        [nb[i * 2], nb[i * 2 + 1]].forEach((b) => b && b.classList.toggle("caught", q >= 0.97));
       });
       wrapEl.classList.toggle("gone", e >= 1);
     }

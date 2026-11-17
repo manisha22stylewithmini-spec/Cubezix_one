@@ -1580,3 +1580,21 @@ footer.site-footer{background:#fff;margin-top:0}
 .t-acc:hover .t-in,.h2-title .grad:hover .t-in,.cta-h .pxf:hover .t-in{animation:tTwist .8s cubic-bezier(.45,0,.25,1) 1}
 @keyframes tTwist{0%{transform:translateY(0) rotate(0) skewX(0)}28%{transform:translateY(-12%) rotate(-3.5deg) skewX(-10deg) scale(1.04)}58%{transform:translateY(6%) rotate(2.5deg) skewX(7deg)}82%{transform:translateY(-2%) rotate(-1deg) skewX(-2deg)}100%{transform:translateY(0) rotate(0) skewX(0)}}
 @media (prefers-reduced-motion:reduce){.t-acc:hover .t-in,.h2-title .grad:hover .t-in,.cta-h .pxf:hover .t-in{animation:none}}
+/* hero module cards: four cards on the right, two modules each (all eight); they land on the dashboard's module list on scroll */
+.hf{width:224px}
+.hf-erp,.hf-desk,.hf-assets,.hf-people,.hf-sign{display:none}
+.hc0{right:max(18px,calc(50% - 770px));top:190px}
+.hc1{right:max(50px,calc(50% - 720px));top:370px}
+.hc2{right:max(18px,calc(50% - 770px));top:550px}
+.hc3{right:max(50px,calc(50% - 720px));top:730px}
+.hc0 .hf-in{animation-delay:.15s,1s}.hc1 .hf-in{animation-delay:.3s,2.2s}.hc2 .hf-in{animation-delay:.45s,3.1s}.hc3 .hf-in{animation-delay:.6s,1.7s}
+.hf-mods{display:grid;gap:12px;padding:14px 16px}
+.hm{display:flex;gap:10px;align-items:center;text-align:left}
+.hm+.hm{padding-top:12px;border-top:1px solid rgba(20,22,63,.07)}
+.hm i{flex:none;width:30px;height:30px;border-radius:10px;background:#EEF0FF;color:#3A4CE1;display:grid;place-items:center}
+.hm i svg{width:17px;height:17px}
+.hm small{display:block;font:500 11px var(--font);color:var(--muted)}
+.hm b{display:block;font:600 19px/1.15 var(--font-display);letter-spacing:-.03em;color:var(--ink)}
+.hm em{display:block;font:400 11px var(--font);font-style:normal;color:var(--muted)}
+.h2-window .ed-nav button.caught{background:#EEF0FF;color:#3A4CE1;box-shadow:inset 0 0 0 1.5px rgba(58,76,225,.35)}
+.h2-float{display:none!important}
