@@ -12,7 +12,8 @@
   /* ---------- hero dashboard (dark device frame, pastel cards, chart, table, promo) ---------- */
   const di = (d, w = 16) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const DI = { search: di('<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/>'), bell: di('<path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 004 0"/>'), chev: di('<path d="M6 9l6 6 6-6"/>', 14), sliders: di('<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>'), star: di('<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8 6.8 19.6l1-5.8L3.5 9.7l5.9-.8z"/>'), arrow: di('<path d="M5 12h14M13 6l6 6-6 6"/>', 14), out: di('<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>', 18), grid: di('<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>', 18), chat: di('<path d="M4 5h16v11H9l-5 4z"/>', 18), box: di('<path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>', 18), users: di('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c.6-3.6 3-5.2 6-5.2s5.4 1.6 6 5.2M16 5.4a3 3 0 010 5.4M18.5 14.8c1.6.6 2.5 2.2 2.8 4.2"/>', 18), pen: di('<path d="M4 20l1-4L16.5 4.5a2 2 0 013 3L8 19z"/><path d="M14 7l3 3"/>', 18), doc: di('<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/>', 18), wallet: di('<rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/>', 18), truck: di('<path d="M2 6h11v10H2zM13 9h5l3 3.5V16h-8"/><circle cx="6.5" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>', 18), bank: di('<path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/>', 18), clock: di('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', 18), check: di('<path d="M5 12.5l4.5 4.5L19 7.5"/>', 18), cart: di('<path d="M3 4h2.5l2 11h10l2-8H6.5"/><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/>', 18) };
-  const RAIL = [["erp", DI.grid, "ONE ERP"], ["desk", DI.chat, "ONE Desk"], ["assets", DI.box, "ONE Assets"], ["people", DI.users, "ONE People"], ["sign", DI.pen, "ONE Sign"]];
+  const RAIL = [["erp", DI.grid, "ONE ERP"]]; const RAIL_ALL = [["erp", DI.grid, "ONE ERP"], ["desk", DI.chat, "ONE Desk"], ["assets", DI.box, "ONE Assets"], ["people", DI.users, "ONE People"], ["sign", DI.pen, "ONE Sign"]];
+  const HP = PRODUCTS.filter((p) => p.k === "erp"); // hero dashboard shows ONE ERP only
   const spark = (s) => { const W = 320, H = 100, mn = Math.min(...s), mx = Math.max(...s); const pts = s.map((v, i) => [(i * W) / (s.length - 1), H - 10 - ((v - mn) / (mx - mn || 1)) * (H - 30)]); return { d: pts.map((q, i) => (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" "), pts, W, H }; };
   const TONES = { lav: ["#F0E5FF", "#3A1B7A", "#8C5CE8"], mint: ["#D8F4F4", "#0B4F54", "#1FA9AE"], sand: ["#E3E5FF", "#1F2670", "#2B2FA0"], sky: ["#E3EDFD", "#1F2F5C", "#3F7FE0"], rose: ["#EFE4FF", "#3A1B7A", "#633ADD"], aqua: ["#D8F4F4", "#024745", "#0AA7A4"] };
   const av = (t, c) => `<span class="av" style="--c:${c}">${t}</span>`;
@@ -31,17 +32,69 @@
   const kcard = (tag, tagc, title, desc, who, due, n, drag) => `<div class="k-card${drag ? " drag" : ""}"><span class="k-tag" style="--t:${tagc}">${tag}</span><b>${title}</b><p>${desc}</p><div class="k-foot"><span class="a-stack sm">${who}</span><span class="k-m">${cal}${due}</span><span class="k-m">${msg}${n}</span></div></div>`;
   const kcol = (name, c, n, cards) => `<div class="k-col"><div class="k-h"><u style="--t:${c}">${name}</u><em>${n}</em><span>${dots}</span></div>${cards}</div>`;
   const doc = (ti, sub, st, c) => `<div class="s-doc"><i class="tile">${DI.doc}</i><span><b>${ti}</b><small>${sub}</small></span><u class="st ${c}">${st}</u></div>`;
+  /* ---------- ONE ERP dashboard: module tabs in the side nav, one view per module ---------- */
+  const DIT = di('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2"/>');
+  const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"];
+  const ED = {
+    finance: { n: "Finance", ic: DI.bank, sub: "October close is two days away. Three decisions need you.", big: ["Cash position", "AED 957,400", "+4.2% than last month", "Reconcile", "Approve"], lim: ["Monthly spending limit", "AED 214K spent", "of AED 320K", 67],
+      tiles: [["Bank lines matched", "214", "+38 today"], ["Invoices out", "AED 186K", "8 overdue"], ["VAT to file", "AED 41.2K", "Due 28 Nov"], ["Unmatched", "3", "Needs you"]],
+      ch: ["Cash in and out", "Last 8 months", ["In", "Out"], [[62, 30], [70, 24], [48, 36], [66, 28], [58, 40], [78, 22], [64, 34], [74, 26]]],
+      rows: [["Purchase order", "PO-2026-0418", "AED 48,250", "Over budget 6%", "warn", "12 Nov, 09:41"], ["Bank line", "BL-2026-1093", "AED 8,640", "Matched", "ok", "12 Nov, 09:12"], ["Payroll run", "October", "AED 96,400", "WPS sent", "ok", "11 Nov, 17:05"], ["Invoice", "INV-2026-0931", "AED 22,100", "Sent", "brand", "11 Nov, 14:20"]] },
+    payroll: { n: "Payroll", ic: DI.wallet, sub: "Pay day is the 25th. One employee is missing bank details.", big: ["October payroll", "AED 96,400", "25 employees", "Run payroll", "Payslips"], lim: ["WPS file", "24 of 25 ready", "1 missing bank details", 96],
+      tiles: [["Employees paid", "24", "of 25"], ["Overtime", "AED 6.1K", "+8% on Sept"], ["Gratuity accrued", "AED 118K", "This month"], ["Missing details", "1", "Needs you"]],
+      ch: ["Payroll cost", "Last 8 months", ["Salary", "Overtime"], [[70, 12], [72, 10], [71, 14], [74, 9], [73, 16], [75, 11], [76, 13], [78, 12]]],
+      rows: [["Payroll run", "October", "AED 96,400", "Checking", "warn", "25 Nov, 09:00"], ["Payslips", "25 employees", "AED 91,200", "Sent", "ok", "25 Nov, 09:20"], ["WPS file", "SIF-1025", "AED 91,200", "Ready", "ok", "24 Nov, 16:40"], ["Gratuity", "Accrual", "AED 4,900", "Posted", "brand", "30 Oct, 18:00"]] },
+    sales: { n: "Sales", ic: DI.doc, sub: "Four quotes are waiting on a reply. One is about to lapse.", big: ["Sales this month", "AED 428,900", "+9.4% than last month", "New quote", "Invoice"], lim: ["Monthly target", "AED 429K sold", "of AED 500K", 86],
+      tiles: [["Quotes open", "14", "4 waiting"], ["Orders", "38", "+6 this week"], ["Invoiced", "AED 301K", "71% of orders"], ["Overdue", "AED 22K", "3 customers"]],
+      ch: ["Sales and returns", "Last 8 months", ["Sales", "Returns"], [[52, 8], [58, 10], [60, 7], [66, 9], [63, 12], [72, 8], [76, 10], [84, 9]]],
+      rows: [["Quote", "Q-2026-0207", "AED 31,500", "Sent", "brand", "12 Nov, 10:02"], ["Sales order", "SO-2026-0398", "AED 18,200", "Confirmed", "ok", "12 Nov, 09:30"], ["Invoice", "INV-2026-0931", "AED 22,100", "Overdue", "warn", "11 Nov, 14:20"], ["Delivery", "DN-2026-0612", "AED 9,800", "Delivered", "ok", "11 Nov, 11:00"]] },
+    crm: { n: "CRM", ic: DIT, sub: "Every lead followed up before it goes cold. Two need a call today.", big: ["Pipeline value", "AED 1.84M", "+12% than last month", "Add lead", "Log a call"], lim: ["Quarter goal", "AED 1.84M in play", "of AED 2.4M", 76],
+      tiles: [["New leads", "46", "+11 this week"], ["Deals open", "23", "5 closing"], ["Won this month", "AED 212K", "9 deals"], ["Gone cold", "2", "Needs you"]],
+      ch: ["Leads and wins", "Last 8 months", ["Leads", "Lost"], [[44, 14], [52, 18], [48, 12], [60, 16], [58, 20], [68, 14], [64, 18], [74, 15]]],
+      rows: [["Al Noor Trading", "Deal · Warehouse racking", "AED 64,000", "Negotiating", "brand", "12 Nov, 10:15"], ["Marina Dental", "Deal · Annual service", "AED 28,500", "Quote sent", "ok", "12 Nov, 09:05"], ["Gulf Pack Supplies", "Lead · Website", "AED 12,000", "Call today", "warn", "11 Nov, 16:30"], ["Sara's Bakery", "Deal · Fit-out", "AED 41,000", "Won", "ok", "11 Nov, 12:10"]] },
+    inventory: { n: "Inventory", ic: DI.box, sub: "One item is below its reorder point. A purchase order is ready.", big: ["Stock value", "AED 1.26M", "+2.1% than last month", "Count stock", "Reorder"], lim: ["Warehouse capacity", "8,420 units", "of 10,000", 84],
+      tiles: [["Items in stock", "1,240", "3 locations"], ["Moves today", "92", "In and out"], ["Reorders raised", "4", "Auto-created"], ["Below reorder", "1", "Needs you"]],
+      ch: ["Stock in and out", "Last 8 months", ["In", "Out"], [[60, 34], [56, 40], [64, 30], [58, 38], [68, 32], [62, 42], [70, 30], [66, 36]]],
+      rows: [["Shipping carton 40x30", "SKU-0214", "120 in stock", "Below reorder", "warn", "12 Nov, 09:48"], ["Pallet wrap", "SKU-0108", "640 in stock", "OK", "ok", "12 Nov, 08:30"], ["Transfer", "TR-2026-0077", "40 units", "In transit", "brand", "11 Nov, 15:10"], ["Stock count", "Store room", "212 items", "Done", "ok", "11 Nov, 10:00"]] },
+    procurement: { n: "Procurement", ic: DI.cart, sub: "One purchase is over budget and waits for your approval.", big: ["Spend this month", "AED 312,400", "-3.1% than last month", "New PO", "Approve"], lim: ["Monthly budget", "AED 312K spent", "of AED 350K", 89],
+      tiles: [["Open orders", "17", "5 arriving"], ["Approved", "AED 238K", "This month"], ["Supplier bills", "9", "2 to match"], ["Over budget", "1", "Needs you"]],
+      ch: ["Spend and budget", "Last 8 months", ["Spend", "Over"], [[56, 6], [60, 10], [52, 4], [64, 8], [68, 12], [62, 6], [70, 9], [74, 14]]],
+      rows: [["Purchase order", "PO-2026-0418", "AED 48,250", "Over budget 6%", "warn", "12 Nov, 09:41"], ["Goods received", "GR-2026-0233", "AED 12,900", "Matched", "ok", "12 Nov, 08:50"], ["Supplier bill", "SB-2026-0171", "AED 7,400", "To pay", "brand", "11 Nov, 17:30"], ["Request", "PR-2026-0309", "AED 3,200", "Approved", "ok", "11 Nov, 13:15"]] },
+    hr: { n: "HR", ic: DI.users, sub: "Two visas expire within 30 days. Both owners have been told.", big: ["Employees", "25", "+2 than last quarter", "Add employee", "Leave"], lim: ["Leave taken", "212 days", "of 600 booked", 35],
+      tiles: [["On leave today", "3", "of 25"], ["New joiners", "2", "This month"], ["Documents", "100%", "On file"], ["Expiring soon", "2", "Visas, 30 days"]],
+      ch: ["Headcount and leavers", "Last 8 months", ["Joined", "Left"], [[40, 6], [44, 8], [46, 4], [52, 6], [54, 10], [58, 4], [62, 6], [66, 5]]],
+      rows: [["Visa renewal", "Fatima Al Ali", "Expires 12 Dec", "Flagged", "warn", "12 Nov, 09:00"], ["Leave request", "Omar Khan", "4 days", "Approved", "ok", "12 Nov, 08:44"], ["New joiner", "Aisha Rahman", "Starts 3 Feb", "Onboarding", "brand", "11 Nov, 16:20"], ["Contract", "Youssef Nasser", "Signed", "Filed", "ok", "11 Nov, 11:35"]] },
+    operations: { n: "Operations", ic: DI.truck, sub: "One delivery is running late. The customer has been told.", big: ["Deliveries today", "18", "+3 than yesterday", "Plan route", "Track"], lim: ["On-time deliveries", "17 of 18", "this week 94%", 94],
+      tiles: [["Out for delivery", "11", "6 drivers"], ["Delivered", "7", "On time"], ["Work orders", "9", "2 waiting"], ["Running late", "1", "Needs you"]],
+      ch: ["Deliveries", "Last 8 months", ["On time", "Late"], [[58, 6], [62, 8], [60, 5], [68, 7], [66, 9], [72, 5], [74, 6], [78, 4]]],
+      rows: [["Delivery", "DN-2026-0612", "Al Noor Trading", "Late", "warn", "12 Nov, 11:10"], ["Delivery", "DN-2026-0611", "Marina Dental", "Delivered", "ok", "12 Nov, 10:20"], ["Work order", "WO-218", "Cargo trolley", "Waiting for a part", "amber", "12 Nov, 09:00"], ["Pickup", "PU-2026-0090", "Gulf Pack", "Scheduled", "brand", "11 Nov, 15:00"]] },
+  };
+  const ED_ORDER = ["finance", "payroll", "sales", "crm", "inventory", "procurement", "hr", "operations"];
+  ED_ORDER.splice(0, ED_ORDER.length, "finance", "sales", "crm", "inventory", "procurement", "payroll", "hr", "operations");
+  const edView = (k) => {
+    const m = ED[k];
+    return `<div class="ed-view"><div class="ed-hello"><h3>Good morning, Hana</h3><p>${m.sub}</p></div>
+    <div class="ed-grid">
+      <div class="ed-col">
+        <div class="ed-card ed-big"><small>${m.big[0]}</small><b>${m.big[1]}</b><span class="ed-up">${m.big[2]}</span><div class="ed-btns"><u class="dark">${m.big[3]}</u><u>${m.big[4]}</u></div></div>
+        <div class="ed-card ed-lim"><small>${m.lim[0]}</small><div class="ed-pr"><i style="--w:${m.lim[3]}%"></i></div><div class="ed-lf"><span>${m.lim[1]}</span><span>${m.lim[2]}</span></div></div>
+      </div>
+      <div class="ed-tiles">${m.tiles.map((t, i) => `<div class="ed-t${i === 0 ? " hot" : ""}${i === 3 ? " ask" : ""}" style="--d:${0.08 + i * 0.07}s"><small>${t[0]}</small><b>${t[1]}</b><em>${t[2]}</em></div>`).join("")}</div>
+      <div class="ed-card ed-ch"><b>${m.ch[0]}</b><small>${m.ch[1]}</small><div class="ed-lg"><span><i></i>${m.ch[2][0]}</span><span><i class="h"></i>${m.ch[2][1]}</span></div>
+        <div class="ed-bars">${m.ch[3].map((p, i) => `<i style="--d:${i * 0.05}s"><u style="--h:${p[0]}%"></u><s style="--h:${p[1]}%"></s><em>${MON[i]}</em></i>`).join("")}</div></div>
+    </div>
+    <div class="ed-card ed-tab"><div class="ed-th"><b>Recent activities</b><span class="ed-sr">${DI.search}<i>Search</i></span></div>
+      ${m.rows.map((r, i) => `<div class="ed-tr" style="--d:${0.2 + i * 0.06}s"><span class="nm"><i class="tile">${m.ic}</i><span><b>${r[0]}</b><small>${r[1]}</small></span></span><span class="mono">${r[2]}</span><span><u class="st ${r[4]}">${r[3]}</u></span><span class="dt">${r[5]}</span></div>`).join("")}</div></div>`;
+  };
+  const edHTML = () => `<div class="ed" data-m="finance"><aside class="ed-side"><div class="ed-ws"><i>${window.CZ_NAV.mark(24)}</i><span><b>Gulf Pack Trading</b><small>ONE ERP · 8 modules</small></span></div><small class="ed-cap">Modules</small><nav class="ed-nav" role="tablist" aria-label="ERP modules">${ED_ORDER.map((k, i) => `<button type="button" role="tab" data-m="${k}" class="${i === 0 ? "on" : ""}" aria-selected="${i === 0}">${ED[k].ic}<span>${ED[k].n}</span></button>`).join("")}</nav></aside>
+    <div class="ed-main"><div class="ed-top"><span class="ed-pills"><i class="on">Overview</i><i>Activity</i><i>Reports</i></span><span class="ed-ic">${DI.search}</span><span class="ed-ic">${DI.bell}</span><span class="ed-me">${AV.h}<b>Hana Nasser</b></span></div><div class="ed-body">${edView("finance")}</div></div></div>`;
+  const edShow = (root, k) => {
+    if (!root || root.dataset.m === k) return; root.dataset.m = k;
+    $$(".ed-nav button", root).forEach((b) => { const on = b.dataset.m === k; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
+    $(".ed-body", root).innerHTML = edView(k);
+  };
   const PANELS_HTML = {
-    erp: () => shell("erp", { ws: "Gulf Pack Trading", wsub: "ONE ERP · 8 modules", active: "Overview", crumb: ["Finance", "Overview"], btn: "New entry",
-      groups: [["Workspace", [["Overview", DI.grid], ["Inbox", DI.chat, "3"], ["Approvals", DI.check, "5"]]], ["Modules", [["Finance", DI.bank], ["Sales", DI.cart], ["Inventory", DI.box], ["Payroll", DI.wallet], ["Procurement", DI.truck]]]],
-      body: `<h3>Welcome back, Hana</h3><p class="a-sub">Month-end close is two days away. Three decisions need you.</p>
-      <div class="a-banner"><span><b>October close</b><small>All bank lines matched except 3. Payroll file sent.</small></span><span class="a-prog"><i style="width:82%"></i></span><em>82%</em><u class="a-cta">Review ${DI.arrow}</u></div>
-      <div class="a-stats">${stat("sand", DI.bank, "214", "Bank lines matched", "+38")}${stat("mint", DI.wallet, "AED 957K", "Cash position", "+4.2%")}${stat("lav", DI.box, "1 item", "Below reorder", "Low")}</div>
-      ${tabsBar([["Approvals", "3"], ["Cash"], ["Payroll"], ["Stock"]], 0)}
-      <div class="a-table"><div class="a-th"><span>Item</span><span>Amount</span><span>Status</span><span>Owner</span></div>
-      <div class="a-tr2"><span class="nm"><i class="tile">${DI.cart}</i><span><b>Purchase order</b><small>PO-2026-0418</small></span></span><span class="mono">AED 48,250</span><span><u class="st warn">Over budget 6%</u></span><span>${AV.h} Hana</span></div>
-      <div class="a-tr2"><span class="nm"><i class="tile">${DI.bank}</i><span><b>Bank line</b><small>BL-2026-1093</small></span></span><span class="mono">AED 8,640</span><span><u class="st ok">Matched</u></span><span>${AV.m} Maria</span></div>
-      <div class="a-tr2"><span class="nm"><i class="tile">${DI.wallet}</i><span><b>Payroll run</b><small>October</small></span></span><span class="mono">AED 96,400</span><span><u class="st ok">WPS sent</u></span><span>${AV.m} Maria</span></div></div>` }),
+    erp: () => edHTML(),
     desk: () => shell("desk", { ws: "Support", wsub: "ONE Desk · 6 agents", active: "Board", crumb: ["Support", "Ticket board"], btn: "New ticket",
       groups: [["Queues", [["Board", DI.grid], ["My tickets", DI.chat, "4"], ["Unassigned", DI.users, "2"], ["At risk", DI.clock, "2"]]], ["Customers", [["Portal", DI.star], ["Knowledge base", DI.doc]]]],
       body: `<div class="a-hd"><h3>Ticket board</h3>${tabsBar([["Board"], ["List"], ["Calendar"]], 0)}</div>
@@ -78,15 +131,15 @@
   const tabs = $("#h2-tabs"), panels = $("#h2-panels"), win = $("#h2-window");
   const rail = $("#h2-rail");
   rail.innerHTML = `<span class="rail-logo">${window.CZ_NAV.mark(30)}</span><div class="rail-nav">${RAIL.map((r, i) => `<button class="rail-b" data-i="${i}" aria-label="${r[2]}" title="${r[2]}" style="--c:${PRODUCTS[i].c}">${r[1]}</button>`).join("")}</div><span class="rail-out">${DI.out}</span>`;
-  tabs.innerHTML = PRODUCTS.map((p, i) => `<button class="h2-tab" role="tab" data-k="${p.k}" style="--c:${p.c}" aria-selected="false"><i>${TABICON[p.k]}</i><span>${p.name}</span><b></b></button>`).join("");
-  panels.innerHTML = PRODUCTS.map((p) => `<div class="h2-panel" data-k="${p.k}" role="tabpanel"></div>`).join("");
+  tabs.innerHTML = HP.map((p, i) => `<button class="h2-tab" role="tab" data-k="${p.k}" style="--c:${p.c}" aria-selected="false"><i>${TABICON[p.k]}</i><span>${p.name}</span><b></b></button>`).join("");
+  panels.innerHTML = HP.map((p) => `<div class="h2-panel" data-k="${p.k}" role="tabpanel"></div>`).join("");
   let cur = -1, reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   function select(i) {
     const prev = cur; cur = i;
     $$('.h2-glows i').forEach((g, k) => g.classList.toggle('on', k === i));
     panels.style.setProperty('--dir', i >= prev ? 1 : -1);
-    const u = $('#w-url'); if (u) u.textContent = 'app.cubezix.one/' + PRODUCTS[i].k;
-    $$(".rail-b").forEach((b, k) => b.classList.toggle("on", k === i)); win.style.setProperty("--c", PRODUCTS[i].c);
+    const u = $('#w-url'); if (u) u.textContent = 'app.cubezix.one/' + HP[i].k;
+    $$(".rail-b").forEach((b, k) => b.classList.toggle("on", k === i)); win.style.setProperty("--c", HP[i].c);
     $$(".h2-tab").forEach((t, k) => { const on = k === i; t.classList.toggle("on", on); t.setAttribute("aria-selected", on); if (on) { t.style.setProperty("--dur", "6s"); const b = $("b", t); b.style.animation = "none"; void b.offsetWidth; b.style.animation = ""; } });
     $$(".h2-panel").forEach((p, k) => {
       if (k === i && !p.firstChild) p.innerHTML = PANELS[p.dataset.k]();
@@ -96,9 +149,14 @@
   }
   rail.addEventListener("click", (e) => { const b = e.target.closest(".rail-b"); if (b) { select(+b.dataset.i); if (!reduce) win.classList.add("paused"); } });
   tabs.addEventListener("click", (e) => { const t = e.target.closest(".h2-tab"); if (t) { select($$(".h2-tab").indexOf(t)); if (!reduce) win.classList.add("paused"); } });
-  tabs.addEventListener("animationend", (e) => { if (e.target.tagName === "B" && !reduce) select((cur + 1) % PRODUCTS.length); });
+  tabs.addEventListener("animationend", (e) => { if (e.target.tagName === "B" && !reduce) select((cur + 1) % HP.length); });
   win.addEventListener("mouseenter", () => win.classList.add("paused")); win.addEventListener("mouseleave", () => win.classList.remove("paused")); tabs.addEventListener("mouseenter", () => win.classList.add("paused")); tabs.addEventListener("mouseleave", () => win.classList.remove("paused"));
   new IntersectionObserver(([e]) => win.classList.toggle("paused", !e.isIntersecting), { threshold: 0.2 }).observe(win);
+  { // ERP module tabs: click a module in the side nav; they also rotate on their own until you touch them
+    let stop = false, vis = true; new IntersectionObserver(([e]) => { vis = e.isIntersecting; }, { threshold: 0.3 }).observe(win);
+    panels.addEventListener("click", (e) => { const b = e.target.closest(".ed-nav button"); if (!b) return; stop = true; edShow(b.closest(".ed"), b.dataset.m); });
+    if (!reduce) setInterval(() => { const r = $(".ed"); if (stop || !vis || !r || win.matches(":hover")) return; edShow(r, ED_ORDER[(ED_ORDER.indexOf(r.dataset.m) + 1) % ED_ORDER.length]); }, 5200);
+  }
   { const cm = $("#cta-mark"); if (cm) cm.innerHTML = window.CZ_NAV.mark(100); }
   /* ---------- hero background: character field that wakes up around the cursor (Dovetail-style) ---------- */
   (function asciiField() {
@@ -160,6 +218,7 @@
       h.innerHTML = words.slice(0, -n).join(" ") + (words.length > n ? " " : "") + `<span class="t-acc">${words.slice(-n).join(" ")}</span>`;
     });
   })();
+  $$(".t-acc,.h2-title .grad,.cta-h .pxf").forEach((e) => { if (e.querySelector(":scope > .t-in")) return; const w = document.createElement("span"); w.className = "t-in"; while (e.firstChild) w.appendChild(e.firstChild); e.appendChild(w); });
   /* ---------- closing CTA: WebGL "Waves" shader in the logo colours (port of the 21st.dev ShaderBackground) ---------- */
   function shaderBg(card, stops = [0, 0.5, 1]) {
     if (!card) return;
@@ -206,6 +265,7 @@
     addEventListener("resize", () => { if (still) { raf = 0; go(); } });
   }
   shaderBg($(".h2-cta-card"), [0.05, 0.35, 0.85]);
+  shaderBg($(".vs-bg"), [0.05, 0.35, 0.85]);
   const stage = $(".h2-stage");
   stage.insertAdjacentHTML("afterbegin", `<div class="h2-float f1" aria-hidden="true"><i class="ok"></i><div><b>Payroll sent</b><small>WPS file · 8 employees</small></div></div><div class="h2-float f2" aria-hidden="true"><i class="warn"></i><div><b>Visa expires in 30 days</b><small>Fatima · HR</small></div></div><div class="h2-float f3" aria-hidden="true"><i class="brand"></i><div><b>1 decision needs you</b><small>PO-2026-0418</small></div></div>`);
   [$(".h2-stage")].forEach((el) => new IntersectionObserver(([e]) => el.classList.toggle("is-off", !e.isIntersecting), { rootMargin: "100px" }).observe(el));
@@ -224,7 +284,7 @@
     });
   }
   win.insertAdjacentHTML("afterbegin", '<div class="w-bar"><span class="w-dots"><i></i><i></i><i></i></span><span class="w-url"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span id="w-url">app.cubezix.one/erp</span></span><span class="w-sp"></span></div>');
-  stage.insertAdjacentHTML("afterbegin", '<div class="h2-glows" aria-hidden="true">' + PRODUCTS.map((p) => `<i style="--c:${p.c}"></i>`).join("") + "</div>");
+  stage.insertAdjacentHTML("afterbegin", '<div class="h2-glows" aria-hidden="true">' + HP.map((p) => `<i style="--c:${p.c}"></i>`).join("") + "</div>");
   /* ---------- hero product cards that fly into their tabs on scroll (Steep-style) ---------- */
   (function heroFlow() {
     const hero = $(".h2-hero"); if (!hero) return;
@@ -460,6 +520,30 @@
   const AFTER = ["One record for every customer, item and amount", "Every request has an owner and a deadline", "Every device has a holder and a history", "Pay day and permits flagged before they lapse", "Documents signed and stamped online, with a trail"];
   $("#ba-before").innerHTML = BEFORE.map((t) => `<li>${ICX.x}<span>${t}</span></li>`).join("");
   $("#ba-after").innerHTML = AFTER.map((t) => `<li>${ICX.ok}<span>${t}</span></li>`).join("");
+  document.querySelectorAll(".ba-logo").forEach((el) => (el.innerHTML = window.CZ_NAV.mark(40)));
+  const pvV = $("#pv-vid"), pvP = $("#vs-play");
+  if (pvV && pvP) { const box = pvV.closest(".vs-video"); pvP.addEventListener("click", () => { box.classList.add("playing"); pvV.controls = true; pvV.play(); }); }
+  const baF = $(".ba-frame");
+  if (baF) {
+    let cur = 100, goal = 100, raf = 0, last = 0, tau = 150;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const set = (v) => { baF.style.setProperty("--x", v.toFixed(3)); baF.classList.toggle("flip", v > 72); };
+    const tick = (t) => {
+      const dt = Math.min(64, t - (last || t)); last = t;
+      cur += (goal - cur) * (1 - Math.exp(-dt / tau));
+      if (Math.abs(goal - cur) < 0.02) cur = goal;
+      set(cur);
+      if (cur === goal) { raf = 0; last = 0; } else raf = requestAnimationFrame(tick);
+    };
+    const go = (g, slow) => { goal = reduce ? g : g; tau = reduce ? 1 : slow ? 320 : 150; if (!raf) raf = requestAnimationFrame(tick); };
+    const at = (e) => { const r = baF.getBoundingClientRect(); return Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100)); };
+    baF.addEventListener("pointerenter", (e) => { baF.classList.add("live"); go(at(e), true); });
+    baF.addEventListener("pointermove", (e) => { baF.classList.add("live"); go(at(e)); });
+    baF.addEventListener("pointerleave", () => { baF.classList.remove("live"); go(100, true); });
+    baF.addEventListener("pointercancel", () => { baF.classList.remove("live"); go(100); });
+    baF.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { baF.classList.add("live"); go(Math.max(0, Math.min(100, goal + (e.key === "ArrowLeft" ? -10 : 10)))); } });
+    baF.addEventListener("blur", () => { baF.classList.remove("live"); go(100); });
+  }
 
   const bar = (w, c) => `<div class="mv-bar"><i style="width:${w}%;${c ? "background:" + c : ""}"></i></div>`;
   /* ---------- products bento ---------- */
@@ -547,9 +631,7 @@
   /* ---------- clients ---------- */
   const Q = [["From the initial IT consultation to the seamless implementation, CubeZix demonstrated a deep understanding of our unique IT infrastructure needs. Their expertise in network security, cloud computing and infrastructure management has significantly enhanced our operational efficiency.", "Samarth V", "Assistant Finance Manager, Al Rama International FZCO", "#3F7FE0"], ["CubeZix's responsiveness is impressive; they are always quick to address any issues that arise, minimizing downtime and keeping our operations seamless. Beyond maintenance, they offer valuable advice and proactive solutions.", "Tarek Nachnouchi", "Chief Product Officer, Arabyads", "#0AA7A4"], ["CubeZix's proactive maintenance approach is a standout feature. They regularly monitor our systems, perform routine check-ups, and provide detailed reports on our IT health.", "Aman Nasser", "Director, International Textile Exports Ltd", "#633ADD"]];
   const qcard = (q) => `<figure class="qm-c"><div class="stars" aria-label="5 stars">★★★★★</div><p>${q[0]}</p><figcaption class="who"><span class="av" style="--c:${q[3]}">${q[1].split(" ").map((w) => w[0]).join("").slice(0, 2)}</span><div><b>${q[1]}</b><small>${q[2]}</small></div></figcaption></figure>`;
-  const qrow = (arr, rev) => `<div class="qm-track${rev ? " rev" : ""}"><div class="qm-in">${(() => { const set = Array.from({ length: 4 }, () => arr).flat(); return [...set, ...set].map(qcard).join(""); })()}</div></div>`;
-  $("#quotes").innerHTML = qrow([Q[0], Q[1], Q[2]]) + qrow([Q[1], Q[2], Q[0]], true);
-  new IntersectionObserver(([e]) => $("#quotes").classList.toggle("is-off", !e.isIntersecting)).observe($("#quotes"));
+  $("#quotes").innerHTML = `<div class="wrap qm-grid">${Q.map(qcard).join("")}</div>`; // static: no marquee
 
   /* ---------- faq ---------- */
   const FAQ = [["How long does it take to go live?", "It depends on your size and modules. Most companies go live in [timeframe]. Your dedicated contact plans every step with you."], ["Can we start with just one product?", "Yes. Start with the ERP, the helpdesk or HR on their own, and add the rest later. They share records when you run them together."], ["Can you move our data from our current system?", "Yes. We migrate your customers, items and balances, and clean up duplicates along the way, so you start with one clean record for everything."], ["Does it handle UAE VAT, WPS and e-invoicing?", "Yes. VAT at 5% is built in, WPS salary files are prepared from the payroll run, and e-invoicing is supported as the UAE rules come into force."], ["Where is our data stored, and is it secure?", "[Hosting location and security details.] Access is controlled with roles, two-factor login and a full audit trail."], ["What does our dedicated contact do?", "One person at CubeZix who knows your setup, from your first demo through go-live and beyond."]];
