@@ -295,15 +295,12 @@
       Inventory: "M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8", Procurement: "M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2",
       Payroll: "M3 7h18v10H3zM3 11h18M7 15h3", HR: "M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 3.6-7 8-7s8 3 8 7", Operations: "M4 14l4-4 3 3 5-6 4 4M4 20h16",
     };
-    const GROUPS = [
-      [["Finance", "AED 957K", "cash position"], ["Sales", "14", "quotes open"]],
-      [["CRM", "46", "new leads"], ["Inventory", "1,240", "items in stock"]],
-      [["Procurement", "14", "orders approved"], ["Payroll", "Nov 25", "WPS run ready"]],
-      [["HR", "12", "leave requests"], ["Operations", "96%", "tasks on time"]],
-    ];
+    // eight cards, one per module: four on the left, four on the right
+    const CARDS = [["Finance", "AED 957K", "cash position"], ["Sales", "14", "quotes open"], ["CRM", "46", "new leads"], ["Inventory", "1,240", "items in stock"], ["Procurement", "14", "orders approved"], ["Payroll", "Nov 25", "WPS run ready"], ["HR", "12", "leave requests"], ["Operations", "96%", "tasks on time"]];
+    const SIDE = [0, 0, 0, 0, 1, 1, 1, 1]; // 0 = left, 1 = right
     const row = (m) => `<div class="hm"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${MI[m[0]]}"/></svg></i><div><small>${m[0]}</small><b>${m[1]}</b><em>${m[2]}</em></div></div>`;
     const wrapEl = document.createElement("div"); wrapEl.className = "hf-wrap"; wrapEl.setAttribute("aria-hidden", "true");
-    wrapEl.innerHTML = GROUPS.map((g, i) => `<div class="hf hc${i}"><div class="hf-in hf-mods">${g.map(row).join("")}</div></div>`).join("");
+    wrapEl.innerHTML = CARDS.map((m, i) => `<div class="hf hc${i} ${SIDE[i] ? "hr" : "hl"}"><div class="hf-in hf-mods">${row(m)}</div></div>`).join("");
     hero.insertBefore(wrapEl, hero.querySelector(".wrap"));
     const cards = $$(".hf", wrapEl), winEl = $(".h2-window");
     let geo = [], end = 1, lastE = -1;
@@ -314,8 +311,8 @@
       const keep = winEl ? winEl.style.transform : ""; if (winEl) winEl.style.transform = "none"; // measure the dashboard in its final, flat state
       const hr = hero.getBoundingClientRect(), nb = navBtns();
       geo = cards.map((c, i) => {
-        const a = nb[i * 2], z = nb[i * 2 + 1] || a; if (!a) return { dx: 0, dy: 0, k: 0.4 };
-        const ra = a.getBoundingClientRect(), rz = z.getBoundingClientRect();
+        const a = nb[i]; if (!a) return { dx: 0, dy: 0, k: 0.4 };
+        const ra = a.getBoundingClientRect(), rz = ra;
         const tx = (ra.left + rz.right) / 2 - hr.left, ty = (ra.top + rz.bottom) / 2 - hr.top;
         const cx = c.offsetLeft + c.offsetWidth / 2, cy = c.offsetTop + c.offsetHeight / 2;
         return { dx: tx - cx, dy: ty - cy, k: Math.min(0.78, Math.max(0.3, 1 - (rz.right - ra.left) / c.offsetWidth)) };
@@ -331,10 +328,10 @@
       if (e === lastE) return; lastE = e;
       const nb = navBtns();
       cards.forEach((c, i) => {
-        const g = geo[i], d = i * 0.04, q = clamp((e - d) / (1 - d), 0, 1);
+        const g = geo[i], d = (i % 4) * 0.035, q = clamp((e - d) / (1 - d), 0, 1);
         c.style.transform = `translate(${(g.dx * q).toFixed(1)}px,${(g.dy * Math.pow(q, 1.6)).toFixed(1)}px) scale(${(1 - g.k * q).toFixed(3)})`;
         c.style.opacity = q < 0.92 ? 1 : Math.max(0, 1 - (q - 0.92) / 0.08).toFixed(3);
-        [nb[i * 2], nb[i * 2 + 1]].forEach((b) => b && b.classList.toggle("caught", q >= 0.97));
+        nb[i] && nb[i].classList.toggle("caught", q >= 0.97);
       });
       wrapEl.classList.toggle("gone", e >= 1);
     }
@@ -342,7 +339,7 @@
     big.addEventListener("change", measure);
     let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(measure, 150); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(measure, 60));
-    setTimeout(measure, 400);
+    setTimeout(measure, 400); setTimeout(measure, 1500); setTimeout(measure, 3200); addEventListener("load", () => setTimeout(measure, 300));
   })();
   select(0);
   if (reduce) $$(".h2-tab b").forEach((b) => (b.style.display = "none"));

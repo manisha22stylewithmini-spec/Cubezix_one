@@ -1598,3 +1598,13 @@ footer.site-footer{background:#fff;margin-top:0}
 .hm em{display:block;font:400 11px var(--font);font-style:normal;color:var(--muted)}
 .h2-window .ed-nav button.caught{background:#EEF0FF;color:#3A4CE1;box-shadow:inset 0 0 0 1.5px rgba(58,76,225,.35)}
 .h2-float{display:none!important}
+/* eight hero cards, four each side, mirrored and gently staggered; they land on the matching module in the dashboard list */
+.hf{width:206px}
+.hf-mods{padding:13px 15px}
+.hl{left:max(14px,calc(50% - 770px));right:auto}
+.hr{right:max(14px,calc(50% - 770px));left:auto}
+.hc0,.hc4{top:180px}.hc1,.hc5{top:306px}.hc2,.hc6{top:432px}.hc3,.hc7{top:558px}
+.hc1.hl{left:max(46px,calc(50% - 738px))}.hc3.hl{left:max(46px,calc(50% - 738px))}
+.hc5.hr{right:max(46px,calc(50% - 738px))}.hc7.hr{right:max(46px,calc(50% - 738px))}
+.hc0 .hf-in,.hc4 .hf-in{animation-delay:.15s,1s}.hc1 .hf-in,.hc5 .hf-in{animation-delay:.3s,2.2s}.hc2 .hf-in,.hc6 .hf-in{animation-delay:.45s,3.1s}.hc3 .hf-in,.hc7 .hf-in{animation-delay:.6s,1.7s}
+.hm b{font-size:21px}
