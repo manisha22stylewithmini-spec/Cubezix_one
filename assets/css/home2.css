@@ -1608,3 +1608,14 @@ footer.site-footer{background:#fff;margin-top:0}
 .hc5.hr{right:max(46px,calc(50% - 738px))}.hc7.hr{right:max(46px,calc(50% - 738px))}
 .hc0 .hf-in,.hc4 .hf-in{animation-delay:.15s,1s}.hc1 .hf-in,.hc5 .hf-in{animation-delay:.3s,2.2s}.hc2 .hf-in,.hc6 .hf-in{animation-delay:.45s,3.1s}.hc3 .hf-in,.hc7 .hf-in{animation-delay:.6s,1.7s}
 .hm b{font-size:21px}
+/* nav: the landing pulse no longer leaves every module highlighted; the running glow shows the next module about to open */
+.h2-window .ed-nav button.caught{background:transparent;color:inherit;box-shadow:none;animation:navCaught 1.4s ease-out}
+.h2-window .ed-nav button.on.caught{background:#14163F;color:#fff}
+@keyframes navCaught{0%{box-shadow:inset 0 0 0 1.5px rgba(58,76,225,.6),0 0 0 4px rgba(58,76,225,.22)}100%{box-shadow:inset 0 0 0 1.5px rgba(58,76,225,0),0 0 0 0 rgba(58,76,225,0)}}
+@property --nr{syntax:"<angle>";inherits:false;initial-value:0deg}
+.ed-nav button{position:relative}
+.ed-nav button.running{background:#EEF0FF;color:#3A4CE1;box-shadow:inset 0 0 16px rgba(58,76,225,.28)}
+.ed-nav button.running::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;pointer-events:none;background:conic-gradient(from var(--nr),rgba(128,209,212,0) 0 55%,#80D1D4 72%,#3A4CE1 88%,#633ADD 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:navRun 1.7s linear 1 both}
+.ed-nav button.running::after{content:"";position:absolute;inset:2px;border-radius:inherit;pointer-events:none;background:conic-gradient(from var(--nr),rgba(128,209,212,0) 0 60%,rgba(99,58,221,.22) 90%,rgba(128,209,212,0) 100%);filter:blur(6px);animation:navRun 1.7s linear 1 both}
+@keyframes navRun{to{--nr:360deg}}
+@media (prefers-reduced-motion:reduce){.ed-nav button.running::before,.ed-nav button.running::after{animation:none}}

@@ -155,7 +155,14 @@
   { // ERP module tabs: click a module in the side nav; they also rotate on their own until you touch them
     let stop = false, vis = true; new IntersectionObserver(([e]) => { vis = e.isIntersecting; }, { threshold: 0.3 }).observe(win);
     panels.addEventListener("click", (e) => { const b = e.target.closest(".ed-nav button"); if (!b) return; stop = true; edShow(b.closest(".ed"), b.dataset.m); });
-    if (!reduce) setInterval(() => { const r = $(".ed"); if (stop || !vis || !r || win.matches(":hover")) return; edShow(r, ED_ORDER[(ED_ORDER.indexOf(r.dataset.m) + 1) % ED_ORDER.length]); }, 5200);
+    // every 10 s the next module's nav card runs a glow around its inside, and when the run ends the dashboard switches to that module
+    if (!reduce) setInterval(() => {
+      const r = $(".ed"); if (stop || !vis || !r || win.matches(":hover")) return;
+      const next = ED_ORDER[(ED_ORDER.indexOf(r.dataset.m) + 1) % ED_ORDER.length];
+      const btn = $(`.ed-nav button[data-m="${next}"]`, r); if (!btn) return;
+      btn.classList.add("running");
+      setTimeout(() => { btn.classList.remove("running"); if (!stop) edShow(r, next); }, 1700);
+    }, 10000);
   }
   { const cm = $("#cta-mark"); if (cm) cm.innerHTML = window.CZ_NAV.mark(100); }
   /* ---------- hero background: character field that wakes up around the cursor (Dovetail-style) ---------- */
