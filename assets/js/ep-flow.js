@@ -1,14 +1,21 @@
 /* Wave flow for the "how work travels" stage: a curved line through hexagon nodes. Shared by erp.js and pp.js */
 (function () {
   const CHECK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
-  window.EP_chain = function (steps) {
+  window.EP_chain = function (steps, bleed) {
     const N = steps.length, W = 1000, H = 300, LO = 0.64, HI = 0.34;
     const y = (i) => (i % 2 === 0 ? LO : HI) * H, x = (i) => ((i + 0.5) / N) * W;
     // smooth path: horizontal tangents at every node, so it reads as one wave
-    let d = `M0 ${(y(0) + (y(0) > H / 2 ? 34 : -34)).toFixed(1)} C ${(x(0) * 0.5).toFixed(1)} ${(y(0) + (y(0) > H / 2 ? 34 : -34)).toFixed(1)} ${(x(0) * 0.5).toFixed(1)} ${y(0).toFixed(1)} ${x(0).toFixed(1)} ${y(0).toFixed(1)}`;
+    const BL = bleed ? 900 : 0; // bleed: the line runs on past both ends so the card's edges cut it off, connecting it to the left and right edges
+    let d = `M${-BL} ${(y(0) + (y(0) > H / 2 ? 34 : -34)).toFixed(1)}${bleed ? ` L0 ${(y(0) + (y(0) > H / 2 ? 34 : -34)).toFixed(1)}` : ""} C ${(x(0) * 0.5).toFixed(1)} ${(y(0) + (y(0) > H / 2 ? 34 : -34)).toFixed(1)} ${(x(0) * 0.5).toFixed(1)} ${y(0).toFixed(1)} ${x(0).toFixed(1)} ${y(0).toFixed(1)}`;
     for (let i = 1; i < N; i++) { const mx = (x(i - 1) + x(i)) / 2; d += ` C ${mx.toFixed(1)} ${y(i - 1).toFixed(1)} ${mx.toFixed(1)} ${y(i).toFixed(1)} ${x(i).toFixed(1)} ${y(i).toFixed(1)}`; }
     const last = y(N - 1), end = last + (last > H / 2 ? -34 : 34), ex = (x(N - 1) + W) / 2;
     d += ` C ${ex.toFixed(1)} ${last.toFixed(1)} ${ex.toFixed(1)} ${end.toFixed(1)} ${W} ${end.toFixed(1)}`;
+    if (bleed) d += ` L${W + BL} ${end.toFixed(1)}`;
+    if (bleed) { // one continuous wave: it carries on past both ends with the same rhythm, so there are no flat stretches or tight bends where it meets the card edges
+      const px = (i) => ((i + 0.5) / N) * W, py = (i) => (i % 2 === 0 ? LO : HI) * H;
+      d = `M${px(-1).toFixed(1)} ${py(-1).toFixed(1)}`;
+      for (let i = 0; i <= N; i++) { const mx = (px(i - 1) + px(i)) / 2; d += ` C ${mx.toFixed(1)} ${py(i - 1).toFixed(1)} ${mx.toFixed(1)} ${py(i).toFixed(1)} ${px(i).toFixed(1)} ${py(i).toFixed(1)}`; }
+    }
     const nodes = steps.map((t, i) => `<div class="ep-wn ${i % 2 ? "hi" : "lo"}" style="--x:${(((i + 0.5) / N) * 100).toFixed(2)};--y:${((i % 2 ? HI : LO) * 100).toFixed(1)};--i:${i};--n:${N}"><span class="ep-hexw"><i class="ep-hex">${CHECK}</i></span><div class="ep-wl" data-n="0${i + 1}"><small>Step 0${i + 1}</small><b>${t}</b></div></div>`).join("");
     return `<div class="ep-wave" style="--n:${N}"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="epwg" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#80D1D4"/><stop offset=".55" stop-color="#7B8CFF"/><stop offset="1" stop-color="#A27BFF"/></linearGradient></defs><path class="ep-w-sh" d="${d}" pathLength="1"/><path class="ep-w-ln" d="${d}" pathLength="1"/></svg>${nodes}</div>`;
   };

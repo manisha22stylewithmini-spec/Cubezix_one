@@ -65,12 +65,20 @@
     ["A visa is 30 days from expiry", ["HR"], ["Date reached", "Owner reminded", "Renewal task opened"]],
   ];
   const evs = $("#ep-evs"), stage = $("#ep-stage");
+  // the stage sits on the same live teal-blue-violet gradient as the home video section; the gradient lives in a wrapper so it survives the stage re-rendering
+  const box = document.createElement("div"); box.className = "ep-stagebox";
+  stage.parentNode.insertBefore(box, stage);
+  const bgEl = document.createElement("div"); bgEl.className = "ep-bg"; bgEl.setAttribute("aria-hidden", "true");
+  box.appendChild(bgEl); box.appendChild(stage);
+  if (window.CZ_shaderBg) window.CZ_shaderBg(bgEl, [0.05, 0.35, 0.85]);
+  const accent = (t) => { const w = t.split(" "), n = w.length >= 4 ? 2 : 1; return w.slice(0, -n).join(" ") + (w.length > n ? " " : "") + `<span class="t-acc"><span class="t-in">${w.slice(-n).join(" ")}</span></span>`; };
+  const BOLT = '<svg class="pill-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#3A4CE1;flex:none"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>';
   evs.innerHTML = EV.map((e, i) => `<button class="ep-ev" type="button" role="tab" data-i="${i}"><span>${String(i + 1).padStart(2, "0")}</span>${e[0]}</button>`).join("");
   function flow(i) {
     const e = EV[i];
     $$(".ep-ev", evs).forEach((b, k) => { b.classList.toggle("on", k === i); b.setAttribute("aria-selected", k === i); });
     { const on = evs.children[i]; if (on && evs.scrollWidth > evs.clientWidth) evs.scrollTo({ left: on.offsetLeft - (evs.clientWidth - on.offsetWidth) / 2, behavior: "smooth" }); }
-    stage.classList.remove("go"); stage.innerHTML = `<div class="ep-st-h"><small>When this happens</small><b>${e[0]}</b></div><div class="ep-tags">${e[1].map((t) => `<span>${t}</span>`).join("")}</div>${window.EP_chain(e[2])}`;
+    stage.classList.remove("go"); stage.innerHTML = `<div class="ep-st-h"><span class="h2-pill" data-pill="1">${BOLT}When this happens</span><b>${accent(e[0])}</b></div><div class="ep-tags">${e[1].map((t) => `<span>${t}</span>`).join("")}</div>${window.EP_chain(e[2], true)}`;
     void stage.offsetWidth; stage.classList.add("go");
   }
   flow(2);
