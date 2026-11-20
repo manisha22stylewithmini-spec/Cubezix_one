@@ -149,3 +149,49 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(run); else run();
   let t; addEventListener("resize", () => { clearTimeout(t); t = setTimeout(run, 100); });
 })();
+
+/* inner pages: highlight wrapper + home-style eyebrow pills */
+(function () {
+  const IC = {
+    pen: "M3 21l3.5-1 12-12a2.1 2.1 0 00-3-3l-12 12zM14 7l3 3",
+    box: "M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8",
+    users: "M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3 2.7-5 6-5s6 2 6 5M16 5a3 3 0 010 6M18 15c2 .5 3 2.2 3 5",
+    inbox: "M3 13l3-8h12l3 8v6H3zM3 13h5l1 2h6l1-2h5",
+    grid: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z",
+    building: "M3 21h18M5 21V9l7-5 7 5v12M9 21v-5h6v5M9 11h.01M15 11h.01",
+    cal: "M4 5h16v15H4zM4 10h16M8 3v4M16 3v4",
+    spark: "M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z",
+  };
+  const pick = (txt) => {
+    const t = (txt + " " + location.pathname).toLowerCase();
+    if (/demo|start your/.test(txt.toLowerCase())) return IC.cal;
+    if (/sign|stamp|signature/.test(t)) return IC.pen;
+    if (/asset|device|laptop/.test(t)) return IC.box;
+    if (/people|hr\b|leave|payroll|attendance|employee|payslip|recruit|onboard|expense/.test(t)) return IC.users;
+    if (/desk|helpdesk|request|ticket|sla|knowledge|portal|chat/.test(t)) return IC.inbox;
+    if (/industr|trading|retail|manufactur|services|company/.test(t)) return IC.building;
+    if (/erp|finance|sales|crm|inventory|procurement|operations/.test(t)) return IC.grid;
+    return IC.spark;
+  };
+  const SEL = ".ep-hero-copy .eyebrow,.h2-head .eyebrow,.ac-head .eyebrow,.ep-fan-head .eyebrow,.in-hero .eyebrow,.co-hero .eyebrow,.fp-hero .eyebrow,.sv-hero .eyebrow,#fp-eyebrow,#fp-more-h,#in-eyebrow,.h2-cta-card .cta-eyebrow";
+  const icon = (e) => {
+    if (e.firstElementChild && e.firstElementChild.classList.contains("pill-ic")) return;
+    const d = pick(e.textContent || "");
+    e.insertAdjacentHTML("afterbegin", `<svg class="pill-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#3A4CE1;flex:none"><path d="${d}"/></svg>`);
+  };
+  const pill = (root) => {
+    if (document.body.dataset.page === "home") return;
+    (root.matches && root.matches(SEL) ? [root] : []).concat([...root.querySelectorAll ? root.querySelectorAll(SEL) : []]).forEach((e) => {
+      if (e.dataset.pill) return; e.dataset.pill = "1"; e.classList.add("h2-pill"); icon(e);
+      new MutationObserver(() => { if (!e.firstElementChild || !e.firstElementChild.classList.contains("pill-ic")) icon(e); }).observe(e, { childList: true });
+    });
+  };
+  const wrap = (root) => {
+    (root.matches && root.matches(".t-acc,.h2-title .grad,.cta-h .pxf") ? [root] : []).concat([...root.querySelectorAll ? root.querySelectorAll(".t-acc,.h2-title .grad,.cta-h .pxf") : []]).forEach((e) => {
+      if (e.querySelector(":scope > .t-in")) return; const w = document.createElement("span"); w.className = "t-in"; while (e.firstChild) w.appendChild(e.firstChild); e.appendChild(w);
+    });
+  };
+  const run = (root) => { pill(root); wrap(root); };
+  const start = () => { run(document.body); new MutationObserver((ms) => ms.forEach((m) => m.addedNodes.forEach((n) => { if (n.nodeType === 1) run(n); }))).observe(document.body, { childList: true, subtree: true }); };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();

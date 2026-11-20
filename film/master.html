@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CubeZixONE film · master</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@400;500;600&family=Space+Grotesk:wght@400;500&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/styles.min.css">
+<link rel="stylesheet" href="../assets/css/home2.min.css">
+<style>
+html,body{margin:0;background:#000;overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:#F4F5FF;font-family:"Inter",sans-serif;color:#14163F}
+#stage *{box-sizing:border-box}
+.abs{position:absolute}
+/* determinism: nothing animates by itself */
+#stage *,#stage *::before,#stage *::after{animation:none!important;transition:none!important}
+#bgDark{position:absolute;inset:0;background:#0A0C2E}
+#bgLav{position:absolute;inset:0;background:#ECEAFF}
+#world{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.copy{position:absolute;font-family:"Inter Tight","Inter",sans-serif;font-weight:500;letter-spacing:-.045em;line-height:1.04}
+.copy .ln{overflow:hidden;padding-bottom:.14em;margin-bottom:-.14em}
+.copy .ln>span{display:inline-block;white-space:nowrap}
+.card{position:absolute;background:#fff;border-radius:26px;border:1px solid rgba(20,22,63,.08);box-shadow:0 24px 50px -30px rgba(20,22,63,.35);overflow:hidden}
+.mono{font-family:"Geist Mono",ui-monospace,monospace}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font:500 15px "Inter",sans-serif}
+.win{position:absolute;border-radius:18px;background:#fff;box-shadow:0 40px 80px -36px rgba(0,0,0,.7);overflow:hidden;font-family:"Inter",sans-serif}
+.win .tb{height:38px;display:flex;align-items:center;gap:8px;padding:0 14px;background:#E9EAF3;font:500 14px "Inter",sans-serif;color:#4A4F86}
+.win .tb i{width:11px;height:11px;border-radius:50%;background:#C9CBE0;display:block}
+.ncard{position:absolute;width:430px;height:98px;border-radius:22px;background:#fff;display:flex;align-items:center;gap:16px;padding:0 22px;box-shadow:0 30px 60px -30px rgba(0,0,0,.65)}
+.ncard .nic{width:46px;height:46px;border-radius:14px;background:#EEF0FF;display:grid;place-items:center;flex:none}
+.ncard small{display:block;font:400 15px "Inter",sans-serif;color:#7B7FA6}
+.ncard b{display:block;margin-top:4px;font:500 20px "Inter",sans-serif;color:#14163F;white-space:nowrap}
+.ncard em{font-style:normal;margin-left:auto;font:500 15px "Inter",sans-serif;color:#fff;background:#14163F;border-radius:999px;padding:6px 11px;flex:none}
+#cursor{position:absolute;left:0;top:0;width:0;height:0;z-index:50}
+#cursor .cptr{max-width:none!important;min-width:84px;position:absolute;left:-4px;top:-3px;filter:drop-shadow(0 6px 10px rgba(10,12,46,.35))}
+#cursor .ctag{position:absolute;left:30px;top:44px;background:#633ADD;color:#fff;font:500 15px "Inter",sans-serif;border-radius:10px 10px 10px 2px;padding:6px 12px;white-space:nowrap}
+.ripple{position:absolute;border-radius:50%;border:2px solid #3A4CE1;pointer-events:none}
+#dashWrap{position:absolute;left:0;top:0;width:1560px;height:860px;transform-origin:0 0}
+#dashWrap .ed{width:1560px;height:860px;border-radius:34px;font-size:1.3em;zoom:1}
+
+/* ---- home page look: gradient grounds, serif italic accents ---- */
+#stage{background:radial-gradient(60% 50% at 50% 0%,rgba(58,76,225,.10),transparent 70%),radial-gradient(40% 45% at 92% 100%,rgba(128,209,212,.20),transparent 70%),#F4F5FF}
+#bgDark,#darkTop{background:radial-gradient(55% 70% at 78% 45%,rgba(99,58,221,.38),transparent 70%),radial-gradient(45% 55% at 8% 100%,rgba(128,209,212,.16),transparent 70%),radial-gradient(40% 40% at 45% 0%,rgba(58,76,225,.28),transparent 70%),#11144A}
+#lavLayer{position:absolute;inset:0;background:radial-gradient(60% 60% at 82% 0%,rgba(58,76,225,.13),transparent 70%),radial-gradient(50% 55% at 0% 100%,rgba(128,209,212,.26),transparent 70%),#ECEAFF}
+#darkTop{position:absolute;inset:0}
+.copy .ln>span.al,.copy .ln>span.ad{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;font-size:1.1em;letter-spacing:-.015em;line-height:.9;padding:.14em .18em .22em .06em;margin:-.14em -.18em -.22em -.06em;-webkit-background-clip:text;background-clip:text;color:transparent}
+.copy .ln>span.al{background-image:linear-gradient(95deg,#80D1D4 0%,#3A4CE1 48%,#633ADD 100%)}
+.copy .ln>span.ad{background-image:linear-gradient(95deg,#80D1D4 0%,#A9B3FF 55%,#B69CFF 100%)}
+.copy .ln{padding-top:.1em;margin-top:-.1em}
+.btn-grad{background:linear-gradient(95deg,#80D1D4 0%,#3A4CE1 62%,#633ADD 100%);color:#fff}
+/* the ONE cursor: bigger, arrow and tag are one object */
+#cursor .cptr{max-width:none!important;min-width:84px;position:absolute;left:-6px;top:-5px;width:84px;height:100px;filter:drop-shadow(0 8px 14px rgba(10,12,46,.4))}
+#cursor .ctag{left:30px;top:64px;font:500 30px "Inter";letter-spacing:-.01em;border-radius:18px 18px 18px 4px;padding:9px 24px 10px;box-shadow:0 10px 22px -8px rgba(99,58,221,.7)}
+#marq{position:absolute;border:3px solid #3A4CE1;background:rgba(58,76,225,.12);border-radius:6px;display:none}
+.mono{font-family:"Geist Mono",ui-monospace,monospace}
+#bgLav{display:none}</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bgDark"></div>
+  <div id="bgLav"></div>
+  <div id="world"></div>
+  <div id="copies"></div>
+  <div id="marq"></div><div id="rip"></div>
+  <div id="cursor"><svg class="cptr" width="84" height="100" viewBox="0 0 44 52"><path d="M4 2 L4 38 L13 30 L20 46 L27 43 L20 28 L33 28 Z" fill="#3A4CE1" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg><div class="ctag">ONE</div></div>
+  <div id="wipe" class="abs" style="inset:0;pointer-events:none"></div>
+</div>
+<script src="audio.js"></script>
+<script>
+(() => {
+const W = 1920, H = 1080, BEAT = 0.5, DUR = 86;
+const INK = '#14163F', NAVY = '#0A0C2E', BLUE = '#3A4CE1', VIO = '#633ADD', TEAL = '#80D1D4', LAV = '#ECEAFF', PAPER = '#F4F5FF';
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const seg = (t, a, b) => clamp((t - a) / (b - a), 0, 1);
+const eo = (p) => 1 - Math.pow(1 - p, 3);
+const eio = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+const expo = (p) => (p >= 1 ? 1 : 1 - Math.pow(2, -10 * p));
+const sp = (p) => (p <= 0 ? 0 : p >= 1 ? 1 : 1 - Math.exp(-7 * p) * Math.cos(10 * p)); // restrained overshoot
+const lerp = (a, b, p) => a + (b - a) * p;
+const hash = (n) => { const x = Math.sin(n * 127.1 + 31.7) * 43758.5453; return x - Math.floor(x); };
+const $ = (s, r = document) => r.querySelector(s);
+const world = $('#world'), copiesEl = $('#copies'), stage = $('#stage');
+const ico = (d, s = 26, c = '#4A4F86', w = 1.8) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+const P = {
+  sheet: 'M5 4h14v16H5zM5 10h14M5 15h14M10 4v16', calc: 'M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2zM8 7h8M8 11h2M14 11h2M8 15h2M14 15h2',
+  bank: 'M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18', tasks: 'M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2',
+  folder: 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z', mail: 'M3 6h18v12H3zM3 7l9 6 9-6', chat: 'M4 5h16v11H9l-5 4z', cal: 'M4 5h16v15H4zM4 10h16M8 3v4M16 3v4',
+  coin: 'M12 3a9 9 0 100 18 9 9 0 000-18zM9.5 9.5c.5-1 1.5-1.5 2.5-1.5 1.5 0 2.5.8 2.5 2s-1 1.6-2.5 2-2.5.8-2.5 2 1 2 2.5 2c1 0 2-.5 2.5-1.5',
+  cart: 'M4 5h2l2 10h9l2-7H7M10 19h.01M16 19h.01', box: 'M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8', pay: 'M3 7h18v10H3zM3 11h18M7 15h3',
+  hr: 'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 3.6-7 8-7s8 3 8 7', ops: 'M4 14l4-4 3 3 5-6 4 4M4 20h16', pos: 'M4 7V5h3M17 5h3v2M4 17v2h3M17 19h3v-2M8 9v6M11 9v6M14 9v6M17 9v6',
+  check: 'M5 12.5l4.5 4.5L19 7.5', arrow: 'M5 12h14M13 6l6 6-6 6',
+};
+const T_CLICK = { n0: 26.0, n1: 27.2, n2: 28.4, n3: 29.8, n4: 31.2, n5: 32.6, fin: 5.5, hr: 6.75, inv: 8.0, sal: 9.25, pur: 10.5, ss: 15.5, chat: 17.0, acc: 18.5, mail: 20.0, bank: 21.5, grab: 37.0, one: 43.0, review: 72.0 };
+const DASH_TABS = [49.0, 51.4, 53.8, 56.2, 58.6, 61.0, 63.4, 65.8];
+DASH_TABS.forEach((t, i) => { T_CLICK['tab' + i] = t; });
+window.CLICKS = Object.values(T_CLICK).sort((a, b) => a - b);
+
+/* ======================= scene DOM (built once) ======================= */
+const el = (html, parent = world) => { const d = document.createElement('div'); d.innerHTML = html.trim(); const n = d.firstChild; parent.appendChild(n); return n; };
+
+/* ---- Ch1: five departments (independent systems) ---- */
+const DEP = [
+  { id: 'fin', name: 'Finance', ic: 'coin', x: 150, y: 520 },
+  { id: 'hr', name: 'People', ic: 'hr', x: 500, y: 520 },
+  { id: 'inv', name: 'Inventory', ic: 'box', x: 850, y: 520 },
+  { id: 'sal', name: 'Sales', ic: 'cart', x: 1200, y: 520 },
+  { id: 'pur', name: 'Purchasing', ic: 'tasks', x: 1550, y: 520 },
+].map((d) => ({ ...d, w: 320, h: 330 }));
+const depEls = {};
+DEP.forEach((d) => {
+  const n = el(`<div class="card" id="dep-${d.id}" style="left:${d.x}px;top:${d.y}px;width:${d.w}px;height:${d.h}px;padding:28px"></div>`);
+  depEls[d.id] = n;
+});
+const depHTML = (id, t) => {
+  const c = (k) => seg(t, T_CLICK[k], T_CLICK[k] + 0.5);
+  const head = (name, ic) => `<div style="display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:14px;background:#EEF0FF;display:grid;place-items:center">${ico(P[ic], 24)}</div><div style="font:500 24px 'Inter Tight';letter-spacing:-.03em">${name}</div></div>`;
+  if (id === 'fin') {
+    const inv = 38 + Math.round(eo(c('fin')) * 1);
+    return head('Finance', 'coin') + `<div class="mono" style="margin-top:34px;font-size:15px;color:#7B7FA6">Collected in Nov</div><div style="margin-top:6px;font:500 56px 'Inter Tight';letter-spacing:-.05em">AED ${(1.24 + eo(c('fin')) * 0.06).toFixed(2)}M</div><div style="margin-top:20px;font:400 18px Inter;color:#6A6E9A">Invoices sent <b style="color:#14163F">${inv}</b></div><div class="chip" style="margin-top:18px;background:#E6F7EF;color:#1E9A63;opacity:${c('fin')}">${ico(P.check, 16, '#1E9A63', 2.4)} Invoice 0${inv} paid</div>`;
+  }
+  if (id === 'hr') {
+    const ok = c('hr');
+    return head('People', 'hr') + `<div style="margin-top:30px;display:grid;gap:14px">` + ['Aisha · Annual leave', 'Arjun · Sick leave', 'Sara · Day off'].map((r, i) => `<div style="display:flex;align-items:center;gap:10px;font:400 17px Inter;color:#4A4F86"><i style="width:30px;height:30px;border-radius:50%;background:#EEF0FF;display:block"></i><span style="flex:1">${r}</span>${i === 0 ? `<span class="chip" style="padding:4px 10px;font-size:13px;background:${ok > 0.5 ? '#E6F7EF' : '#F1F2FB'};color:${ok > 0.5 ? '#1E9A63' : '#6A6E9A'}">${ok > 0.5 ? 'Approved' : 'Pending'}</span>` : ''}</div>`).join('') + `</div>`;
+  }
+  if (id === 'inv') {
+    const b = lerp(0.72, 0.38, eo(c('inv')));
+    return head('Inventory', 'box') + `<div class="mono" style="margin-top:34px;font-size:15px;color:#7B7FA6">Items in stock</div><div style="margin-top:6px;font:500 56px 'Inter Tight';letter-spacing:-.05em">${(2140 - Math.round(eo(c('inv')) * 612)).toLocaleString('en-US')}</div><div style="margin-top:26px;height:16px;border-radius:8px;background:#EEF0FF"><div style="width:${b * 100}%;height:100%;border-radius:8px;background:${BLUE}"></div></div><div style="margin-top:14px;font:400 17px Inter;color:#6A6E9A">Store 2 · restock at 600</div>`;
+  }
+  if (id === 'sal') {
+    const stg = Math.min(3, Math.floor(eo(c('sal')) * 3.01));
+    const names = ['Lead', 'Quote', 'Won'];
+    return head('Sales', 'cart') + `<div style="margin-top:34px;display:flex;gap:8px">` + names.map((n, i) => `<div style="flex:1;height:130px;border-radius:14px;background:#F4F5FF;padding:10px;font:500 14px Inter;color:#6A6E9A">${n}${i === Math.min(2, stg) ? `<div style="margin-top:10px;height:56px;border-radius:10px;background:${i === 2 ? '#E6F7EF' : '#fff'};border:1px solid rgba(20,22,63,.1);padding:8px;font:500 13px Inter;color:#14163F">Al Noor<br><span style="color:#7B7FA6;font-weight:400">AED 18,400</span></div>` : ''}</div>`).join('') + `</div>`;
+  }
+  const ap = c('pur');
+  return head('Purchasing', 'tasks') + `<div class="mono" style="margin-top:34px;font-size:15px;color:#7B7FA6">Purchase orders</div><div style="margin-top:6px;font:500 56px 'Inter Tight';letter-spacing:-.05em">${14 + Math.round(ap)}</div><div style="margin-top:22px;font:400 18px Inter;color:#6A6E9A">PO-2217 · Gulf Pack</div><div class="chip" style="margin-top:14px;background:${ap > 0.5 ? '#E6F7EF' : '#F1F2FB'};color:${ap > 0.5 ? '#1E9A63' : '#6A6E9A'}">${ap > 0.5 ? ico(P.check, 16, '#1E9A63', 2.4) + ' Approved' : 'Awaiting approval'}</div>`;
+};
+
+/* ---- Ch2: the same five become separate apps (windows) ---- */
+const APPS = [
+  { id: 'ss', t: 'Spreadsheet · cash_flow_FINAL.xlsx', dep: 'fin', fx: 90, fy: 360, rot: -4, w: 560, h: 360, body: () => '<div style="padding:12px 16px;font:400 15px Inter;color:#4A4F86;display:grid;gap:6px">' + Array.from({ length: 8 }, (_, r) => `<div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:6px">${[0, 1, 2].map((c) => `<div style="height:28px;background:${r === 0 ? '#DDE0F2' : '#F4F5FB'};border-radius:4px;padding:5px 8px;font-size:14px">${r === 0 ? ['Item', 'Nov', 'Dec'][c] : c === 0 ? ['Rent', 'Stock', 'Payroll', 'VAT', 'Freight', 'Fuel', 'Misc'][r - 1] : (1200 + r * 317 * (c + 1)) % 9000}</div>`).join('')}</div>`).join('') + '</div>' },
+  { id: 'chat', t: 'Chat · HR group', dep: 'hr', fx: 1130, fy: 330, rot: 3, w: 470, h: 400, body: () => '<div style="padding:16px;display:grid;gap:12px;font:400 16px Inter">' + [['Fatima', 'visa photos needed by noon', 0], ['You', 'sent them yesterday?', 1], ['Aisha', 'which folder?', 0], ['Fatima', 'the old one, not the new', 0]].map((m) => `<div style="justify-self:${m[2] ? 'end' : 'start'};max-width:80%;padding:11px 15px;border-radius:16px;background:${m[2] ? BLUE : '#F1F2FB'};color:${m[2] ? '#fff' : '#14163F'}"><span style="opacity:.6;font-size:13px">${m[0]}</span><br>${m[1]}</div>`).join('') + '</div>' },
+  { id: 'acc', t: 'Old accounting app', dep: 'inv', fx: 520, fy: 520, rot: -2, w: 540, h: 380, body: () => '<div style="padding:0"><div style="height:46px;background:#2B2FA0;color:#fff;font:500 16px Inter;display:flex;align-items:center;padding:0 18px">41 bank lines unmatched</div>' + Array.from({ length: 6 }, (_, i) => `<div style="display:flex;justify-content:space-between;padding:13px 18px;border-bottom:1px solid #EEF0FF;font:400 16px Inter;color:#4A4F86"><span>${['Cheque 0041', 'Transfer Al Noor', 'POS settlement', 'VAT Q3', 'Cheque 0044', 'Refund'][i]}</span><b style="font-weight:500;color:#14163F">${(700 + i * 413).toLocaleString('en-US')}</b></div>`).join('') + '</div>' },
+  { id: 'mail', t: 'Mail', dep: 'sal', fx: 1010, fy: 600, rot: 4, w: 520, h: 370, body: () => '<div>' + [['Statement of account: October', '3 invoices open, 1 overdue', 1], ['Re: can you confirm the PO number?', 'Al Noor Trading', 1], ['Quote 118 revised', 'Sent to Gulf Pack', 0], ['Out of office', 'Back on Monday', 0]].map((m) => `<div style="padding:15px 20px;border-bottom:1px solid #EEF0FF"><div style="font:${m[2] ? 600 : 400} 17px Inter;color:#14163F">${m[0]}</div><div style="font:400 15px Inter;color:#7B7FA6;margin-top:3px">${m[1]}</div></div>`).join('') + '</div>' },
+  { id: 'bank', t: 'Bank portal', dep: 'pur', fx: 1380, fy: 470, rot: -3, w: 470, h: 380, body: () => `<div style="padding:22px"><div style="font:400 15px Inter;color:#7B7FA6">Current account</div><div style="font:500 44px 'Inter Tight';letter-spacing:-.04em;margin:4px 0 14px">AED 312,480</div>` + ['3 cheques cleared', 'New beneficiary added', 'WPS file rejected'].map((r) => `<div style="padding:12px 0;border-top:1px solid #EEF0FF;font:400 16px Inter;color:#4A4F86">${r}</div>`).join('') + '</div>' },
+].map((a) => { const d = DEP.find((x) => x.id === a.dep); return { ...a, dx: d.x, dy: d.y, dw: d.w, dh: d.h }; });
+const appEls = {};
+APPS.forEach((a) => {
+  appEls[a.id] = el(`<div class="win" id="app-${a.id}" style="width:${a.w}px;height:${a.h}px"><div class="tb"><i></i><i></i><i></i><span style="margin-left:8px">${a.t}</span></div><div>${a.body()}</div><div class="bdg" style="position:absolute;right:16px;top:8px;font:500 14px Inter;color:#fff;background:${VIO};border-radius:999px;padding:3px 10px">0</div></div>`);
+});
+
+/* ---- Ch3: the notification pile ---- */
+const NOTES = [
+  ['sheet', 'Spreadsheet · 08:30', 'Cash flow: November tab updated', '99+'], ['calc', 'Old accounting app · now', '41 bank lines unmatched', '47'], ['bank', 'Bank portal · 09:12', '3 cheques cleared', '23'],
+  ['tasks', 'Tasks · 09:41', 'Due Thursday: stock take', '12'], ['folder', 'Drive · 2m', 'Contract_v3_final.pdf was shared', '8'], ['mail', 'Mail · 07:58', 'Statement of account: October', '31'],
+  ['chat', 'Chat · 09:20', 'Fatima: visa photos needed by noon', '9'], ['cal', 'Calendar · 09:12', 'Month-end review moved to 16:00', '3'], ['sheet', 'Spreadsheet · now', 'Overtime sheet: 4 rows highlighted', '17'],
+  ['tasks', 'Tasks · 08:20', '7 tasks moved to next week', '22'], ['mail', 'Mail · 09:02', 'Re: can you confirm the PO number?', '14'], ['calc', 'Old accounting app · 09:33', 'VAT export needs a re-run', '2'],
+  ['folder', 'Drive · 09:41', '3 people edited Tender response', '18'], ['chat', 'Chat · 09:38', 'Price list (copy) was shared', '47'], ['bank', 'Bank portal · 09:38', 'New beneficiary added', '1'],
+  ['pos', 'Point of sale · 08:55', 'Daily sales report', '312'], ['mail', 'Mail · 09:44', 'Invoice 0412 overdue', '6'], ['tasks', 'Tasks · 09:46', 'Reconcile Store 1 and Store 2', '5'],
+  ['chat', 'Chat · 09:47', 'Who has the new laptop?', '11'], ['bank', 'Bank portal · 09:50', 'WPS file rejected', '1'], ['folder', 'Drive · 09:52', 'HR / Visas 2026 moved', '5'], ['sheet', 'Spreadsheet · 09:53', 'Price list (copy 2)', '4'],
+];
+const NCK = { 2: 'n0', 6: 'n1', 4: 'n2', 9: 'n3', 7: 'n4', 11: 'n5' };
+const NC = NOTES.map((n, i) => {
+  const e = el(`<div class="ncard"><div class="nic">${ico(P[n[0]], 24)}</div><div><small>${n[1]}</small><b>${n[2]}</b></div><em>${n[3]}</em></div>`);
+  const col = i % 3, row = Math.floor(i / 3);
+  // pile rests across the screen; a few rest near the right where they entered
+  const rx = 160 + col * 560 + (hash(i + 2) - 0.5) * 140, ry = 380 + row * 100 + (hash(i + 7) - 0.5) * 50;
+  return { e, rx, ry, rot: (hash(i + 17) - 0.5) * 10, t0: 22.6 + i * 0.5, i };
+});
+
+/* ---- Ch4: connectors between systems and the ONE node ---- */
+const nodeXY = [[380, 660], [720, 920], [1240, 920], [1580, 660], [1480, 330]]; // kept clear of the headline (top left)
+const NODEN = ['Finance', 'People', 'Inventory', 'Sales', 'Purchasing'];
+const svgNS = 'http://www.w3.org/2000/svg';
+const conn = document.createElementNS(svgNS, 'svg');
+conn.setAttribute('width', W); conn.setAttribute('height', H); conn.style.cssText = 'position:absolute;left:0;top:0';
+world.appendChild(conn);
+const lines = nodeXY.map((p) => { const l = document.createElementNS(svgNS, 'path'); l.setAttribute('fill', 'none'); l.setAttribute('stroke', '#80D1D4'); l.setAttribute('stroke-width', '5'); l.setAttribute('stroke-linecap', 'round'); conn.appendChild(l); return l; });
+const nodes = nodeXY.map((p, i) => el(`<div class="abs" style="left:${p[0] - 110}px;top:${p[1] - 44}px;width:220px;height:88px;border-radius:44px;background:#fff;display:flex;align-items:center;justify-content:center;gap:12px;font:500 24px 'Inter Tight';color:${INK}">${ico(P[['coin', 'hr', 'box', 'cart', 'tasks'][i]], 26)}${NODEN[i]}</div>`));
+const core = el(`<div class="abs" style="left:${W / 2 - 120}px;top:${H / 2 - 120}px;width:240px;height:240px;border-radius:72px;background:linear-gradient(140deg,#80D1D4,#3A4CE1 55%,#633ADD);color:#fff;display:flex;align-items:center;justify-content:center;font:500 80px 'Inter Tight';letter-spacing:-.04em">ONE</div>`);
+
+/* ---- Ch5: the real dashboard (DOM rebuilt from the product) ---- */
+const dashHost = el('<div class="abs" id="dashHost" style="left:180px;top:210px;width:1560px;height:860px;border-radius:34px;overflow:hidden;box-shadow:0 60px 120px -50px rgba(0,0,0,.8)"></div>');
+let MODS = null, curMod = -1;
+const ORDER = ['finance', 'sales', 'crm', 'inventory', 'procurement', 'payroll', 'hr', 'operations'];
+
+/* ---- Ch6: handled / needs you / fyi (lives in its own layer that wipes in over the dashboard) ---- */
+const lavLayer = document.createElement('div'); lavLayer.id = 'lavLayer'; lavLayer.style.clipPath = 'circle(0px at 0 0)'; stage.insertBefore(lavLayer, copiesEl);
+const sheet = el(`<div class="abs" id="sheet" style="left:0;top:0;width:${W}px;height:${H}px"></div>`, lavLayer);
+const colBox = (x, w, bg, id) => el(`<div class="card" id="${id}" style="left:${x}px;top:330px;width:${w}px;height:560px;background:${bg};padding:44px;border-radius:40px"></div>`, sheet);
+const c1 = colBox(150, 520, '#fff', 'c-handled'), c2 = colBox(720, 520, '#fff', 'c-needs'), c3 = colBox(1290, 480, '#fff', 'c-fyi');
+
+/* ---- Ch7: the brand ---- */
+const LOGO_SVG = null;
+const darkTop = document.createElement('div'); darkTop.id = 'darkTop'; darkTop.style.clipPath = 'circle(0px at 50% 50%)'; stage.insertBefore(darkTop, copiesEl);
+const brand = el(`<div class="abs" id="brand" style="left:0;top:0;width:${W}px;height:${H}px"></div>`, darkTop);
+
+/* ======================= copy blocks (screen space) ======================= */
+const COPY = [
+  { id: 'c1', t0: 0.5, t1: 11.2, x: 150, y: 150, size: 112, color: INK, w: 1500, lines: ['Running a business means', 'keeping everything moving.'], acc: 1 },
+  { id: 'c2', t0: 12.6, t1: 23.6, x: 150, y: 90, size: 84, color: '#fff', w: 1500, lines: ['But your business information', 'lives in too many places.'], acc: 1 },
+  { id: 'c3a', t0: 24.2, t1: 28.2, x: 150, y: 90, size: 128, color: '#fff', w: 1700, lines: ['More tools.'], acc: 99 },
+  { id: 'c3b', t0: 28.5, t1: 32.0, x: 150, y: 90, size: 128, color: '#fff', w: 1700, lines: ['More coordination.'], acc: 99 },
+  { id: 'c3c', t0: 32.3, t1: 36.4, x: 150, y: 90, size: 128, color: '#fff', w: 1700, lines: ['Less clarity.'], acc: 0 },
+  { id: 'c4', t0: 37.6, t1: 42.4, x: 150, y: 90, size: 96, color: '#fff', w: 1700, lines: ['What if everything', 'worked together?'], acc: 1 },
+  { id: 'c5', t0: 44.6, t1: 47.2, x: 150, y: 50, size: 66, color: '#fff', w: 1700, lines: ['One platform.', 'Connected operations.'], acc: 1 },
+  { id: 'c6', t0: 67.0, t1: 75.6, x: 150, y: 90, size: 72, color: INK, w: 1700, lines: ['Routine work organised.', 'Important decisions visible.', 'Your business connected.'], acc: 2 },
+  { id: 'c7', t0: 78.0, t1: 99, x: 150, y: 330, size: 124, color: '#fff', w: 1700, lines: ['Run your whole', 'company from ONE ERP.'], acc: 1 },
+];
+const copyEls = COPY.map((c) => {
+  const n = el(`<div class="copy" style="left:${c.x}px;top:${c.y}px;width:${c.w}px;font-size:${c.size}px;color:${c.color}">${c.lines.map((l) => `<div class="ln"><span>${l}</span></div>`).join('')}</div>`, copiesEl);
+  return { c, n, lns: [...n.querySelectorAll('.ln>span')] };
+});
+const ACC = { dark: '#80D1D4', light: '#3A4CE1' };
+
+/* ======================= camera ======================= */
+// [t, scale, x, y] smooth interpolation; each scene begins where the previous one ended
+const CAM = [[0, 1.0, 0, 0], [12, 1.04, -36, -16], [24, 1.04, -36, -16], [26, 1.12, -260, -60], [29, 1.12, -260, -60], [31, 1.14, -900, -120], [33, 1.14, -900, -120], [35.2, 1.0, 0, 0], [43, 1.02, -20, -10], [46, 1.0, 0, 0], [47.5, 1.1, -170, -90], [52, 1.1, -170, -90], [54, 1.3, -540, -330], [57, 1.3, -540, -330], [59, 1.12, -190, -60], [64, 1.12, -190, -60], [66.2, 1.04, -40, -20], [68, 1.0, 0, 0], [86, 1.04, -40, -20]];
+const cam = (t) => {
+  const n = CAM.length;
+  if (t <= CAM[0][0]) return [CAM[0][1], CAM[0][2], CAM[0][3]];
+  if (t >= CAM[n - 1][0]) return [CAM[n - 1][1], CAM[n - 1][2], CAM[n - 1][3]];
+  let i = 0; while (i < n - 2 && t > CAM[i + 1][0]) i++;
+  const k0 = CAM[i], k1 = CAM[i + 1], dt = k1[0] - k0[0], u = (t - k0[0]) / dt;
+  const kp = CAM[Math.max(0, i - 1)], kn = CAM[Math.min(n - 1, i + 2)];
+  const out = [];
+  for (let c = 1; c <= 3; c++) {
+    const m0 = i === 0 ? 0 : (k1[c] - kp[c]) / (k1[0] - kp[0]), m1 = i + 1 === n - 1 ? 0 : (kn[c] - k0[c]) / (kn[0] - k0[0]);
+    const u2 = u * u, u3 = u2 * u;
+    out.push((2 * u3 - 3 * u2 + 1) * k0[c] + (u3 - 2 * u2 + u) * dt * m0 + (-2 * u3 + 3 * u2) * k1[c] + (u3 - u2) * dt * m1);
+  }
+  return out;
+};
+
+/* ======================= cursor waypoints ======================= */
+const rectC = (sel) => { const e = typeof sel === 'string' ? $(sel) : sel; if (!e) return [W / 2, H / 2]; const r = e.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+const rectP = (sel, fx, fy) => { const e = typeof sel === 'string' ? $(sel) : sel; if (!e) return [W / 2, H / 2]; const r = e.getBoundingClientRect(); return [r.left + r.width * fx, r.top + r.height * fy]; };
+const tabSel = (i) => `#dashHost .ed-nav button:nth-child(${i + 1})`;
+// [time, position(), via?]  via = the cursor passes through without stopping
+const WP = [
+  [0.0, () => [-120, 1220]], [3.2, () => [820, 400], 1], [5.5, () => rectP('#dep-fin', 0.5, 0.55)], [6.75, () => rectP('#dep-hr', 0.5, 0.45)], [8.0, () => rectP('#dep-inv', 0.55, 0.6)], [9.25, () => rectP('#dep-sal', 0.5, 0.55)], [10.5, () => rectP('#dep-pur', 0.5, 0.6)], [12.0, () => [1480, 420]],
+  [12.9, () => [1480, 420]], [14.4, () => rectP('#app-ss', 0.5, 0.6)], [15.5, () => rectP('#app-ss', 0.5, 0.6)], [17.0, () => rectP('#app-chat', 0.5, 0.55)], [18.5, () => rectP('#app-acc', 0.5, 0.55)], [20.0, () => rectP('#app-mail', 0.5, 0.5)], [21.5, () => rectP('#app-bank', 0.5, 0.5)], [23.4, () => [1480, 860]],
+  [26.0, () => rectP(NC[2].e, 0.6, 0.5)], [27.2, () => rectP(NC[6].e, 0.6, 0.5)], [28.4, () => rectP(NC[4].e, 0.6, 0.5)], [29.8, () => rectP(NC[9].e, 0.6, 0.5)], [31.2, () => rectP(NC[7].e, 0.6, 0.5)], [32.6, () => rectP(NC[11].e, 0.6, 0.5)],
+  [35.4, () => [110, 330]], [37.0, () => [1820, 960]],
+  [39.6, () => rectC(nodes[0]), 1], [40.3, () => rectC(nodes[1]), 1], [41.0, () => rectC(nodes[2]), 1], [41.7, () => rectC(nodes[3]), 1], [42.4, () => rectC(nodes[4]), 1], [43.0, () => rectC(core)], [44.8, () => [1700, 990]],
+  [48.0, () => [1700, 990], 1], ...ORDER.map((k, i) => [DASH_TABS[i], () => rectC(tabSel(i))]), [67.0, () => [1700, 990]],
+  [70.5, () => [1700, 990]], [72.0, () => rectC('#reviewBtn')], [73.2, () => rectC('#reviewBtn')], [76.2, () => [960, 540]], [77.4, () => [960, 540]],
+];
+const curPos = (t) => {
+  const n = WP.length;
+  if (t <= WP[0][0]) return WP[0][1]();
+  if (t >= WP[n - 1][0]) return WP[n - 1][1]();
+  let i = 0; while (i < n - 2 && t > WP[i + 1][0]) i++;
+  const a = WP[i], b = WP[i + 1], dt = b[0] - a[0], u = (t - a[0]) / dt;
+  const A = a[1](), B = b[1]();
+  const vel = (k, nextK) => { // velocity at a via waypoint, from its neighbours
+    const prev = WP[Math.max(0, k - 1)], next = WP[Math.min(n - 1, k + 1)];
+    const Pp = prev[1](), Pn = next[1]();
+    return [(Pn[0] - Pp[0]) / (next[0] - prev[0]), (Pn[1] - Pp[1]) / (next[0] - prev[0])];
+  };
+  const m0 = a[2] ? vel(i) : [0, 0], m1 = b[2] ? vel(i + 1) : [0, 0];
+  const u2 = u * u, u3 = u2 * u, h00 = 2 * u3 - 3 * u2 + 1, h10 = u3 - 2 * u2 + u, h01 = -2 * u3 + 3 * u2, h11 = u3 - u2;
+  const x = h00 * A[0] + h10 * dt * m0[0] + h01 * B[0] + h11 * dt * m1[0];
+  let y = h00 * A[1] + h10 * dt * m0[1] + h01 * B[1] + h11 * dt * m1[1];
+  if (!a[2] && !b[2]) y -= Math.sin(Math.PI * u) * Math.min(110, Math.hypot(B[0] - A[0], B[1] - A[1]) * 0.1);
+  return [x, y];
+};
+
+/* ======================= logo + brand scene ======================= */
+let LOGO = '';
+const buildBrand = () => {
+  brand.innerHTML = `<div id="logoWrap" class="abs" style="left:${W / 2 - 120}px;top:${H / 2 - 165}px;width:240px;height:330px"><svg id="logoSvg" viewBox="0 0 460 640" width="240" height="330">${LOGO}</svg></div>
+  <div id="cta" class="abs" style="left:150px;top:720px;display:flex;align-items:center;gap:30px;font-family:'Inter Tight'">
+    <div class="btn-grad" style="display:inline-flex;align-items:center;gap:14px;padding:26px 50px;border-radius:999px;font:500 40px 'Inter Tight';letter-spacing:-.03em;box-shadow:0 22px 40px -22px rgba(58,76,225,.9)">Book a demo${ico(P.arrow, 34, '#fff', 2.2)}</div>
+    <div style="font:400 34px 'Space Grotesk';color:rgba(255,255,255,.72)">cubezixone.com</div></div>`;
+};
+
+/* ======================= render ======================= */
+const ripEl = $('#rip'), cursorEl = $('#cursor'), wipe = $('#wipe'), bgDark = $('#bgDark'), bgLav = $('#bgLav');
+const circ = (p, cx, cy, maxR) => `circle(${p * maxR}px at ${cx}px ${cy}px)`;
+const state = { last: -1 };
+
+function render(t) {
+  const toDark1 = eio(seg(t, 12.0, 12.9));       // paper -> navy, opened from the cursor
+  bgDark.style.clipPath = t < 12.9 ? circ(toDark1, 1480, 420, 2400) : 'none';
+  // lavender wipes in over the dashboard from the cursor; navy wipes back in over lavender from the centre
+  const toDark2 = eio(seg(t, 76.0, 76.9));
+  darkTop.style.clipPath = t >= 76.0 ? circ(toDark2, 960, 540, 2400) : 'circle(0px at 50% 50%)';
+
+  /* camera */
+  const [cs, cx, cy] = cam(t);
+  world.style.transform = `translate(${cx}px,${cy}px) scale(${cs})`;
+  world.style.transformOrigin = '0 0';
+
+  /* Ch1 departments */
+  const showDep = t < 14.8;
+  DEP.forEach((d, i) => {
+    const n = depEls[d.id];
+    const p = eo(seg(t, 2.6 + i * 0.25, 3.5 + i * 0.25));
+    const out = eio(seg(t, 12.7, 14.5)); // departments morph into windows (same rect at start)
+    n.style.display = showDep ? 'block' : 'none';
+    if (!showDep) return;
+    n.style.clipPath = `inset(${(1 - p) * 100}% 0 0 0 round 26px)`;
+    n.style.opacity = 1 - seg(t, 13.6, 14.4);
+    const html = depHTML(d.id, t);
+    if (n.dataset.h !== html) { n.innerHTML = html; n.dataset.h = html; }
+  });
+  /* Ch2 windows grow out of the same rects */
+  APPS.forEach((a, i) => {
+    const n = appEls[a.id];
+    const g = eio(seg(t, 12.8 + i * 0.12, 14.9 + i * 0.12));
+    if (t < 12.8) { n.style.display = 'none'; return; }
+    n.style.display = 'block';
+    const click = T_CLICK[a.id], z = t >= click ? 30 + Math.round(click) : 10 + i;
+    const bump = t >= click ? 1 + 0.025 * Math.exp(-(t - click) * 9) : 1;
+    const x = lerp(a.dx, a.fx, g), y = lerp(a.dy, a.fy, g), w = lerp(a.dw, a.w, g), h = lerp(a.dh, a.h, g);
+    const col = eio(seg(t, T_CLICK.grab + 0.1, T_CLICK.grab + 1.3));   // selected by the marquee: drawn into the centre
+    n.style.display = t > T_CLICK.grab + 1.35 ? 'none' : 'block';
+    n.style.left = lerp(x, W / 2 - w / 2, col) + 'px'; n.style.top = lerp(y, H / 2 - h / 2, col) + 'px'; n.style.width = w + 'px'; n.style.height = h + 'px';
+    n.style.transform = `rotate(${a.rot * g * (1 - col)}deg) scale(${bump * lerp(1, 0.04, col)})`;
+    n.style.zIndex = z;
+    n.querySelector('.bdg').textContent = String(Math.round(eo(seg(t, 14.5 + i * 0.4, 22)) * (12 + i * 9)) + (t >= click ? 3 : 0));
+  });
+  /* Ch3 notifications */
+  NC.forEach((c) => {
+    const p = eo(seg(t, c.t0, c.t0 + 1.1));
+    if (t < c.t0 || t > 38.6) { c.e.style.display = 'none'; return; }
+    c.e.style.display = 'flex';
+    const grab = eio(seg(t, T_CLICK.grab, T_CLICK.grab + 1.1 + c.i * 0.02));
+    // pile -> orderly grid (selected by the cursor), then toward the centre
+    const gx = 120 + (c.i % 6) * 290, gy = 390 + Math.floor(c.i / 6) * 150;
+    const toCore = eio(seg(t, 40.4 + c.i * 0.03, 42.7));
+    let x = lerp(2000, c.rx, p), y = lerp(c.ry - 80, c.ry, p);
+    x = lerp(x, gx, grab); y = lerp(y, gy, grab);
+    x = lerp(x, W / 2 - 215, toCore); y = lerp(y, H / 2 - 49, toCore);
+    const sc = lerp(1, 0.2, toCore) * lerp(1, 0.66, grab * (1 - toCore));
+    c.e.style.transform = `translate(${x}px,${y}px) rotate(${lerp(c.rot, 0, grab) * (1 - toCore) + (1 - p) * 8}deg) scale(${sc})`;
+    c.e.style.left = '0px'; c.e.style.top = '0px';
+    c.e.style.opacity = 1 - seg(toCore, 0.8, 1);
+    c.e.style.zIndex = 20 + c.i;
+    const ck = NCK[c.i]; // read by the cursor: the badge clears, but more keep arriving
+    const rd = ck === undefined ? 0 : (t >= T_CLICK[ck] ? 1 : 0);
+    c.e.style.filter = rd ? 'saturate(.2) brightness(.92)' : 'none';
+    c.e.querySelector('em').style.background = rd ? '#B7BAD6' : '#14163F';
+    c.e.querySelector('em').textContent = rd ? '✓' : NOTES[c.i][3];
+  });
+  /* Ch4 connectors */
+  const dl = seg(t, 38.6, 41.0);
+  lines.forEach((l, i) => {
+    const [x, y] = nodeXY[i], len = 1400;
+    l.setAttribute('d', `M${x} ${y} Q${(x + W / 2) / 2} ${(y + H / 2) / 2 + (i % 2 ? 60 : -60)} ${W / 2} ${H / 2}`);
+    l.setAttribute('stroke-dasharray', len); l.setAttribute('stroke-dashoffset', len * (1 - eo(clamp(dl * 1.6 - i * 0.15, 0, 1))));
+    l.style.opacity = t < 38.4 || t > 43.6 ? 0 : 1;
+  });
+  nodes.forEach((n, i) => { const p = sp(seg(t, 38.4 + i * 0.2, 39.4 + i * 0.2)); n.style.display = t > 38.3 && t < 43.9 ? 'flex' : 'none'; n.style.transform = `scale(${lerp(0.3, 1, p) * (1 - eio(seg(t, 43.2, 43.8)) * 0.8)})`; n.style.opacity = 1 - seg(t, 43.2, 43.9); });
+  const coreP = sp(seg(t, 39.6, 40.5)), expand = eio(seg(t, T_CLICK.one + 0.1, T_CLICK.one + 1.4));
+  core.style.display = t > 39.5 && t < 46.2 ? 'flex' : 'none';
+  const csz = lerp(0.2, 1, coreP);
+  core.style.transform = `scale(${csz * lerp(1, 1, expand)})`;
+  core.style.opacity = 1; if (t > 44.1) core.style.display = 'none';
+  /* Ch5 dashboard (real DOM) */
+  const dIn = eio(seg(t, T_CLICK.one + 0.2, T_CLICK.one + 1.6));
+  dashHost.style.display = t > T_CLICK.one && t < 67.2 ? 'block' : 'none';
+  /* marquee selection (ch4) */
+  const mq = $('#marq'), mA = [110, 330];
+  if (t > 35.5 && t < T_CLICK.grab + 0.3) { const e = eio(seg(t, 35.9, 37.0)); mq.style.display = 'block'; mq.style.left = mA[0] + 'px'; mq.style.top = mA[1] + 'px'; mq.style.width = Math.max(1, (1820 - mA[0]) * e) + 'px'; mq.style.height = Math.max(1, (960 - mA[1]) * e) + 'px'; } else mq.style.display = 'none';
+  if (MODS && t > T_CLICK.one) {
+    const mi = (() => { let k = 0; DASH_TABS.forEach((tt, i) => { if (t >= tt) k = i; }); return k; })();
+    if (mi !== curMod) {
+      curMod = mi;
+      const fit = (h) => `<div class="ed-fit" style="width:1180px;height:650px;transform-origin:0 0;transform:scale(1.322)">${h}</div>`;
+      dashHost.innerHTML = `<div class="layer prev" style="position:absolute;inset:0">${fit(MODS[String(Math.max(0, mi - 1))])}</div><div class="layer cur" style="position:absolute;inset:0">${fit(MODS[String(mi)])}</div>`;
+    }
+    const wp = mi === 0 ? 1 : eo(seg(t, DASH_TABS[mi] + 0.05, DASH_TABS[mi] + 0.55));
+    const cur = dashHost.querySelector('.layer.cur'); if (cur) cur.style.clipPath = `inset(0 ${(1 - wp) * 100}% 0 0)`;
+  }
+  const dsc = lerp(0.12, 1, dIn);
+  dashHost.style.transformOrigin = '50% 38.4%';
+  dashHost.style.transform = `scale(${dsc})`;
+  dashHost.style.borderRadius = lerp(120, 34, dIn) + 'px';
+  dashHost.style.opacity = 1;
+  const toLav = eio(seg(t, 66.0, 67.0)), lo = (curMod >= 0 && t < 67.2) ? rectC(tabSel(7)) : [W / 2, H / 2];
+  lavLayer.style.clipPath = t >= 66.0 ? circ(toLav, lo[0], lo[1], 2600) : 'circle(0px at 0 0)';
+  /* Ch6 */
+  sheet.style.display = t > 66.0 && t < 77.0 ? 'block' : 'none';
+  if (t > 66.0 && t < 77.0) {
+    const mk = (id, a, b) => { const p = sp(seg(t, a, b)); const e = $('#' + id); e.style.transform = `translateY(${(1 - p) * 140}px)`; e.style.opacity = clamp(p * 2, 0, 1); };
+    mk('c-handled', 67.6, 68.4); mk('c-needs', 68.0, 68.8); mk('c-fyi', 68.4, 69.2);
+    const nh = Math.round(49 * eo(seg(t, 68.2, 70.0))), nf = Math.round(37 * eo(seg(t, 68.6, 70.4)));
+    const done = eio(seg(t, T_CLICK.review + 0.1, T_CLICK.review + 0.7));
+    const lab = (s) => `<div style="font:500 17px 'Space Grotesk';letter-spacing:.14em;text-transform:uppercase;color:#7B7FA6">${s}</div>`;
+    c1.innerHTML = lab('Handled by your rules') + `<div style="margin-top:20px;font:500 190px/1 'Inter Tight';letter-spacing:-.06em;color:${INK}">${nh}</div><div style="margin-top:20px;font:400 28px Inter;color:#6A6E9A;line-height:1.4">Routine items sorted before they reach you.</div>`;
+    c3.innerHTML = lab('FYI') + `<div style="margin-top:20px;font:500 190px/1 'Inter Tight';letter-spacing:-.06em;color:${INK}">${nf}</div><div style="margin-top:20px;font:400 28px Inter;color:#6A6E9A;line-height:1.4">Updates collected in today's digest.</div>`;
+    c2.style.boxShadow = `0 0 0 ${Math.round((1 - done) * 4)}px rgba(99,58,221,${(1 - done) * 0.35}), 0 24px 50px -30px rgba(20,22,63,.35)`;
+    const swap = (a1, b1, size, color, h) => `<div style="position:relative;height:${h}px;overflow:hidden"><div style="position:absolute;left:0;right:0;top:0;transform:translateY(${-done * (h + 12)}px);font:500 ${size}px/1.1 'Inter Tight';letter-spacing:-.04em;color:${color}">${a1}</div><div style="position:absolute;left:0;right:0;top:0;transform:translateY(${(1 - done) * (h + 12)}px);font:500 ${size}px/1.1 'Inter Tight';letter-spacing:-.04em;color:${color}">${b1}</div></div>`;
+    const swap2 = (a1, b1) => `<div style="position:relative;height:34px;overflow:hidden;margin-top:14px"><div style="position:absolute;left:0;top:0;transform:translateY(${-done * 46}px);font:400 24px 'Space Grotesk';color:#6A6E9A">${a1}</div><div style="position:absolute;left:0;top:0;transform:translateY(${(1 - done) * 46}px);font:400 24px 'Space Grotesk';color:#6A6E9A">${b1}</div></div>`;
+    c2.innerHTML = lab('Needs you') + `<div style="margin-top:26px;display:flex;align-items:center;gap:14px"><div style="width:56px;height:56px;border-radius:17px;background:#EEF0FF;display:grid;place-items:center">${ico(P.pay, 30)}</div><div style="font:400 24px 'Space Grotesk';color:#6A6E9A">Payroll · 09:41</div></div><div style="margin-top:22px">${swap('1 employee is missing bank details', 'Bank details added', 44, INK, 100)}</div>${swap2('The WPS run is due on 25 Nov', 'The WPS run is ready for 25 Nov')}<div id="reviewBtn" style="position:absolute;left:44px;bottom:44px;width:210px;height:68px;border-radius:999px;background:${INK};color:#fff;overflow:hidden;font:500 28px 'Inter Tight'"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transform:scale(${1 - 0.06 * Math.exp(-Math.abs(t - T_CLICK.review) * 12)})">Review</div><div style="position:absolute;inset:0;background:#2DBE7E;display:flex;align-items:center;justify-content:center;gap:10px;clip-path:inset(0 ${(1 - done) * 100}% 0 0)">${ico(P.check, 26, '#fff', 2.6)}Done</div></div>`;
+  }
+  /* Ch7 brand */
+  brand.style.display = t > 77.2 ? 'block' : 'none';
+  if (t > 77.2) {
+    const lg = eio(seg(t, 77.4, 78.4)), lw = $('#logoWrap');
+    lw.style.clipPath = circ(lg, 120, 165, 260);
+    const ls = lerp(1, 1.0, eio(seg(t, 78.6, 79.6)));
+    lw.style.transform = `translate(${lerp(0, 640, eio(seg(t, 78.6, 79.6)))}px,${lerp(0, -40, eio(seg(t, 78.6, 79.6)))}px) scale(${ls})`;
+    const cta = $('#cta'); const cp = eo(seg(t, 81.0, 82.2)); cta.style.opacity = cp; cta.style.transform = `translateY(${(1 - cp) * 40}px)`;
+  }
+
+  /* copy blocks */
+  copyEls.forEach(({ c, n, lns }) => {
+    n.style.display = t >= c.t0 - 0.05 && t <= c.t1 + 0.8 ? 'block' : 'none';
+    if (n.style.display === 'none') return;
+    const dark = bgIsDark(t, c);
+    lns.forEach((s, i) => {
+      const pin = expo(seg(t, c.t0 + i * 0.18, c.t0 + i * 0.18 + 0.7));
+      const pout = eio(seg(t, c.t1 - 0.6 + i * 0.08, c.t1 + i * 0.08));
+      s.style.transform = `translateY(${(1 - pin) * 112 + pout * -112}%)`;
+      const isAcc = i >= c.acc; s.className = isAcc ? (dark ? 'ad' : 'al') : ''; if (!isAcc) s.style.color = dark ? '#fff' : INK;
+    });
+  });
+
+  /* cursor + ripples */
+  const cpos = curPos(t);
+  const showCur = t > 0.0 && t < 78.2;
+  cursorEl.style.display = showCur ? 'block' : 'none';
+  let cs2 = 1; window.CLICKS.forEach((ck) => { if (t >= ck && t < ck + 0.3) cs2 = 1 - 0.14 * Math.sin(Math.PI * (t - ck) / 0.3); });
+  const morph = eio(seg(t, 76.9, 77.7));
+  cursorEl.style.transform = `translate(${cpos[0]}px,${cpos[1]}px) scale(${cs2 * (1 - morph * 0.9)})`;
+  cursorEl.style.opacity = 1 - seg(t, 77.4, 77.9);
+  let rhtml = '';
+  window.CLICKS.forEach((ck) => { if (t >= ck && t < ck + 0.7) { const p = seg(t, ck, ck + 0.7), pp = cpos; rhtml += `<div class="ripple" style="left:${pp[0] - 60 * eo(p)}px;top:${pp[1] - 60 * eo(p)}px;width:${120 * eo(p)}px;height:${120 * eo(p)}px;opacity:${1 - p}"></div>`; } });
+  ripEl.innerHTML = rhtml;
+}
+function bgIsDark(t, c) { if (c.id === 'c1') return false; if (c.id === 'c6') return false; if (c.id === 'c2') return t > 12.9; return true; }
+
+window.seek = (t) => { render(t); };
+window.DUR = DUR;
+Promise.all([fetch('modules.json').then((r) => r.json()), fetch('logo.svg').then((r) => r.text()), document.fonts.load('italic 400 40px "Instrument Serif"'), document.fonts.load('500 40px "Inter Tight"'), document.fonts.load('500 20px "Space Grotesk"'), document.fonts.ready]).then(([m, lg]) => {
+  MODS = m;
+  const inner = lg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+  LOGO = inner.replace(/lg-([abc])/g, 'lgf-$1'); buildBrand();
+  window.READY = true;
+  const q = new URLSearchParams(location.search);
+  if (q.has('t')) window.seek(parseFloat(q.get('t')));
+});
+})();
+</script>
+</body>
+</html>
