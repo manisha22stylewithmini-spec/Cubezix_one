@@ -35,12 +35,13 @@
   /* ---------- how money travels ---------- */
   const evs = $("#ep-evs"), stage = $("#ep-stage");
   evs.innerHTML = D.events.map((e, i) => `<button class="ep-ev" type="button" role="tab" data-i="${i}"><span>${String(i + 1).padStart(2, "0")}</span>${e[0]}</button>`).join("");
+  window.EP_stageBox(stage);
   function flow(i) {
     const e = D.events[i];
     $$(".ep-ev", evs).forEach((b, k) => { b.classList.toggle("on", k === i); b.setAttribute("aria-selected", k === i); });
     { const on = evs.children[i]; if (on && evs.scrollWidth > evs.clientWidth) evs.scrollTo({ left: on.offsetLeft - (evs.clientWidth - on.offsetWidth) / 2, behavior: "smooth" }); }
     stage.classList.remove("go");
-    stage.innerHTML = `<div class="ep-st-h"><small>When this happens</small><b>${e[0]}</b></div><div class="ep-tags">${e[1].map((t) => `<span>${t}</span>`).join("")}</div>${window.EP_chain(e[2])}`;
+    stage.innerHTML = `${window.EP_head(e[0], e[1])}${window.EP_chain(e[2], true)}`;
     void stage.offsetWidth; stage.classList.add("go");
   }
   flow(0);

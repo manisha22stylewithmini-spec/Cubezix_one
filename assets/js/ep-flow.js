@@ -1,6 +1,21 @@
 /* Wave flow for the "how work travels" stage: a curved line through hexagon nodes. Shared by erp.js and pp.js */
 (function () {
   const CHECK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  /* shared "when this happens" stage: live gradient box, pill eyebrow, highlighted title */
+  window.EP_stageBox = function (stage) {
+    if (!stage || (stage.parentNode && stage.parentNode.classList.contains("ep-stagebox"))) return;
+    const box = document.createElement("div"); box.className = "ep-stagebox";
+    stage.parentNode.insertBefore(box, stage);
+    const bg = document.createElement("div"); bg.className = "ep-bg"; bg.setAttribute("aria-hidden", "true");
+    box.appendChild(bg); box.appendChild(stage);
+    if (window.CZ_shaderBg) window.CZ_shaderBg(bg, [0.05, 0.35, 0.85]);
+  };
+  window.EP_head = function (title, tags) {
+    const w = String(title).split(" "), n = w.length >= 4 ? 2 : 1;
+    const acc = w.slice(0, -n).join(" ") + (w.length > n ? " " : "") + `<span class="t-acc"><span class="t-in">${w.slice(-n).join(" ")}</span></span>`;
+    const bolt = '<svg class="pill-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#3A4CE1;flex:none"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>';
+    return `<div class="ep-st-h"><span class="h2-pill" data-pill="1">${bolt}When this happens</span><b>${acc}</b></div><div class="ep-tags">${tags.map((t) => `<span>${t}</span>`).join("")}</div>`;
+  };
   window.EP_chain = function (steps, bleed) {
     const N = steps.length, W = 1000, H = 300, LO = 0.64, HI = 0.34;
     const y = (i) => (i % 2 === 0 ? LO : HI) * H, x = (i) => ((i + 0.5) / N) * W;
