@@ -1642,11 +1642,6 @@ html body .t-acc:hover .t-in,html body .h2-title .grad:hover .t-in,html body .ct
 .cmp-row em{display:inline-flex;align-items:center;gap:5px;font:600 11px var(--mono);font-style:normal;white-space:nowrap;padding:5px 9px 5px 7px;border-radius:999px}
 .cmp-b em{background:#FCE9EA;color:#C03A42}
 .cmp-a em{background:#E7F7EF;color:#17804F}
-.cmp-row:nth-child(1) .cmp-a .cmp-ic{background:#E3E5FF;color:#3A4CE1}
-.cmp-row:nth-child(2) .cmp-a .cmp-ic{background:#D8F4F4;color:#0B6B70}
-.cmp-row:nth-child(3) .cmp-a .cmp-ic{background:#EFE4FF;color:#633ADD}
-.cmp-row:nth-child(4) .cmp-a .cmp-ic{background:#FFF0DD;color:#B3640B}
-.cmp-row:nth-child(5) .cmp-a .cmp-ic{background:#E1F5EA;color:#1C8A55}
 .cmp-ar{align-self:center;justify-self:center;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#9AA0C8;border:1px solid #E3E5F4;transition:color .3s,background .3s,transform .4s var(--ease),border-color .3s}
 .cmp-row::before{content:"";position:absolute;left:calc(50% - 28px);right:calc(50% - 28px);top:50%;height:1px;background:linear-gradient(90deg,#D9DBE8,#B9C1FA);z-index:-1}
 .cmp-row:hover .cmp-b{background:#fff;border-style:solid;border-color:#F1D3D6}
@@ -1685,3 +1680,9 @@ html body .t-acc:hover .t-in,html body .h2-title .grad:hover .t-in,html body .ct
   .cmp-foot>span{padding:0 6px;font-size:13px}
   .cmp-foot>span b{font-size:24px}
 }
+.cmp-a .cmp-ic{background:var(--ib);color:var(--ic)}
+.cmp-a em{min-width:0}
+.cmp-b,.cmp-a{padding:13px 16px}
+.cmp-list{row-gap:8px}
+/* only ONE ERP is on sale for now: its card takes the full row */
+#bento .pc-erp{grid-column:1/-1}
