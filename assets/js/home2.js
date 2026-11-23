@@ -531,7 +531,6 @@
   $$(".h2-stat b").forEach((b) => { const card = b.closest(".h2-stat"), pct = +card.dataset.pct || 0, put = (v) => { const suf = (b.dataset.suf || "").trim(); b.innerHTML = Math.round(+b.dataset.to * v).toLocaleString("en-US") + (suf ? `<i>${b.dataset.suf.startsWith(" ") ? "&nbsp;" : ""}${suf}</i>` : ""); }; put(0); window.ONEERP.inView(b, () => { const t0 = performance.now(); (function tick(t) { const k = ease(clamp((t - t0) / 1400)); put(k); card.style.setProperty("--p", (pct * k).toFixed(2)); if (k < 1) requestAnimationFrame(tick); })(t0); }, 0.6); });
 
   /* ---------- before / after ---------- */
-  document.querySelectorAll(".bx-logo").forEach((el) => (el.innerHTML = window.CZ_NAV.mark(22)));
   const pvV = $("#pv-vid"), pvP = $("#vs-play");
   if (pvV && pvP) { const box = pvV.closest(".vs-video"); pvP.addEventListener("click", () => { box.classList.add("playing"); pvV.controls = true; pvV.play(); }); }
 
