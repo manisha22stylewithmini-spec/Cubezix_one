@@ -24,11 +24,10 @@
   D.what.list.forEach((r) => { const k = r[0].toLowerCase(), t = V[k] ? k : AL[k]; if (t && V[t] && !used.has(t)) { used.add(t); viz[k] = V[t]; } });
   window.EP_why($("#ep-why"), D.what.list, { viz });
   $("#ep-steps").innerHTML = D.steps.map((s, i) => `<article class="ep-step rv" style="--d:${i * 0.08}s"><div class="ep-sn"><span>0${i + 1}</span><i></i></div><h3>${s[0]}</h3><p>${s[1]}</p><span class="ep-when">${s[2]}</span></article>`).join("");
+  if (/assets-record/.test(location.pathname) && window.EP_stickySteps) window.EP_stickySteps($("#live"));
   const acEl = $("#faq-list");
   acEl.innerHTML = D.faq.map((f, i) => `<div class="ac-i${i === 0 ? " open" : ""}"><h3><button class="ac-t" type="button" id="acq${i}" aria-expanded="${i === 0}" aria-controls="aca${i}"><span class="ac-n">0${i + 1}</span><span class="ac-q">${f[0]}</span><span class="ac-ch">${IC.chev}</span></button></h3><div class="ac-c" id="aca${i}" role="region" aria-labelledby="acq${i}"><div><p>${f[1]}</p></div></div></div>`).join("");
   acEl.addEventListener("click", (e) => { const b = e.target.closest(".ac-t"); if (!b) return; const it = b.closest(".ac-i"), was = it.classList.contains("open"); $$(".ac-i", acEl).forEach((x) => { x.classList.remove("open"); $(".ac-t", x).setAttribute("aria-expanded", "false"); }); if (!was) { it.classList.add("open"); b.setAttribute("aria-expanded", "true"); } });
-  $("#fp-more-h").textContent = "More from " + D.parent[0];
-  $("#fp-more").innerHTML = D.more.map((m) => `<a class="fp-chip" href="${m[1]}">${m[0]}${IC.arrow}</a>`).join("");
   $("#sv-pager").innerHTML = `<a class="sv-pg prev" href="${D.prev[1]}"><small>Previous</small><b>${IC.arrow}${D.prev[0]}</b></a><a class="sv-pg all" href="${D.parent[1]}"><small>Back to</small><b>${D.parent[0]}</b></a><a class="sv-pg next" href="${D.next[1]}"><small>Next</small><b>${D.next[0]}${IC.arrow}</b></a>`;
   const cm = $("#cta-mark"); if (cm) cm.innerHTML = window.CZ_NAV.mark(100);
   if (window.CZ_shaderBg) window.CZ_shaderBg($(".h2-cta-card"), [0.05, 0.35, 0.85]);

@@ -2,6 +2,49 @@
 (function () {
   const CHECK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   /* shared "when this happens" stage: live gradient box, pill eyebrow, highlighted title */
+  /* sticky scroll steps: the section pins, a graph line draws with the scroll and lights each step in turn */
+  window.EP_stickySteps = function (sec) {
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!sec || reduce || matchMedia("(max-width: 820px)").matches || matchMedia("(max-height: 700px)").matches) return;
+    const wrap = sec.querySelector(".wrap"), head = sec.querySelector(".h2-head"), stepsEl = sec.querySelector(".ep-steps");
+    if (!wrap || !head || !stepsEl || sec.classList.contains("ss")) return;
+    const cards = [...stepsEl.children], N = cards.length; if (!N) return;
+    sec.classList.add("ss");
+    const pin = document.createElement("div"); pin.className = "ss-pin";
+    wrap.appendChild(pin); pin.appendChild(head);
+    const W = 1000, H = 170, LO = 0.72, HI = 0.28;
+    const px = (i) => ((i + 0.5) / N) * W, py = (i) => (i % 2 === 0 ? LO : HI) * H;
+    let d = `M${px(-1).toFixed(1)} ${py(-1).toFixed(1)}`;
+    for (let i = 0; i <= N; i++) { const mx = (px(i - 1) + px(i)) / 2; d += ` C ${mx.toFixed(1)} ${py(i - 1).toFixed(1)} ${mx.toFixed(1)} ${py(i).toFixed(1)} ${px(i).toFixed(1)} ${py(i).toFixed(1)}`; }
+    const check = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+    const graph = document.createElement("div"); graph.className = "ss-graph"; graph.setAttribute("aria-hidden", "true");
+    graph.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="ssg" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#80D1D4"/><stop offset=".55" stop-color="#3A4CE1"/><stop offset="1" stop-color="#633ADD"/></linearGradient></defs><path class="ss-gh" d="${d}"/><path class="ss-gl" d="${d}"/></svg>` +
+      cards.map((c, i) => `<span class="ss-n" style="left:${(((i + 0.5) / N) * 100).toFixed(2)}%;top:${((i % 2 === 0 ? LO : HI) * 100).toFixed(1)}%"><i>${check}</i></span>`).join("");
+    pin.appendChild(graph); pin.appendChild(stepsEl);
+    const line = graph.querySelector(".ss-gl"), nodes = [...graph.querySelectorAll(".ss-n")];
+    let L = 0, reach = [];
+    const measure = () => {
+      L = line.getTotalLength(); line.style.strokeDasharray = L;
+      reach = cards.map((c, i) => { const xt = px(i); let lo = 0, hi = L; for (let k = 0; k < 24; k++) { const m = (lo + hi) / 2; if (line.getPointAtLength(m).x < xt) lo = m; else hi = m; } return hi; });
+    };
+    let raf = 0, last = -1;
+    const update = () => {
+      raf = 0;
+      const r = wrap.getBoundingClientRect(), total = Math.max(1, r.height - innerHeight);
+      const p = Math.min(1, Math.max(0, -r.top / total));
+      const draw = L * Math.min(1, p / 0.94);
+      line.style.strokeDashoffset = (L - draw).toFixed(1);
+      let active = -1; reach.forEach((len, i) => { if (draw >= len - 1) active = i; });
+      if (active === last) return; last = active;
+      cards.forEach((c, i) => { c.classList.toggle("on", i === active); c.classList.toggle("done", i < active); });
+      nodes.forEach((n, i) => n.classList.toggle("on", i <= active));
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
+    addEventListener("scroll", kick, { passive: true });
+    addEventListener("resize", () => { measure(); last = -2; kick(); });
+    measure(); update();
+    document.fonts && document.fonts.ready.then(() => { measure(); last = -2; kick(); });
+  };
   window.EP_stageBox = function (stage) {
     if (!stage || (stage.parentNode && stage.parentNode.classList.contains("ep-stagebox"))) return;
     const box = document.createElement("div"); box.className = "ep-stagebox";

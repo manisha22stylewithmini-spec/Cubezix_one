@@ -531,37 +531,13 @@
   $$(".h2-stat b").forEach((b) => { const card = b.closest(".h2-stat"), pct = +card.dataset.pct || 0, put = (v) => { const suf = (b.dataset.suf || "").trim(); b.innerHTML = Math.round(+b.dataset.to * v).toLocaleString("en-US") + (suf ? `<i>${b.dataset.suf.startsWith(" ") ? "&nbsp;" : ""}${suf}</i>` : ""); }; put(0); window.ONEERP.inView(b, () => { const t0 = performance.now(); (function tick(t) { const k = ease(clamp((t - t0) / 1400)); put(k); card.style.setProperty("--p", (pct * k).toFixed(2)); if (k < 1) requestAnimationFrame(tick); })(t0); }, 0.6); });
 
   /* ---------- before / after ---------- */
-  const BEFORE = ["Orders, invoices and stock live in three different files", "Requests get lost in chats and shared inboxes", "Laptops and phones nobody can fully account for", "Payroll dates and visa expiries tracked from memory", "Contracts printed, signed and chased by phone"];
-  const AFTER = ["One record for every customer, item and amount", "Every request has an owner and a deadline", "Every device has a holder and a history", "Pay day and permits flagged before they lapse", "Documents signed and stamped online, with a trail"];
-  $("#ba-before").innerHTML = BEFORE.map((t) => `<li>${ICX.x}<span>${t}</span></li>`).join("");
-  $("#ba-after").innerHTML = AFTER.map((t) => `<li>${ICX.ok}<span>${t}</span></li>`).join("");
-  document.querySelectorAll(".ba-logo").forEach((el) => (el.innerHTML = window.CZ_NAV.mark(40)));
+  document.querySelectorAll(".bx-logo").forEach((el) => (el.innerHTML = window.CZ_NAV.mark(22)));
   const pvV = $("#pv-vid"), pvP = $("#vs-play");
   if (pvV && pvP) { const box = pvV.closest(".vs-video"); pvP.addEventListener("click", () => { box.classList.add("playing"); pvV.controls = true; pvV.play(); }); }
-  const baF = $(".ba-frame");
-  if (baF) {
-    let cur = 100, goal = 100, raf = 0, last = 0, tau = 150;
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const set = (v) => { baF.style.setProperty("--x", v.toFixed(3)); baF.classList.toggle("flip", v > 72); };
-    const tick = (t) => {
-      const dt = Math.min(64, t - (last || t)); last = t;
-      cur += (goal - cur) * (1 - Math.exp(-dt / tau));
-      if (Math.abs(goal - cur) < 0.02) cur = goal;
-      set(cur);
-      if (cur === goal) { raf = 0; last = 0; } else raf = requestAnimationFrame(tick);
-    };
-    const go = (g, slow) => { goal = reduce ? g : g; tau = reduce ? 1 : slow ? 320 : 150; if (!raf) raf = requestAnimationFrame(tick); };
-    const at = (e) => { const r = baF.getBoundingClientRect(); return Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100)); };
-    baF.addEventListener("pointerenter", (e) => { baF.classList.add("live"); go(at(e), true); });
-    baF.addEventListener("pointermove", (e) => { baF.classList.add("live"); go(at(e)); });
-    baF.addEventListener("pointerleave", () => { baF.classList.remove("live"); go(100, true); });
-    baF.addEventListener("pointercancel", () => { baF.classList.remove("live"); go(100); });
-    baF.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { baF.classList.add("live"); go(Math.max(0, Math.min(100, goal + (e.key === "ArrowLeft" ? -10 : 10)))); } });
-    baF.addEventListener("blur", () => { baF.classList.remove("live"); go(100); });
-  }
 
   const bar = (w, c) => `<div class="mv-bar"><i style="width:${w}%;${c ? "background:" + c : ""}"></i></div>`;
   /* ---------- products bento ---------- */
+  const PCOL = { desk: { c: "#4A8EDE", soft: "#E1EDFC", deep: "#1C4E92" } };
   const PC = {
     erp: { cls: "wide", p: "Finance, HR, payroll, inventory, sales, CRM, procurement and operations on one set of records, with UAE VAT, WPS and e-invoicing built in.", li: ["Every dirham in and out, matched to your books", "Purchases checked against budget before anyone signs", "One decision at a time, with the numbers beside it"] },
     desk: { p: "A helpdesk for your customers and your staff. Every request gets an owner and a time to reply.", li: ["Email, portal, chat and device agent", "SLAs and escalation to the team lead"] },
@@ -576,7 +552,7 @@
     people: `<div class="pv leave"><div><span>Annual leave</span><em>18 of 30 days</em></div>${bar(60, "#633ADD")}<div><span>Sick leave</span><em>13 of 15 days</em></div>${bar(87, "#633ADD")}</div>`,
     sign: `<div class="pv sign"><svg viewBox="0 0 120 32" fill="none" stroke="#2B2FA0" stroke-width="2" stroke-linecap="round"><path d="M4 22c8-14 12-14 14-2s6 4 12-8c6-12 8 6 14 6s10-12 18-2 12 4 18-6"/></svg><span>Signed 14:02</span><span class="seal" aria-hidden="true"><svg viewBox="0 0 100 100"><defs><path id="sra" d="M50 50m-33 0a33 33 0 1 1 66 0a33 33 0 1 1-66 0"/></defs><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="24" fill="none" stroke="currentColor" stroke-width="1.2"/><text font-family="Inter,sans-serif" font-size="9.5" font-weight="700" letter-spacing="2.2" fill="currentColor"><textPath href="#sra" startOffset="0">CUBEZIX ONE · APPROVED · </textPath></text><path d="M50 33l4.7 9.6 10.6 1.5-7.7 7.5 1.8 10.5-9.4-5-9.4 5 1.8-10.5-7.7-7.5 10.6-1.5z" fill="currentColor"/></svg></span></div>`,
   };
-  $("#bento").innerHTML = PRODUCTS.map((p, i) => { const c = PC[p.k]; return `<a class="pc ${c.cls || ""} rv" href="${p.href}" style="--c:${p.c};--soft:${p.soft};--deep:${p.deep};--d:${i * 0.06}s">${c.soon ? '<span class="soon">COMING SOON</span>' : ""}<div class="pn"><i></i>${p.name}${p.flag ? `<em>${p.flag}</em>` : ""}</div><p>${c.p}</p>${p.k === "erp" ? `<div class="chips2">${p.modules.map((m) => `<span>${ICX[m[0]]}${m[1]}</span>`).join("")}</div>` : ""}<ul>${c.li.map((l) => `<li>${l}</li>`).join("")}</ul>${PV[p.k] || ""}<span class="go">Explore ${p.name} ${IC.arrow}</span></a>`; }).join("");
+  $("#bento").innerHTML = PRODUCTS.map((p, i) => { const c = PC[p.k], k = PCOL[p.k] || p; return `<a class="pc pc-${p.k} ${c.cls || ""} rv" href="${p.href}" style="--c:${k.c};--soft:${k.soft};--deep:${k.deep};--d:${i * 0.06}s">${c.soon ? '<span class="soon">COMING SOON</span>' : ""}<div class="pn"><i></i>${p.name}${p.flag ? `<em>${p.flag}</em>` : ""}</div><p>${c.p}</p>${p.k === "erp" ? `<div class="chips2">${p.modules.map((m) => `<span>${ICX[m[0]]}${m[1]}</span>`).join("")}</div>` : ""}<ul>${c.li.map((l) => `<li>${l}</li>`).join("")}</ul>${PV[p.k] || ""}<span class="go">Explore ${p.name} ${IC.arrow}</span></a>`; }).join("");
 
   /* ---------- industries ---------- */
   const INDICON = {
