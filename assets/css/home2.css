@@ -1652,3 +1652,18 @@ html body .h2-cta-card [data-pill].h2-pill{margin-bottom:24px}
 .pc-desk .pv i.amber{background:#E3E5FF;color:#1F2670}
 .pc-desk .pv i.ok{background:#D9E8FB;color:#174A8C}
 .pc-desk .pv.list{border-color:#D6E5F8}
+/* hero dashboard: each module slide takes the colour of its industry group
+   Trading teal: Finance | Retail (marketing and sales) indigo: Sales | Manufacturing blue: Inventory | Services violet: Procurement, Payroll, HR, Operations, CRM */
+.ed{--a:#3A4CE1;--a2:#633ADD;--ad:#14163F;--as:#EEF0FF;--al:#B9C1FA}
+.ed[data-m="finance"]{--a:#1FA9AE;--a2:#0E8A8F;--ad:#0B4F54;--as:#D8F4F4;--al:#9ADFDF}
+.ed[data-m="sales"]{--a:#3A4CE1;--a2:#633ADD;--ad:#2F36B8;--as:#E9E8FF;--al:#C3C9FA}
+.ed[data-m="inventory"]{--a:#3F7FE0;--a2:#2B5FC0;--ad:#1F2F5C;--as:#E3EDFD;--al:#B9CDF5}
+.ed[data-m="procurement"],.ed[data-m="payroll"],.ed[data-m="hr"],.ed[data-m="operations"],.ed[data-m="crm"]{--a:#8C5CE8;--a2:#6A3BC9;--ad:#3A1B7A;--as:#F0E5FF;--al:#D6B8F9}
+.ed-nav button.on,.h2-window .ed-nav button.on.caught,.ed-pills i.on,.ed-btns u.dark{background:var(--ad);transition:background-color .5s var(--ease),color .3s}
+.ed-bars u,.ed-lg i{background:var(--ad)}
+.ed-bars s,.ed-lg i.h{background:repeating-linear-gradient(135deg,var(--a) 0 2px,var(--al) 2px 4px)}
+.ed-t.hot{background:linear-gradient(145deg,var(--a),var(--a2))}
+.ed-pr i{background:linear-gradient(90deg,var(--al),var(--a))}
+.ed-up{background:var(--as);color:var(--ad)}
+.ed-t.ask em{color:var(--a2)}
+.ed-tr .tile{background:var(--as);color:var(--ad)}
