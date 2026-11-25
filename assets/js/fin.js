@@ -1,4 +1,4 @@
-/* Finance page only: bank reconciliation hero and statement tabs. Runs after sv.js. */
+/* Module pages (Finance template): reconciliation hero on Finance, statement tabs, pinned flows and going-live steps. Runs after sv.js. */
 (function () {
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -10,7 +10,7 @@
 
   /* ---------- hero: bank statement against the ledger ---------- */
   const win = $("#sv-win");
-  if (win) {
+  if (win && document.body.dataset.sv === "finance") {
     const ROWS = [
       ["12 Nov", "Harbour Line Freight", "Incoming transfer", 8640, "INV-2026-0544"],
       ["12 Nov", "Gulf Pack Supplies", "Outgoing payment", -4120, "BILL-2026-0231"],
@@ -76,7 +76,7 @@
         e.preventDefault(); const n = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length]; show(n.dataset.p, true);
       });
     });
-    show("pl");
+    show(tabs[0].dataset.p);
   }
 
   /* ---------- going live: pin the section and light each step as you scroll ---------- */
