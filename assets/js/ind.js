@@ -51,7 +51,7 @@
   };
   const key = document.body.dataset.ind, d = D[key], n = INDUSTRIES.find((x) => x[0] === d.name), idx = INDUSTRIES.indexOf(n);
   document.documentElement.style.setProperty("--p", n[5]); document.documentElement.style.setProperty("--d", n[6]); document.documentElement.style.setProperty("--b", n[4]);
-  $("#in-crumb").innerHTML = `<a href="industries.html">Industries</a>${IC.chev.replace("<svg", '<svg style="transform:rotate(-90deg)"')}<b>${d.name}</b>`;
+  if ($("#in-crumb")) $("#in-crumb").innerHTML = `<a href="industries.html">Industries</a>${IC.chev.replace("<svg", '<svg style="transform:rotate(-90deg)"')}<b>${d.name}</b>`;
   $("#in-tile").innerHTML = INDICO[d.name]; $("#in-eyebrow").textContent = "Industries · " + d.name;
   $("#in-h1").innerHTML = d.title; $("#in-lead").textContent = d.lead;
   $("#in-vis").innerHTML = d.win + `<div class="ic-chip"><i></i>${d.chip}</div>`;

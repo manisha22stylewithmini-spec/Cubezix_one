@@ -11,7 +11,8 @@
 <link rel="stylesheet" href="assets/css/styles.min.css">
 <link rel="stylesheet" href="assets/css/home2.min.css?v=hl2">
 <link rel="stylesheet" href="assets/css/erp.css?v=hl2">
-<link rel="stylesheet" href="assets/css/sv.css">
+<link rel="stylesheet" href="assets/css/sv.css?v=sp1">
+<link rel="stylesheet" href="assets/css/fin.css?v=7">
 </head>
 <body data-page="products" data-sv="finance">
 
@@ -19,15 +20,19 @@
 <section class="ep-hero sv-hero" id="top" style="--g1:rgba(58,76,225,.22);--g2:rgba(128,209,212,.30)">
   <div class="wrap">
     <div class="ep-hero-copy">
-      <nav class="sv-crumb" aria-label="Breadcrumb"><a href="erp.html">ONE ERP</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><b>Finance</b></nav>
       <span class="eyebrow">ONE ERP · Finance</span>
       <h1 class="h2-title">Clarity and control for <span class="grad">every transaction.</span></h1>
       <p class="h2-lead">Every dirham in and out, matched to your books as it goes. Real-time clarity across your whole financial picture, with the one line it can't place waiting for you.</p>
-      <div class="ep-cta"><a class="btn btn-primary btn-lg" href="book-a-demo.html">Book a demo</a><a class="btn btn-lg ep-ghost" href="#features">See what's inside</a></div>
+      <div class="ep-cta"><a class="btn btn-primary btn-lg" href="book-a-demo.html">Book a demo</a><a class="btn btn-lg ep-ghost" href="#features">See how it works</a></div>
       <p class="ep-note">[Finance module details to be confirmed by CubeZix.]</p>
     </div>
     <div class="sv-win rv" id="sv-win" aria-label="Finance in use"></div>
   </div>
+</section>
+
+<!-- FINANCE · CONTROLS BAND -->
+<section class="fn-band" aria-label="Financial controls">
+  <div class="wrap"><ul class="fn-band-l"><li><span class="fn-bi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 21h14M7 7h10M7 7l-3 7a3 3 0 006 0zM17 7l-3 7a3 3 0 006 0z"/></svg></span><span><b>Double-entry</b><small>Every posting balances, debit to credit</small></span></li><li><span class="fn-bi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2.5 20c.5-3.2 2.8-5 5.5-5s5 1.8 5.5 5M13 15.3c.9-.2 1.9-.3 3-.3 2.7 0 5 1.8 5.5 5"/></svg></span><span><b>Maker-checker</b><small>No one approves their own payment</small></span></li><li><span class="fn-bi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span><span><b>Locked periods</b><small>Closed months cannot be edited</small></span></li><li><span class="fn-bi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14v16H5z"/><path d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/></svg></span><span><b>Full audit trail</b><small>Who changed what, and when</small></span></li><li><span class="fn-bi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span><b>UAE VAT and e-invoicing</b><small>TRN, 5% VAT and PINT-AE ready</small></span></li></ul></div>
 </section>
 
 <!-- 2 · RESULTS -->
@@ -36,11 +41,83 @@
   <div class="wrap"><p class="sv-foot" id="sv-foot"></p></div>
 </section>
 
-<!-- 3 · WHAT IT COVERS -->
-<section class="h2-sec" id="features">
+<!-- 3 · HOW FINANCE RUNS: pinned card stack -->
+<section class="h2-sec fn-flows" id="features">
   <div class="wrap">
-    <div class="h2-head rv"><span class="eyebrow">What Finance covers</span><h2 class="h2">Six jobs, done from <span class="t-acc">one set of books.</span></h2><p>Everything an accounts team does each day, kept on the same records as sales, purchasing and payroll.</p></div>
-    <div class="ep-why" id="ep-why"></div>
+    <div class="h2-head rv"><span class="eyebrow">How finance runs</span><h2 class="h2">Four flows, kept in <span class="t-acc">one set of books.</span></h2><p>Getting paid, paying suppliers, closing the month and reporting. Each one posts to the same ledger as sales, purchasing and payroll.</p></div>
+    <div class="fn-flow" style="--n:4">
+      <div class="fn-pin">
+        <nav class="fn-fnav" aria-label="Finance flows"><button type="button" data-i="0"><span>01</span>Receivables</button><button type="button" data-i="1"><span>02</span>Payables</button><button type="button" data-i="2"><span>03</span>Ledger and close</button><button type="button" data-i="3"><span>04</span>Reporting and tax</button></nav>
+        <div class="fn-stage">
+      <div class="fn-fx" data-i="0" style="--c:#E1F5F5;--k:#0B6B70;z-index:1">
+        <article class="fn-fc" aria-labelledby="fn-fc-rec">
+          <div class="fn-vis"><small class="fn-fn">01 · Receivables</small><svg class="fn-ill" viewBox="0 0 220 200" aria-hidden="true"><g transform="rotate(-8 86.0 79.0)"><rect class="pg" x="45" y="25" width="92" height="118" rx="6"/><rect class="pp" x="40" y="20" width="92" height="118" rx="6"/><path class="hd" d="M54,36 H90.6"/><path class="ln" d="M54,50 H118"/><path class="ln" d="M54,63 H98"/><path class="ln" d="M54,76 H118"/><path class="ln" d="M54,89 H98"/><path class="ln" d="M54,102 H118"/></g><path class="cs" d="M110,144 A30,10 0 0 0 170,144 V150 A30,10 0 0 1 110,150 Z"/><path class="cs" d="M110,138 A30,10 0 0 0 170,138 V144 A30,10 0 0 1 110,144 Z"/><path class="cs" d="M110,132 A30,10 0 0 0 170,132 V138 A30,10 0 0 1 110,138 Z"/><path class="cs" d="M110,126 A30,10 0 0 0 170,126 V132 A30,10 0 0 1 110,132 Z"/><path class="cs" d="M110,120 A30,10 0 0 0 170,120 V126 A30,10 0 0 1 110,126 Z"/><path class="cs" d="M110,114 A30,10 0 0 0 170,114 V120 A30,10 0 0 1 110,120 Z"/><path class="cs" d="M110,108 A30,10 0 0 0 170,108 V114 A30,10 0 0 1 110,114 Z"/><path class="cs" d="M110,102 A30,10 0 0 0 170,102 V108 A30,10 0 0 1 110,108 Z"/><path class="cs" d="M110,96 A30,10 0 0 0 170,96 V102 A30,10 0 0 1 110,102 Z"/><ellipse class="ct" cx="140" cy="96" rx="30" ry="10"/><ellipse class="ci" cx="140" cy="96" rx="19.8" ry="6.2"/><path class="cs" d="M68,154 A30,10 0 0 0 128,154 V160 A30,10 0 0 1 68,160 Z"/><path class="cs" d="M68,148 A30,10 0 0 0 128,148 V154 A30,10 0 0 1 68,154 Z"/><path class="cs" d="M68,142 A30,10 0 0 0 128,142 V148 A30,10 0 0 1 68,148 Z"/><path class="cs" d="M68,136 A30,10 0 0 0 128,136 V142 A30,10 0 0 1 68,142 Z"/><ellipse class="ct" cx="98" cy="136" rx="30" ry="10"/><ellipse class="ci" cx="98" cy="136" rx="19.8" ry="6.2"/><circle class="bd" cx="170" cy="46" r="17"/><path class="tk" d="M162,46 l6,6 11-12"/></svg></div>
+          <div class="fn-ft"><h3 id="fn-fc-rec">Get paid</h3><p>Turn every sale into cash you can see. Invoices go out with VAT and your TRN on them, reminders chase what is late, and each payment finds its invoice the moment it lands.</p></div>
+          <div class="fn-fb"><a href="book-a-demo.html">See it in a demo</a></div>
+        </article>
+        <ol class="fn-fs" aria-label="Get paid: how it works"><li><h4><span>01</span>Invoice from the order</h4><p>The quote becomes the order, the order becomes the invoice. Nothing is typed twice.</p></li><li><h4><span>02</span>VAT on every line</h4><p>Your TRN, the tax amount and the e-invoice fields are added as the invoice is raised.</p></li><li><h4><span>03</span>Reminders that send themselves</h4><p>Overdue invoices are chased on a schedule you set, politely and on time.</p></li><li><h4><span>04</span>Payment matched</h4><p>The bank line is matched to its invoice and the receivable clears in the ledger.</p></li></ol>
+      </div>
+      <div class="fn-fx" data-i="1" style="--c:#E3E5FF;--k:#3A4CE1;z-index:2">
+        <article class="fn-fc" aria-labelledby="fn-fc-pay">
+          <div class="fn-vis"><small class="fn-fn">02 · Payables</small><svg class="fn-ill" viewBox="0 0 220 200" aria-hidden="true"><path class="cs" d="M36,142 A30,10 0 0 0 96,142 V148 A30,10 0 0 1 36,148 Z"/><path class="cs" d="M36,136 A30,10 0 0 0 96,136 V142 A30,10 0 0 1 36,142 Z"/><path class="cs" d="M36,130 A30,10 0 0 0 96,130 V136 A30,10 0 0 1 36,136 Z"/><path class="cs" d="M36,124 A30,10 0 0 0 96,124 V130 A30,10 0 0 1 36,130 Z"/><path class="cs" d="M36,118 A30,10 0 0 0 96,118 V124 A30,10 0 0 1 36,124 Z"/><path class="cs" d="M36,112 A30,10 0 0 0 96,112 V118 A30,10 0 0 1 36,118 Z"/><path class="cs" d="M36,106 A30,10 0 0 0 96,106 V112 A30,10 0 0 1 36,112 Z"/><ellipse class="ct" cx="66" cy="106" rx="30" ry="10"/><ellipse class="ci" cx="66" cy="106" rx="19.8" ry="6.2"/><path class="cs" d="M128,122 A30,10 0 0 0 188,122 V128 A30,10 0 0 1 128,128 Z"/><path class="cs" d="M128,116 A30,10 0 0 0 188,116 V122 A30,10 0 0 1 128,122 Z"/><path class="cs" d="M128,110 A30,10 0 0 0 188,110 V116 A30,10 0 0 1 128,116 Z"/><path class="cs" d="M128,104 A30,10 0 0 0 188,104 V110 A30,10 0 0 1 128,110 Z"/><ellipse class="ct" cx="158" cy="104" rx="30" ry="10"/><ellipse class="ci" cx="158" cy="104" rx="19.8" ry="6.2"/><path class="ar" d="M76,62 C100,30 140,30 160,58"/><path class="ah" d="M150,56 l11,3 2-12"/><path class="ar" d="M148,166 C124,186 88,186 70,166"/><path class="ah" d="M80,170 l-11-4 -1 12"/></svg></div>
+          <div class="fn-ft"><h3 id="fn-fc-pay">Pay suppliers</h3><p>Pay the right supplier the right amount, once. Every bill is checked against what was ordered and received before anyone approves it.</p></div>
+          <div class="fn-fb"><a href="book-a-demo.html">See it in a demo</a></div>
+        </article>
+        <ol class="fn-fs" aria-label="Pay suppliers: how it works"><li><h4><span>01</span>Bill checked against the order</h4><p>Quantities and prices are compared with the purchase order and the goods received.</p></li><li><h4><span>02</span>Approved within limits</h4><p>The budget owner approves. Larger amounts go to a second approver.</p></li><li><h4><span>03</span>Payment run scheduled</h4><p>Due bills are grouped into one run, ready for the bank on the right day.</p></li><li><h4><span>04</span>Settled and posted</h4><p>The payment clears the payable and the bank line matches itself.</p></li></ol>
+      </div>
+      <div class="fn-fx" data-i="2" style="--c:#EEE5FF;--k:#633ADD;z-index:3">
+        <article class="fn-fc" aria-labelledby="fn-fc-close">
+          <div class="fn-vis"><small class="fn-fn">03 · Ledger and close</small><svg class="fn-ill" viewBox="0 0 220 200" aria-hidden="true"><path class="pg" d="M40,58 L112,40 L184,58 V150 L112,168 L40,150 Z"/><path class="pp" d="M36,54 L108,36 L108,146 L36,164 Z"/><path class="pp" d="M108,36 L180,54 V164 L108,146 Z"/><path class="ln" d="M48,74 L96,62"/><path class="ln" d="M120,62 L168,74"/><path class="ln" d="M48,88 L96,76"/><path class="ln" d="M120,76 L168,88"/><path class="ln" d="M48,102 L96,90"/><path class="ln" d="M120,90 L168,102"/><path class="ln" d="M48,116 L96,104"/><path class="ln" d="M120,104 L168,116"/><path class="ln" d="M48,130 L96,118"/><path class="ln" d="M120,118 L168,130"/><rect class="bd" x="128" y="118" width="54" height="44" rx="8"/><path class="sh" d="M140,118 v-10 a15,15 0 0 1 30,0 v10"/><circle class="tkf" cx="155" cy="138" r="5"/><path class="tk" d="M155,142 v8"/></svg></div>
+          <div class="fn-ft"><h3 id="fn-fc-close">Close the books</h3><p>One ledger that every module posts to, and a month-end that follows the same checklist every time. When the last line is done, the period locks.</p></div>
+          <div class="fn-fb"><a href="book-a-demo.html">See it in a demo</a></div>
+        </article>
+        <ol class="fn-fs" aria-label="Close the books: how it works"><li><h4><span>01</span>Every module posts here</h4><p>Sales, purchasing, payroll and inventory write their own journals.</p></li><li><h4><span>02</span>Banks reconciled</h4><p>Statement and ledger agree, with the exceptions listed for you.</p></li><li><h4><span>03</span>Accruals and adjustments</h4><p>Recurring journals post themselves. One-offs go through maker-checker.</p></li><li><h4><span>04</span>Period locked</h4><p>Once closed, nobody can post into the month without an approved reopen.</p></li></ol>
+      </div>
+      <div class="fn-fx" data-i="3" style="--c:#E1EDFC;--k:#1C4E92;z-index:4">
+        <article class="fn-fc" aria-labelledby="fn-fc-rep">
+          <div class="fn-vis"><small class="fn-fn">04 · Reporting and tax</small><svg class="fn-ill" viewBox="0 0 220 200" aria-hidden="true"><path class="ax" d="M34,166 H190"/><path class="cs" d="M44,120 h22 l8,-6 h-22 Z"/><path class="pg" d="M66,120 l8,-6 V160 l-8,6 Z"/><rect class="pp" x="44" y="120" width="22" height="46"/><path class="cs" d="M76,92 h22 l8,-6 h-22 Z"/><path class="pg" d="M98,92 l8,-6 V160 l-8,6 Z"/><rect class="pp" x="76" y="92" width="22" height="74"/><path class="cs" d="M108,106 h22 l8,-6 h-22 Z"/><path class="pg" d="M130,106 l8,-6 V160 l-8,6 Z"/><rect class="pp" x="108" y="106" width="22" height="60"/><path class="cs" d="M140,64 h22 l8,-6 h-22 Z"/><path class="pg" d="M162,64 l8,-6 V160 l-8,6 Z"/><rect class="pp" x="140" y="64" width="22" height="102"/><path class="tr" d="M50,108 L84,80 L118,92 L156,48"/><circle class="bd" cx="156" cy="48" r="6"/></svg></div>
+          <div class="fn-ft"><h3 id="fn-fc-rep">Report and file</h3><p>Statements that are always current, budgets against actuals, and a VAT return prepared from the same numbers your auditor will see.</p></div>
+          <div class="fn-fb"><a href="book-a-demo.html">See it in a demo</a></div>
+        </article>
+        <ol class="fn-fs" aria-label="Report and file: how it works"><li><h4><span>01</span>Statements, always current</h4><p>Profit and loss, balance sheet and cash flow, with last month beside this one.</p></li><li><h4><span>02</span>Budget against actual</h4><p>Every cost centre against its budget, with the variance explained.</p></li><li><h4><span>03</span>VAT return prepared</h4><p>Output and input tax totalled for the period, ready for your review.</p></li><li><h4><span>04</span>Audit pack in one export</h4><p>Ledgers, reconciliations and the change log, together for your auditor.</p></li></ol>
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINANCE · STATEMENTS -->
+<section class="h2-sec tint" id="statements">
+  <div class="wrap">
+    <div class="h2-head rv"><span class="eyebrow">Financial statements</span><h2 class="h2">Statements your auditor <span class="t-acc">already recognises.</span></h2><p>Profit and loss, balance sheet and cash flow, built from the same ledger every module posts to. Always current, with last month beside this one.</p></div>
+    <div class="fn-stm rv">
+      <div class="fn-st-top">
+        <div class="fn-co"><b>Gulf Pack Trading LLC</b><small>Management accounts · All figures in AED</small></div>
+        <div class="fn-tabs" role="tablist" aria-label="Statement">
+          <button role="tab" aria-selected="true" data-p="pl">Profit and loss</button>
+          <button role="tab" aria-selected="false" data-p="bs">Balance sheet</button>
+          <button role="tab" aria-selected="false" data-p="cf">Cash flow</button>
+        </div>
+      </div>
+      <div class="fn-sp on" data-p="pl" role="tabpanel"><div class="fn-sr fn-sh"><span></span><span>Oct 2026</span><span>Sep 2026</span><span>Change</span></div><div class="fn-sr "><span>Revenue</span><span>1,184,200</span><span>1,092,600</span><span><span class="fn-chg fav">+8.4%</span></span></div><div class="fn-sr "><span>Cost of sales</span><span>(702,400)</span><span>(651,900)</span><span><span class="fn-chg adv">+7.7%</span></span></div><div class="fn-sr fn-sub"><span>Gross profit</span><span>481,800</span><span>440,700</span><span><span class="fn-chg fav">+9.3%</span></span></div><div class="fn-sr fn-ss"><span>Operating expenses</span><span></span><span></span><span></span></div><div class="fn-sr in"><span>Salaries and benefits</span><span>(96,400)</span><span>(95,100)</span><span><span class="fn-chg adv">+1.4%</span></span></div><div class="fn-sr in"><span>Rent</span><span>(38,000)</span><span>(38,000)</span><span><span class="fn-chg flat">0.0%</span></span></div><div class="fn-sr in"><span>Freight and logistics</span><span>(41,250)</span><span>(36,800)</span><span><span class="fn-chg adv">+12.1%</span></span></div><div class="fn-sr in"><span>Other operating costs</span><span>(52,300)</span><span>(49,900)</span><span><span class="fn-chg adv">+4.8%</span></span></div><div class="fn-sr fn-sub"><span>Total operating expenses</span><span>(227,950)</span><span>(219,800)</span><span><span class="fn-chg adv">+3.7%</span></span></div><div class="fn-sr fn-sub"><span>Operating profit</span><span>253,850</span><span>220,900</span><span><span class="fn-chg fav">+14.9%</span></span></div><div class="fn-sr "><span>Corporate tax at 9% (estimate)</span><span>(22,847)</span><span>(19,881)</span><span><span class="fn-chg adv">+14.9%</span></span></div><div class="fn-sr fn-tot"><span>Net profit</span><span>231,003</span><span>201,019</span><span><span class="fn-chg fav">+14.9%</span></span></div></div>
+      <div class="fn-sp" data-p="bs" role="tabpanel" hidden><div class="fn-sr fn-sh"><span></span><span>31 Oct 2026</span><span>30 Sep 2026</span><span></span></div><div class="fn-sr fn-ss"><span>Assets</span><span></span><span></span><span></span></div><div class="fn-sr in"><span>Cash and bank</span><span>957,400</span><span>918,700</span><span></span></div><div class="fn-sr in"><span>Trade receivables</span><span>186,000</span><span>171,300</span><span></span></div><div class="fn-sr in"><span>Inventory</span><span>1,260,000</span><span>1,234,000</span><span></span></div><div class="fn-sr in"><span>Property and equipment, net</span><span>412,500</span><span>418,900</span><span></span></div><div class="fn-sr fn-sub"><span>Total assets</span><span>2,815,900</span><span>2,742,900</span><span></span></div><div class="fn-sr fn-ss"><span>Liabilities</span><span></span><span></span><span></span></div><div class="fn-sr in"><span>Trade payables</span><span>238,000</span><span>251,600</span><span></span></div><div class="fn-sr in"><span>VAT payable</span><span>41,200</span><span>38,700</span><span></span></div><div class="fn-sr in"><span>Accruals</span><span>64,300</span><span>70,200</span><span></span></div><div class="fn-sr in"><span>Corporate tax payable</span><span>142,647</span><span>119,800</span><span></span></div><div class="fn-sr fn-sub"><span>Total liabilities</span><span>486,147</span><span>480,300</span><span></span></div><div class="fn-sr fn-ss"><span>Equity</span><span></span><span></span><span></span></div><div class="fn-sr in"><span>Share capital</span><span>300,000</span><span>300,000</span><span></span></div><div class="fn-sr in"><span>Retained earnings</span><span>1,798,750</span><span>1,761,581</span><span></span></div><div class="fn-sr in"><span>Profit for the month</span><span>231,003</span><span>201,019</span><span></span></div><div class="fn-sr fn-sub"><span>Total equity</span><span>2,329,753</span><span>2,262,600</span><span></span></div><div class="fn-sr fn-tot"><span>Liabilities and equity</span><span>2,815,900</span><span>2,742,900</span><span></span></div></div>
+      <div class="fn-sp" data-p="cf" role="tabpanel" hidden><div class="fn-sr fn-sh"><span></span><span>Oct 2026</span><span></span><span></span></div><div class="fn-sr fn-ss"><span>Operating activities</span><span></span><span></span><span></span></div><div class="fn-sr in"><span>Net profit</span><span>231,003</span><span></span><span></span></div><div class="fn-sr in"><span>Depreciation</span><span>6,400</span><span></span><span></span></div><div class="fn-sr in"><span>Increase in receivables</span><span>(14,700)</span><span></span><span></span></div><div class="fn-sr in"><span>Increase in inventory</span><span>(26,000)</span><span></span><span></span></div><div class="fn-sr in"><span>Decrease in payables</span><span>(13,600)</span><span></span><span></span></div><div class="fn-sr in"><span>Increase in VAT payable</span><span>2,500</span><span></span><span></span></div><div class="fn-sr in"><span>Decrease in accruals</span><span>(5,900)</span><span></span><span></span></div><div class="fn-sr in"><span>Increase in corporate tax payable</span><span>22,847</span><span></span><span></span></div><div class="fn-sr fn-sub"><span>Cash from operations</span><span>202,550</span><span></span><span></span></div><div class="fn-sr fn-ss"><span>Financing activities</span><span></span><span></span><span></span></div><div class="fn-sr in"><span>Dividends paid</span><span>(163,850)</span><span></span><span></span></div><div class="fn-sr fn-sub"><span>Net change in cash</span><span>38,700</span><span></span><span></span></div><div class="fn-sr "><span>Cash at 1 October</span><span>918,700</span><span></span><span></span></div><div class="fn-sr fn-tot"><span>Cash at 31 October</span><span>957,400</span><span></span><span></span></div></div>
+      <div class="fn-st-ft"><span class="fn-ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg> Balanced · debits equal credits</span><span>Drill from any total to the entries behind it</span><span>Export to Excel or PDF for your auditor</span></div>
+    </div>
+    <p class="fn-note">Example figures for a sample trading company.</p>
+  </div>
+</section>
+
+<!-- FINANCE · MONTH-END CLOSE -->
+<section class="h2-sec" id="close">
+  <div class="wrap fn-close">
+    <div class="h2-head rv fn-left"><span class="eyebrow">Month-end close</span><h2 class="h2">Close the month in <span class="t-acc">days, not weeks.</span></h2><p>Every close follows the same checklist. Each task has an owner and a date, the routine ones finish themselves, and the month only locks when every line is done.</p>
+      <ul class="fn-pts"><li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Reconciliations, accruals and depreciation in one place</li><li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Review before the period locks, not after</li><li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Next month starts from figures you have signed off</li></ul></div>
+    <div class="fn-cl rv">
+      <div class="fn-cl-top"><div><small>Close checklist</small><b>October 2026</b></div><div class="fn-cl-pr"><span>4 of 7 done</span><i><u style="--w:57%"></u></i></div></div>
+      <ol><li class="done"><span class="fn-day">Day 1</span><span class="fn-tk"><b>Bank accounts reconciled</b><small>4 of 4 accounts</small></span><span class="fn-ow">Ravi Nair</span><span class="fn-cs done"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Done</span></li><li class="done"><span class="fn-day">Day 1</span><span class="fn-tk"><b>Sales and purchase ledgers closed</b><small>October cut-off</small></span><span class="fn-ow">Ravi Nair</span><span class="fn-cs done"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Done</span></li><li class="done"><span class="fn-day">Day 2</span><span class="fn-tk"><b>Accruals and prepayments posted</b><small>12 journals</small></span><span class="fn-ow">Ravi Nair</span><span class="fn-cs done"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Done</span></li><li class="done"><span class="fn-day">Day 2</span><span class="fn-tk"><b>Depreciation posted</b><small>AED 6,400 · automatic</small></span><span class="fn-ow">ONE ERP</span><span class="fn-cs done"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Done</span></li><li class="now"><span class="fn-day">Day 3</span><span class="fn-tk"><b>VAT reviewed</b><small>AED 41,200 payable</small></span><span class="fn-ow">Hana Nasser</span><span class="fn-cs now">In review</span></li><li class="next"><span class="fn-day">Day 4</span><span class="fn-tk"><b>Management accounts reviewed</b><small>P&L, balance sheet, cash flow</small></span><span class="fn-ow">Hana Nasser</span><span class="fn-cs next">Waiting</span></li><li class="next"><span class="fn-day">Day 5</span><span class="fn-tk"><b>October locked</b><small>No further postings</small></span><span class="fn-ow">Hana Nasser</span><span class="fn-cs next">Waiting</span></li></ol>
+    </div>
   </div>
 </section>
 
@@ -52,6 +129,25 @@
       <div class="ep-evs" id="ep-evs" role="tablist" aria-label="Events"></div>
       <div class="ep-stage" id="ep-stage" aria-live="polite"></div>
     </div>
+  </div>
+</section>
+
+<!-- FINANCE · CONTROLS AND AUDIT -->
+<section class="h2-sec tint" id="controls">
+  <div class="wrap">
+    <div class="h2-head rv"><span class="eyebrow">Controls and audit</span><h2 class="h2">Every dirham has <span class="t-acc">a second pair of eyes.</span></h2><p>Approval limits, locked periods and a full trail of every change, so your books stand up to an audit without a week of digging.</p></div>
+    <div class="fn-ctl">
+      <article class="fn-cc rv"><header><span class="fn-bi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2.5 20c.5-3.2 2.8-5 5.5-5s5 1.8 5.5 5M13 15.3c.9-.2 1.9-.3 3-.3 2.7 0 5 1.8 5.5 5"/></svg></span><div><b>Approval limits</b><small>Maker-checker on every payment</small></div></header>
+        <div class="fn-lim"><div><span>Up to AED 10,000</span><b>Finance officer</b><em><i></i>1 signature</em></div><div><span>AED 10,000 to 100,000</span><b>Finance manager</b><em><i></i>1 signature</em></div><div><span>Above AED 100,000</span><b>Finance manager and a director</b><em><i></i><i></i>2 signatures</em></div></div>
+        <p class="fn-cn">The person who creates a payment can never be the one who approves it.</p></article>
+      <article class="fn-cc rv" style="--d:.06s"><header><span class="fn-bi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span><div><b>Locked periods</b><small>A closed month stays closed</small></div></header>
+        <div class="fn-mo"><span class=""><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><b>May</b><small>Locked</small></span><span class=""><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><b>Jun</b><small>Locked</small></span><span class=""><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><b>Jul</b><small>Locked</small></span><span class=""><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><b>Aug</b><small>Locked</small></span><span class=""><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><b>Sep</b><small>Locked</small></span><span class="op"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 017.6-1.7"/></svg><b>Oct</b><small>Open</small></span></div>
+        <p class="fn-cn">Corrections to a locked month go in as a dated adjustment, never as a silent edit.</p></article>
+      <article class="fn-cc rv" style="--d:.12s"><header><span class="fn-bi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14v16H5z"/><path d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/></svg></span><div><b>Audit trail</b><small>Today · Finance</small></div></header>
+        <ol class="fn-log"><li class=""><time>09:41</time><span><b>Ravi Nair</b><small>Created payment PAY-0412</small></span><em>AED 48,250</em></li><li class="ok"><time>09:44</time><span><b>Hana Nasser</b><small>Approved PAY-0412 as second signer</small></span><em></em></li><li class=""><time>10:02</time><span><b>ONE ERP</b><small>Matched bank line to INV-2026-0544</small></span><em>AED 8,640</em></li><li class=""><time>10:15</time><span><b>Ravi Nair</b><small>Edited JV-0108: 9,600 → 9,800</small></span><em></em></li><li class="no"><time>10:16</time><span><b>ONE ERP</b><small>Blocked a posting to September (locked)</small></span><em></em></li></ol>
+        <p class="fn-cn">Every entry keeps who made it, who approved it and what it looked like before.</p></article>
+    </div>
+    <p class="fn-note">[Approval limits, roles and log entries are examples. Confirm the controls ONE ERP ships with.]</p>
   </div>
 </section>
 
@@ -100,7 +196,6 @@
 </section>
 
 <!-- 10 · MODULE PAGER + CTA -->
-<section class="h2-sec" style="padding:0 0 60px"><div class="wrap"><nav class="sv-pager" id="sv-pager" aria-label="Modules"></nav></div></section>
 <section class="h2-final">
   <div class="wrap">
     <div class="h2-cta-card rv" data-theme="dark">
@@ -120,6 +215,7 @@
 <script defer src="assets/js/ep-flow.js?v=st4"></script>
 <script defer src="assets/js/ep-viz.js"></script>
 <script defer src="assets/js/ep-viz2.js"></script>
-<script defer src="assets/js/sv.js?v=st4"></script>
+<script defer src="assets/js/sv.js?v=np1"></script>
+<script defer src="assets/js/fin.js?v=4"></script>
 </body>
 </html>

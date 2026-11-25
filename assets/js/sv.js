@@ -30,7 +30,7 @@
   $("#sv-foot").textContent = st.foot;
 
   /* ---------- feature cards with infographics ---------- */
-  window.EP_why($("#ep-why"), D.features.list, { viz: (window.EP_VIZ || {})[key] });
+  if ($("#ep-why")) window.EP_why($("#ep-why"), D.features.list, { viz: (window.EP_VIZ || {})[key] });
 
   /* ---------- how money travels ---------- */
   const evs = $("#ep-evs"), stage = $("#ep-stage");
@@ -67,7 +67,7 @@
     $$(".ac-i", acEl).forEach((x) => { x.classList.remove("open"); $(".ac-t", x).setAttribute("aria-expanded", "false"); });
     if (!was) { item.classList.add("open"); b.setAttribute("aria-expanded", "true"); }
   });
-  $("#sv-pager").innerHTML = `<a class="sv-pg prev" href="${D.prev[1]}"><small>Previous module</small><b>${IC.arrow}${D.prev[0]}</b></a><a class="sv-pg all" href="${D.parent[1]}"><small>Back to</small><b>All ${D.parent[0]} modules</b></a><a class="sv-pg next" href="${D.next[1]}"><small>Next module</small><b>${D.next[0]}${IC.arrow}</b></a>`;
+  if ($("#sv-pager")) $("#sv-pager").innerHTML = `<a class="sv-pg prev" href="${D.prev[1]}"><small>Previous module</small><b>${IC.arrow}${D.prev[0]}</b></a><a class="sv-pg all" href="${D.parent[1]}"><small>Back to</small><b>All ${D.parent[0]} modules</b></a><a class="sv-pg next" href="${D.next[1]}"><small>Next module</small><b>${D.next[0]}${IC.arrow}</b></a>`;
   { const cm = $("#cta-mark"); if (cm) cm.innerHTML = window.CZ_NAV.mark(100); }
   if (window.CZ_shaderBg) window.CZ_shaderBg($(".h2-cta-card"), [0.05, 0.35, 0.85]);
   window.ONEERP.observeReveal();

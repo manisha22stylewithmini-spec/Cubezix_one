@@ -8,7 +8,7 @@
   const pk = { "ONE Desk": "desk", "ONE Assets": "assets", "ONE People": "people", "ONE Sign": "sign" }[D.parent[0]];
   const ck = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   const H = D.hero, n = H.rows.length;
-  $("#fp-crumb").innerHTML = `<a href="${D.parent[1]}">${D.parent[0]}</a>${IC.chev.replace("<svg", '<svg style="transform:rotate(-90deg)"')}<b>${D.name}</b>`;
+  if ($("#fp-crumb")) $("#fp-crumb").innerHTML = `<a href="${D.parent[1]}">${D.parent[0]}</a>${IC.chev.replace("<svg", '<svg style="transform:rotate(-90deg)"')}<b>${D.name}</b>`;
   $("#fp-eyebrow").textContent = D.eyebrow; $("#fp-h1").innerHTML = D.title; $("#fp-lead").textContent = D.lead; $("#fp-note").textContent = D.note;
   $("#sv-win").innerHTML = `<div class="sv-frame"><div class="sv-screen"><div class="sv-top"><div><b>${H.title}</b><small>${H.sub}</small></div><span class="sv-live"><em></em>Live</span></div>
   <div class="sv-rows">${H.rows.map((r, i) => `<div class="sv-r${r[2] ? "" : " need"}" style="--i:${i}"><i class="sv-av">${r[2] ? r[0].split(" ").map((w) => w[0]).slice(0, 2).join("") : "?"}</i><span class="sv-nm"><b>${r[0]}</b><small>${r[1]}</small></span>${r[2] ? `<span class="sv-st"><span class="sv-to">${H.to}</span><span class="sv-ok">${ck} ${r[2]}</span></span>` : `<span class="sv-st"><span class="sv-nd">Needs you</span></span>`}</div>`).join("")}</div>
@@ -28,7 +28,7 @@
   const acEl = $("#faq-list");
   acEl.innerHTML = D.faq.map((f, i) => `<div class="ac-i${i === 0 ? " open" : ""}"><h3><button class="ac-t" type="button" id="acq${i}" aria-expanded="${i === 0}" aria-controls="aca${i}"><span class="ac-n">0${i + 1}</span><span class="ac-q">${f[0]}</span><span class="ac-ch">${IC.chev}</span></button></h3><div class="ac-c" id="aca${i}" role="region" aria-labelledby="acq${i}"><div><p>${f[1]}</p></div></div></div>`).join("");
   acEl.addEventListener("click", (e) => { const b = e.target.closest(".ac-t"); if (!b) return; const it = b.closest(".ac-i"), was = it.classList.contains("open"); $$(".ac-i", acEl).forEach((x) => { x.classList.remove("open"); $(".ac-t", x).setAttribute("aria-expanded", "false"); }); if (!was) { it.classList.add("open"); b.setAttribute("aria-expanded", "true"); } });
-  $("#sv-pager").innerHTML = `<a class="sv-pg prev" href="${D.prev[1]}"><small>Previous</small><b>${IC.arrow}${D.prev[0]}</b></a><a class="sv-pg all" href="${D.parent[1]}"><small>Back to</small><b>${D.parent[0]}</b></a><a class="sv-pg next" href="${D.next[1]}"><small>Next</small><b>${D.next[0]}${IC.arrow}</b></a>`;
+  if ($("#sv-pager")) $("#sv-pager").innerHTML = `<a class="sv-pg prev" href="${D.prev[1]}"><small>Previous</small><b>${IC.arrow}${D.prev[0]}</b></a><a class="sv-pg all" href="${D.parent[1]}"><small>Back to</small><b>${D.parent[0]}</b></a><a class="sv-pg next" href="${D.next[1]}"><small>Next</small><b>${D.next[0]}${IC.arrow}</b></a>`;
   const cm = $("#cta-mark"); if (cm) cm.innerHTML = window.CZ_NAV.mark(100);
   if (window.CZ_shaderBg) window.CZ_shaderBg($(".h2-cta-card"), [0.05, 0.35, 0.85]);
   if (window.ONEERP && ONEERP.observeReveal) ONEERP.observeReveal();

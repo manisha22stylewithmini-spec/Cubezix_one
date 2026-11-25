@@ -25,7 +25,7 @@
 .sv-bar{flex:0 0 46%;height:6px;border-radius:6px;background:#E4E6F8;overflow:hidden}.sv-bar i{display:block;height:100%;width:100%;transform-origin:0 50%;background:linear-gradient(90deg,#80D1D4,#3A4CE1,#633ADD);animation:svBar 10s infinite}
 @keyframes svBar{0%{transform:scaleX(.04)}14%{transform:scaleX(.2)}28%{transform:scaleX(.4)}42%{transform:scaleX(.6)}56%{transform:scaleX(.8)}90%{transform:scaleX(.8)}100%{transform:scaleX(.04)}}
 /* stats */
-.sv-stats{padding:20px 0 6px}
+.sv-stats{padding:20px 0 clamp(48px,6vw,72px)}
 .sv-stats .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;text-align:left}
 .sv-stats .h2-stat{--p:0}
 .sv-stats .h2-stat b{display:block;font:300 clamp(46px,5vw,68px)/1 "Inter Tight","Inter",sans-serif;letter-spacing:-.045em;color:var(--ink)}
