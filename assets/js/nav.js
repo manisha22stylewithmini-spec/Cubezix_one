@@ -46,13 +46,15 @@
   }
 
   function headerHTML(page) {
-    const active = (n) => (({ product: "products", "products": "products", industries: "industries", "industries-trading": "industries", "industries-retail": "industries", "industries-manufacturing": "industries", "industries-services": "industries", company: "company" })[page] === n ? " is-active" : "");
+    const active = (n) => (({ product: "products", "products": "products", industries: "industries", "industries-trading": "industries", "industries-retail": "industries", "industries-manufacturing": "industries", "industries-services": "industries", company: "company", careers: "careers", blog: "blog" })[page] === n ? " is-active" : "");
     return `<div class="wrap cz-bar">
       <a class="cz-logo" href="index.html" aria-label="CubeZixONE home">${mark(38)}</a>
       <nav class="cz-nav" aria-label="Main">
         <div class="cz-item"><button class="nav-item${active("products")}" data-menu="products" aria-expanded="false" aria-controls="mega-products">Products ${IC.chev}</button></div>
         <div class="cz-item"><button class="nav-item${active("industries")}" data-menu="industries" aria-expanded="false" aria-controls="mega-industries">Industries ${IC.chev}</button></div>
         <div class="cz-item"><a class="nav-item${active("company")}" href="company.html">Company</a></div>
+        <div class="cz-item"><a class="nav-item${active("careers")}" href="careers.html">Careers</a></div>
+        <div class="cz-item"><a class="nav-item${active("blog")}" href="blog.html">Blog</a></div>
       </nav>
       <div class="cz-right"><a href="book-a-demo.html" class="btn btn-primary cz-cta">Book a demo</a><button class="nav-toggle" aria-label="Open menu" aria-expanded="false">${IC.menu}</button></div>
     </div>
@@ -69,6 +71,8 @@
       <details><summary>ERP modules ${IC.chev}</summary><div class="m-links two">${PRODUCTS[0].modules.map((m) => `<a href="${m[3]}"><b>${m[1]}</b></a>`).join("")}</div></details>
       <details><summary>Industries ${IC.chev}</summary><div class="m-links">${INDUSTRIES.map((n) => `<a href="${n[2]}"><span><b>${n[0]}</b><small>${n[1]}</small></span></a>`).join("")}<a class="m-more" href="industries.html">All industries ${IC.arrow}</a></div></details>
       <a class="m-plain" href="company.html">Company</a>
+      <a class="m-plain" href="careers.html">Careers</a>
+      <a class="m-plain" href="blog.html">Blog</a>
       <a class="btn btn-primary m-cta" href="book-a-demo.html">Book a demo</a>
     </div>`;
   }
@@ -79,7 +83,7 @@
         <div><h6>Products</h6>${PRODUCTS.map((p) => `<a href="${p.href}">${p.name}</a>`).join("")}<a href="products.html">Products overview</a></div>
         <div><h6>ERP modules</h6>${PRODUCTS[0].modules.map((m) => `<a href="${m[3]}">${m[1]}</a>`).join("")}</div>
         <div><h6>Industries</h6><a href="industries.html">All industries</a>${INDUSTRIES.map((n) => `<a href="${n[2]}">${n[0]}</a>`).join("")}</div>
-        <div><h6>Company</h6><a href="company.html">About CubeZixONE</a><a href="company.html#contact">Contact</a><a href="book-a-demo.html">Book a demo</a><a href="#">Privacy policy</a><a href="#">Terms of use</a></div>
+        <div><h6>Company</h6><a href="company.html">About CubeZixONE</a><a href="careers.html">Careers</a><a href="blog.html">Blog</a><a href="company.html#contact">Contact</a><a href="book-a-demo.html">Book a demo</a><a href="#">Privacy policy</a><a href="#">Terms of use</a></div>
       </div>
       <div class="wordmark cz-word" aria-label="CubeZixONE">CubeZix<span>ONE</span></div>
       <div class="fbot"><span>© 2026 [CubeZixONE company legal name] · Burlington Tower, Business Bay, Dubai</span><span class="fsis"><a href="https://cubezix.com" rel="noopener">CubeZix</a><a href="https://squarezix.com" rel="noopener">SquareZix</a></span></div></div>`;
