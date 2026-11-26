@@ -82,6 +82,49 @@
       count: (d, n) => `${d} of ${n} on time`, foot: "The customer is told by the system",
     },
   };
+  /* industry pages */
+  Object.assign(M, {
+    "ind-trading": {
+      small: "Inbound shipments", title: "October · 5 containers", badge: ["Costing", "All costed"],
+      sum: [["Shipments", "5"], ["Landed cost, AED", "196,360.00", "200,340.00"], ["Charges not in the cost", "3,980.00", "0.00"]],
+      cols: ["Arrived", "Shipment and route", "Landed AED", "Bill of entry", "Status"],
+      rows: [["2 Oct", "SHP-0398 · Shenzhen → Jebel Ali", "Guangzhou Pack Co. · 1×40ft", 61240, "BOE ··4410"], ["9 Oct", "SHP-0401 · Mumbai → Jebel Ali", "Sundaram Films · 1×20ft", 28900, "BOE ··4471"], ["14 Oct", "SHP-0405 · Ningbo → Jebel Ali", "Zhejiang Tape Ind. · 1×40ft", 44380, "BOE ··4502"], ["18 Oct", "SHP-0409 · Antwerp → Khalifa Port", "Euro Board BV · 1×20ft", 19320, "BOE ··4537"], ["21 Oct", "SHP-0412 · Shanghai → Jebel Ali", "Port bill not yet in the item costs", 42520, ""]],
+      wait: "Costing", ok: "Costed", fix: "BOE ··4561", fixAmt: "46,500.00", amt: money,
+      sug: ["Port bill found", "D/O and handling AED 3,980.00 · spread by value across the 3 items", "Allocate", "Hold the bill"],
+      yes: ["All costed", "Every item now carries its freight, duty and port charges"], no: ["Held for review", "Item costs stay provisional until the bill is checked"],
+      count: (d, n) => `${d} of ${n} shipments fully costed`, foot: "Freight, duty and port in every cost",
+    },
+    "ind-retail": {
+      small: "Before the weekend", title: "Stock cover · 5 stores", badge: ["Checking", "All stores ready"],
+      sum: [["Stores", "5"], ["Ready for the weekend", "4", "5"], ["Lines at risk", "6", "0"]],
+      cols: ["Store", "Branch and top 20 lines", "Cover", "Weekend forecast", "Status"],
+      rows: [["DXB", "Dubai Mall", "1,240 units on hand", "8.5 days", "410 units"], ["AUH", "Yas Mall", "980 units on hand", "6.0 days", "330 units"], ["AJM", "City Centre Ajman", "420 units on hand", "5.2 days", "150 units"], ["RAK", "Al Hamra Mall", "610 units on hand", "7.1 days", "170 units"], ["SHJ", "Sahara Centre", "160 on hand · 6 lines empty by Saturday", "1.5 days", ""]],
+      wait: "Checking", ok: "Ready", fix: "TR-0388 · from Yas", fixAmt: "4.8 days",
+      sug: ["Suggested transfer", "140 units from Yas Mall, which has 6 days' cover · arrives Friday 10:00", "Transfer", "Reorder instead"],
+      yes: ["All stores ready", "Every store has more than four days' cover for the weekend"], no: ["Reorder raised", "Purchase order to the supplier for Sunday delivery"],
+      count: (d, n) => `${d} of ${n} stores ready for the weekend`, foot: "Cover worked out from this week's sales",
+    },
+    "ind-manufacturing": {
+      small: "Shop floor", title: "This week · Lines 1 and 2", badge: ["Checking parts", "Line protected"],
+      sum: [["Work orders", "5"], ["Ready to build", "4", "5"], ["Parts short", "12", "0"]],
+      cols: ["Due", "Work order", "Qty", "Materials", "Status"],
+      rows: [["27 Oct", "WO-214 · Pallet trolley PT-500", "Line 1 · frames welded", "40", "All parts issued"], ["28 Oct", "WO-215 · Platform trolley PT-300", "Line 1 · cutting", "60", "All parts issued"], ["29 Oct", "WO-216 · Shelf cart SC-4", "Line 2 · testing", "25", "All parts issued"], ["30 Oct", "WO-217 · Hand truck HT-200", "Line 2 · welding", "80", "All parts issued"], ["31 Oct", "WO-218 · Cargo trolley CT-900", "12 control boards short", "12", ""]],
+      wait: "Checking", ok: "On track", fix: "PO-0452 · Thu 08:00",
+      sug: ["Supplier with stock", "Al Sanaa Electronics has 40 boards · delivery Thursday 08:00, a day before the step", "Order", "Re-plan WO-218"],
+      yes: ["Line protected", "The boards arrive the day before the step that needs them"], no: ["Re-planned", "WO-218 moves to Monday and WO-219 takes its slot"],
+      count: (d, n) => `${d} of ${n} work orders ready to build`, foot: "Parts checked before the line starts",
+    },
+    "ind-services": {
+      small: "Project budgets", title: "October · 5 active projects", badge: ["Checking", "All within budget"],
+      sum: [["Active projects", "5"], ["Within budget", "4", "5"], ["Over budget, AED", "6,000", "0"]],
+      cols: ["Ends", "Project and client", "Spent", "Next invoice", "Status"],
+      rows: [["12 Nov", "ERP rollout · Harbour Line", "Consulting · fixed fee", "61%", "MS-3 · AED 48,000"], ["30 Nov", "Brand refresh · Desert Rose", "Agency · by the hour", "72%", "Hours · AED 22,400"], ["5 Dec", "Network upgrade · Al Noor", "IT · milestones", "48%", "MS-2 · AED 31,500"], ["18 Dec", "Audit support · Sahara Labs", "Retainer", "55%", "Retainer · AED 12,000"], ["20 Nov", "Clinic fit-out · Marina Dental", "AED 126K spent of 120K", "105%", ""]],
+      wait: "Checking", ok: "On budget", fix: "CO-07 · AED 14,000", fixAmt: "94%",
+      sug: ["Unbilled change found", "Glass partition added on site 14 Oct · change order CO-07 for AED 14,000", "Raise change order", "Absorb the cost"],
+      yes: ["Back within budget", "Budget now AED 134,000, 94% spent, and the extra work is billed"], no: ["Cost absorbed", "Forecast margin on the fit-out drops from 22% to 17%"],
+      count: (d, n) => `${d} of ${n} projects within budget`, foot: "Hours logged daily, not at month-end",
+    },
+  });
   const D = M[key], win = $("#sv-win");
   if (!D || !win) return;
   const amt = (v) => (typeof v === "number" ? (D.amt || String)(v) : v);

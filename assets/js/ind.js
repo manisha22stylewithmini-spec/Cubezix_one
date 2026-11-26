@@ -54,9 +54,9 @@
   if ($("#in-crumb")) $("#in-crumb").innerHTML = `<a href="industries.html">Industries</a>${IC.chev.replace("<svg", '<svg style="transform:rotate(-90deg)"')}<b>${d.name}</b>`;
   $("#in-tile").innerHTML = INDICO[d.name]; $("#in-eyebrow").textContent = "Industries · " + d.name;
   $("#in-h1").innerHTML = d.title; $("#in-lead").textContent = d.lead;
-  $("#in-vis").innerHTML = d.win + `<div class="ic-chip"><i></i>${d.chip}</div>`;
-  $("#in-care").innerHTML = d.care.map((c, i) => `<article class="in-c rv" style="--d:${i * 0.06}s"><span class="in-n">0${i + 1}</span><h3>${c[0]}</h3><p>${c[1]}</p></article>`).join("");
-  $("#in-day").innerHTML = d.day.map((s, i) => `<li class="rv" style="--d:${i * 0.07}s"><i>${i + 1}</i><b>${s}</b></li>`).join("");
+  if ($("#in-vis")) $("#in-vis").innerHTML = d.win + `<div class="ic-chip"><i></i>${d.chip}</div>`;
+  if ($("#in-care")) $("#in-care").innerHTML = d.care.map((c, i) => `<article class="in-c rv" style="--d:${i * 0.06}s"><span class="in-n">0${i + 1}</span><h3>${c[0]}</h3><p>${c[1]}</p></article>`).join("");
+  if ($("#in-day")) $("#in-day").innerHTML = d.day.map((s, i) => `<li class="rv" style="--d:${i * 0.07}s"><i>${i + 1}</i><b>${s}</b></li>`).join("");
   $("#in-mods").innerHTML = d.mods.map((m) => `<a class="in-m" href="${M[m][1]}">${M[m][0]}${IC.arrow}</a>`).join("");
   const acEl = $("#faq-list");
   acEl.innerHTML = d.faq.map((f, i) => `<div class="ac-i${i === 0 ? " open" : ""}"><h3><button class="ac-t" type="button" id="acq${i}" aria-expanded="${i === 0}" aria-controls="aca${i}"><span class="ac-n">0${i + 1}</span><span class="ac-q">${f[0]}</span><span class="ac-ch">${IC.chev}</span></button></h3><div class="ac-c" id="aca${i}" role="region" aria-labelledby="acq${i}"><div><p>${f[1]}</p></div></div></div>`).join("");
